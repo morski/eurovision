@@ -1,0 +1,47 @@
+.participant-card {
+    background-color: white;
+    background-size: cover;
+    position: relative;
+    margin-bottom: 20px;
+    color: black;
+}
+
+.participant-card img {
+    width: 100%;
+}
+
+.participant-card .info {
+    padding: 10px;
+}
+
+.participant-card .info .name {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.participant-card .flag-container {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 100%;
+    align-items: center;
+    display: flex;
+    font-size: 20px;
+    color: white;
+    text-shadow:
+        0.05em 0 black,
+        0 0.05em black,
+        -0.05em 0 black,
+        0 -0.05em black,
+        -0.05em -0.05em black,
+        -0.05em 0.05em black,
+        0.05em -0.05em black,
+        0.05em 0.05em black;
+}
+
+.participant-card .flag-container .flag {
+    width: 50px;
+}
+
+
+
