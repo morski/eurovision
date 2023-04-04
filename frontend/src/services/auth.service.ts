@@ -1,3 +1,5 @@
+import EventBus from "../common/EventBus";
+
 const API_URL = "http://localhost:8000/api/auth/";
 
 class AuthService {
@@ -14,8 +16,7 @@ class AuthService {
 
   logout() {
     localStorage.removeItem("user");
-    window.history.pushState({}, "", "/login");
-    window.location.reload();
+    EventBus.dispatch("navigate", "/login");
   }
 
   register(username: string, password: string) {
@@ -30,9 +31,12 @@ class AuthService {
 
   getCurrentUser() {
     const userStr = localStorage.getItem("user");
-    if (userStr) return JSON.parse(userStr);
-
-    return null;
+    if (userStr) {
+      return JSON.parse(userStr);
+    }
+    else {
+      this.logout();
+    }
   }
 }
 

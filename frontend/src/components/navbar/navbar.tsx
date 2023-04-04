@@ -12,16 +12,21 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AuthService from "../../services/auth.service";
+import EventBus from "../../common/EventBus";
+import IUser from "../../types/user.type";
 
+type INavbarProps = {
+    user: IUser,
+    year: number
+};
 
-const Navbar: FunctionComponent = () => {
+const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
 
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
     const navigateToPage = (page: string) => {
-        window.history.pushState({}, "", page);
-        window.location.reload();
+        EventBus.dispatch("navigate", page);
     };
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -165,7 +170,7 @@ const Navbar: FunctionComponent = () => {
                             <MenuItem key={'account'} onClick={handleCloseUserMenu}>
                                 <Typography textAlign="center">Account</Typography>
                             </MenuItem>
-                            <MenuItem key={'logout'} onClick={() => AuthService.logout()}>
+                            <MenuItem key={'logout'} onClick={() => EventBus.dispatch("logout")}>
                                 <Typography textAlign="center">Logout</Typography>
                             </MenuItem>
                         </Menu>
