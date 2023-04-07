@@ -1,5 +1,5 @@
-import { Component, FunctionComponent, useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { FunctionComponent, useEffect, useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import IUser from '../../types/user.type';
 import IEurovisionEvent from "../../types/event.type";
 
@@ -17,46 +17,34 @@ import "./default.css";
 
 const Default: FunctionComponent = () => {
 
-  const [currentUser, setCurrentUser] = useState<IUser | undefined>();
+  const [currentUser, setCurrentUser] = useState<IUser>({} as IUser);
   const [activeEvent, setActiveEvent] = useState<IEurovisionEvent>({} as IEurovisionEvent);
-  const [showAdminBoard, setShowAdminBoard] = useState<boolean>(false);
+  const nav = useNavigate();
 
   useEffect(() => {
-    const user = AuthService.getCurrentUser();
-    if (user) {
-      setCurrentUser(user);
-    } else {
-      window.history.pushState({}, "", "/login");
-      window.location.reload();
-    }
-
-    let event = EventService.getEventFromLocalStorage();
-    if (event) {
-      setActiveEvent(event);
-    } else {
-      EventService.getActiveEvent()
-        .then(response => response.json())
-        .then(response => {
-          setActiveEvent(response);
-          EventService.saveEventToLocalStorage(response);
-        });
-    }
-
-    EventBus.on("logout", logout);
+    setupEventListeners();
+    setCurrentUser(AuthService.getCurrentUser());
+    setActiveEvent(EventService.getActiveEvent());
   }, []);
 
   const logout = () => {
+    console.log('in the logout');
     AuthService.logout();
-    setShowAdminBoard(false);
-    setCurrentUser(undefined);
+  }
 
-    window.history.pushState({}, "", "/login");
-    window.location.reload();
+  const navigate = (e: CustomEvent):void => {
+    console.log(e);
+    nav(e.detail);
+  }
+
+  const setupEventListeners = () => {
+    EventBus.on("logout", logout);
+    EventBus.on("navigate", navigate);
   }
 
   return (
     <div>
-      <Navbar />
+      <Navbar user={currentUser} year={activeEvent.year!} />
 
       <div className="main-container">
         <div className="container mt-3 content-container">

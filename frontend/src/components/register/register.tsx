@@ -3,14 +3,15 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import "./register.css";
 import AuthService from "../../services/auth.service";
-
+import { useNavigate } from "react-router-dom";
 
 const Register: FunctionComponent = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [successful, setSuccessful] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
-
+  const navigate = useNavigate();
+  
   const validationSchema = () => {
     return Yup.object().shape({
       username: Yup.string()
@@ -50,8 +51,7 @@ const Register: FunctionComponent = () => {
       .then(response => {
         if (response.accessToken) {
           localStorage.setItem("user", JSON.stringify(response));
-          window.history.pushState({}, "", "/");
-          window.location.reload();
+          navigate("/");
         }
       })
       .catch(err => {
