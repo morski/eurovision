@@ -68,7 +68,7 @@ namespace backend.Controllers
         public IActionResult Update([FromBody] User request)
         {
             try {
-                var user = _context.Users.FirstOrDefault(x => x.RecordGuid == request.record_guid);
+                var user = _context.Users.FirstOrDefault(x => x.RecordGuid == request.RecordGuid);
                 if(user == null)
                 {
                     return StatusCode(404, "User not found");
