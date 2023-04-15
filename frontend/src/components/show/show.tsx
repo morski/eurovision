@@ -10,6 +10,10 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Container from '@mui/material/Container';
 import Footer from "./footer/footer";
+import Participant from "../participant/participant";
+import ImageList from "@mui/material/ImageList";
+import ImageListItem from "@mui/material/ImageListItem";
+import Box from "@mui/material/Box";
 
 type IShowProps = {
   showType: number,
@@ -19,8 +23,48 @@ type IShowProps = {
 const Show: FunctionComponent<IShowProps> = ({ showType, year }) => {
   const [event, setEvent] = useState<IEurovisionEvent>();
   const [loaded, setLoaded] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<string | false>(false);
+
+  const handleChange =
+    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+    };
+
+  const breakpoints = {
+    xs: 0,
+    sm: 600,
+    md: 960,
+    lg: 1280,
+    xl: 1920
+  }
+
+  const getColumns = (width: number) => {
+    if (width < breakpoints.md) {
+      return 1
+    } else if (width < breakpoints.lg) {
+      return 2
+    } else if (width < breakpoints.xl) {
+      return 3
+    } else {
+      return 3
+    }
+  }
+
+  const [columns, setColumns] = useState(getColumns(window.innerWidth))
+  const updateDimensions = () => {
+    setColumns(getColumns(window.innerWidth))
+  }
 
   useEffect(() => {
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+
+  useEffect(() => {
+    console.log('We here');
+    console.log(year);
+    console.log(showType);
+    console.log(loaded);
     if (year && showType && !loaded) {
       console.log('Fetching show');
       EventService.getEvent(year, showType)
@@ -45,46 +89,31 @@ const Show: FunctionComponent<IShowProps> = ({ showType, year }) => {
     }
   }, [year]);
 
-
   return (
-    <Container maxWidth="xl">
-      <div className="container final-container">
-        <header className="jumbotron">
-          <h3>{event?.location}</h3>
-        </header>
-        <div className="participant-container">
-          {event?.shows && event.shows[0].participants.sort((a, b) => a.order! - b.order!).map((participant, index) =>
-            <Accordion key={index} className="participant-item glass-container" sx={{
-              backgroundColor: 'rgba(255, 255, 255, 0.28)',
-              borderRadius: '4px',
-              boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              padding: '20px',
-              color: '#FFF',
-              textTransform: 'uppercase',
-              textAlign: 'center',
-              width: '90%',
-              maxWidth: '600px'
-            }}>
-
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <img width="80" height="80" src={`/images/flag/hearts/${participant.country && participant.country.toLowerCase().replace(" ", "_")}.svg`} alt="flag" />
-                <div className="text-container">
-                  <span className="name">{participant.name}</span>
-                  <span className="song">{participant.song}</span>
-                  <span className="country">{participant.country}</span>
-                </div>
-              </AccordionSummary>
-              <AccordionDetails>
-                Here you can vote
-              </AccordionDetails>
-            </Accordion>
+    <Container maxWidth="md" sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      maxHeight: 'calc(100vh - 80px)'
+    }}>
+      <header className="jumbotron">
+        <h1>{event?.location}</h1>
+      </header>
+      <Box sx={{
+        overflowY: 'scroll',
+        flex: '1 1 auto'
+      }}>
+        {event && event.shows && (<Box sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center'
+        }}>
+          {event!.shows[0].participants.sort((a, b) => a.order! - b.order!).map((item, index) =>
+            <Participant key={index} participant={item} eventYear={year} expanded={expanded} setExpanded={handleChange} index={index} />
           )}
-        </div>
-        <Footer />
-      </div>
+        </Box>)}
+      </Box>
     </Container>
-
   );
 }
 

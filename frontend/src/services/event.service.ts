@@ -6,6 +6,7 @@ const API_URL = 'http://localhost:8000/api/event/';
 class EventService {
   getActiveEvent() {
     const event = localStorage.getItem("activeEvent");
+    console.log("Do we have the event?" + event);
     if (event) {
       return JSON.parse(event);
     }
@@ -13,7 +14,12 @@ class EventService {
       return fetch(API_URL, {
         headers: authHeader(),
         mode: "cors",
-      });
+      })
+        .then(response => response.json())
+        .then(response => {
+          this.saveEventToLocalStorage(response as IEurovisionEvent);
+          return response;
+        });
     }
   }
 

@@ -19,11 +19,11 @@
 }
 
 body {
-  background-color: #272238;
-  background-image: url("/public/images/footer_overlay_half.webp");
-  background-size: auto 150%;
-  background-position: right center;
+  background-color: #05025e;
+  background-image: url("/public/images/2023/header-right-event-on-2023.webp"), url("/public/images/2023/banner-event-on-2023.webp");
+  background-position: right top 80px, right top 316px;
   background-repeat: no-repeat;
+  background-attachment: fixed;
   height: 100vh;
   font-family: gotham-book;
   color: #FFF;

@@ -11,7 +11,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AuthService from "../../services/auth.service";
 import EventBus from "../../common/EventBus";
 import IUser from "../../types/user.type";
 
@@ -58,7 +57,7 @@ const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
                             mb: 1
                         }}
                         alt="Your logo."
-                        src={"/images/2023/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png"}
+                        src={`/images/${year}/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png`}
                     />
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
@@ -116,7 +115,7 @@ const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
                                 mb: 1,
                             }}
                             alt="Your logo."
-                            src={"/images/2023/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png"}
+                            src={`/images/${year}/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png`}
                         />
                     </Box>
 
@@ -148,7 +147,7 @@ const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                <Avatar alt={user.username?.toUpperCase()} src="/static/images/avatar/2.jpg" />
                             </IconButton>
                         </Tooltip>
                         <Menu

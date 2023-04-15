@@ -1,6 +1,6 @@
 export default interface IParticipant {
-    id?: string | null,
-    name?: string | null,
+    id?: string,
+    name?: string,
     song?: string,
     order?: number,
     country?: string

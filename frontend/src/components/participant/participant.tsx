@@ -1,41 +1,49 @@
-import { Component } from "react";
+import { FunctionComponent, useState } from "react";
 import IParticipant from "../../types/participant.type";
 import "./participant.css";
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ParticipantSummary from "./Summary/participantSummary";
+import Vote from "./Vote/vote";
 
 type Props = {
-    participant: IParticipant
+    participant: IParticipant,
+    eventYear: number,
+    expanded: string | false,
+    setExpanded: (panel: string) => any,
+    index: number
 };
 
-type State = {}
-
-
-export default class Participant extends Component<Props, State> {
-    render() {
-        return (
-            <div className="participant-card">
-                <img 
-                    src={`/images/2022/participants/card/${this.props.participant.country?.toLowerCase().replace(' ', '_')}-card.jpg`} 
-                    alt="this.props.participant.country"
-                    onError={({ currentTarget }) => {
-                        currentTarget.onerror = null; // prevents looping
-                        currentTarget.src=`/images/2022/participants/placeholder-${Math.floor(Math.random() * 5) + 1}.webp`;
-                    }}
-                />
-                <div className="flag-container">
-                    <img className="flag" src={`/images/flag/${this.props.participant.country?.toLowerCase().replace(' ', '_')}.svg`} alt="country" />
-                    <div>
-                        {this.props.participant.country}
-                    </div>
-                </div>
-                <div className="info">
-                    <div className="name">
-                        {this.props.participant.name}
-                    </div>
-                    <div className="song">
-                        {this.props.participant.song}
-                    </div>
-                </div>
-            </div>
-        )
-    }
+const Participant: FunctionComponent<Props> = ({ participant, eventYear, expanded, setExpanded, index }) => {
+    return (
+        <Box sx={{
+            mb: '12px',
+            display: 'flex',
+            width: '100%',
+            borderRadius: '12px'
+        }}>
+            <Accordion expanded={expanded === `panel${index}`} onChange={setExpanded(`panel${index}`)} sx={{
+                backgroundColor: '#1d1b54',
+                color: 'white',
+                width: '100%',
+            }}>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon sx={{ color: 'white' }} />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <ParticipantSummary participant={participant} eventYear={eventYear} />
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Vote participant={participant} />
+                </AccordionDetails>
+            </Accordion>
+        </Box>
+    )
 }
+
+export default Participant;
