@@ -11,14 +11,24 @@ namespace backend.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        [HttpGet("GetUsers")]
-        public IActionResult Get()
+        private readonly ILogger<UserController> _logger;
+        private readonly EurovisionContext _context;
+
+
+        public UserController(ILogger<UserController> logger, EurovisionContext context)
         {
-           //var users = GetUsers();
-            return Ok();
+            _logger = logger;
+            _context = context;
+        }
+
+        [HttpGet("GetUsers")]
+        public User Get()
+        {
+            User user = _context.Users.First(u => u.FirstName == "Tomas");
+            return user;
         }
         [HttpPost("CreateUser")]
-        public IActionResult Create([FromBody] UserRequest request)
+        public User Create([FromBody] UserRequest request)
         {
             return Ok();
         }
