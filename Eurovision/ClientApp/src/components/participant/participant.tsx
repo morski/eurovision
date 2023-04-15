@@ -20,12 +20,7 @@ type Props = {
 
 const Participant: FunctionComponent<Props> = ({ participant, eventYear, expanded, setExpanded, index }) => {
     return (
-        <Box sx={{
-            mb: '12px',
-            display: 'flex',
-            width: '100%',
-            borderRadius: '12px'
-        }}>
+        <Box className="participant-card-container">
             <Accordion expanded={expanded === `panel${index}`} onChange={setExpanded(`panel${index}`)} sx={{
                 backgroundColor: '#1d1b54',
                 color: 'white',
