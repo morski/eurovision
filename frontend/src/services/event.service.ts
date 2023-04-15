@@ -5,24 +5,29 @@ const API_URL = 'http://localhost:8000/api/event/';
 
 class EventService {
   getActiveEvent() {
-    return fetch(API_URL, { 
-      headers: authHeader() ,
-      mode: "cors",
-    });
+    const event = localStorage.getItem("activeEvent");
+    console.log("Do we have the event?" + event);
+    if (event) {
+      return JSON.parse(event);
+    }
+    else {
+      return fetch(API_URL, {
+        headers: authHeader(),
+        mode: "cors",
+      })
+        .then(response => response.json())
+        .then(response => {
+          this.saveEventToLocalStorage(response as IEurovisionEvent);
+          return response;
+        });
+    }
   }
 
   getEvent(year: number, showType: number) {
-    return fetch(API_URL + year + '/' + showType, { 
+    return fetch(API_URL + year + '/' + showType, {
       headers: authHeader(),
       mode: "cors",
-     });
-  }
-
-  getEventFromLocalStorage() {
-    const event = localStorage.getItem("activeEvent");
-    if (event) return JSON.parse(event);
-
-    return null;
+    });
   }
 
   saveEventToLocalStorage(event: IEurovisionEvent) {

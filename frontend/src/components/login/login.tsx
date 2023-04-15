@@ -4,16 +4,15 @@ import * as Yup from "yup";
 import './login.css'
 
 import AuthService from "../../services/auth.service";
-
-interface RouterProps {
-  history: string;
-}
+import { useNavigate } from "react-router";
 
 const Login: FunctionComponent = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
+
+  const navigate = useNavigate();
 
   const validationSchema = () => {
     return Yup.object().shape({
@@ -33,8 +32,7 @@ const Login: FunctionComponent = () => {
       console.log(response);
       if (response.accessToken) {
         localStorage.setItem("user", JSON.stringify(response));
-        window.history.pushState({}, "", "/");
-        window.location.reload();
+        navigate("/");
       }
     })
     .catch(error => {
