@@ -1,3 +1,9 @@
+.participant-card-container {
+    border-radius: 12px;
+    display: flex;
+    margin-bottom: var(--default-gap);
+    width: '100%';
+}
 .participant-card {
     background-color: white;
     background-size: cover;
@@ -11,7 +17,7 @@
 }
 
 .participant-card .info {
-    padding: 10px;
+    padding: var(--default-gap);
 }
 
 .participant-card .info .name {
