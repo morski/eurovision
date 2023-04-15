@@ -90,19 +90,13 @@ const Show: FunctionComponent<IShowProps> = ({ showType, year }) => {
   }, [year]);
 
   return (
-    <Container maxWidth="md" sx={{
+    <Container maxWidth="md" className="main-content" sx={{
       display: 'flex',
-      flexDirection: 'column',
-      overflow: 'hidden',
-      maxHeight: 'calc(100vh - 80px)'
     }}>
       <header className="jumbotron">
         <h1>{event?.location}</h1>
       </header>
-      <Box sx={{
-        overflowY: 'scroll',
-        flex: '1 1 auto'
-      }}>
+      <Box className="participants-container">
         {event && event.shows && (<Box sx={{
           display: 'flex',
           flexDirection: 'column',
