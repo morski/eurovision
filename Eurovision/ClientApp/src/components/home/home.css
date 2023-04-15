@@ -1,0 +1,11 @@
+.card-container {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(26ch, 1fr));
+}
+
+.jumbotron {
+    max-width: 350px;
+    margin: auto;
+    margin-bottom: 2rem;
+}

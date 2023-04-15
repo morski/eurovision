@@ -1,0 +1,159 @@
+@font-face {
+  font-family: gotham-book;
+  src: url("/public/fonts/Gotham\ Bold.otf");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: gotham-book;
+  src: url("/public/fonts/Gotham\ Book\ Regular.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: gotham-book;
+  src: url("/public/fonts/Gotham\ Book\ Italic.ttf");
+  font-weight: normal;
+  font-style: italic;
+}
+
+body {
+  background-color: #05025e;
+  background-image: url("/public/images/2023/header-right-event-on-2023.webp"), url("/public/images/2023/banner-event-on-2023.webp");
+  background-position: right top 80px, right top 316px;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 100vh;
+  font-family: gotham-book;
+  color: #FFF;
+}
+
+.login-container {
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.glass-container {
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(7.5px);
+  -webkit-backdrop-filter: blur(7.5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  color: #FFF;
+  text-transform: uppercase;
+  text-align: center;
+  width: 90%;
+  max-width: 600px;
+}
+
+.glass-button {
+  border: none;
+  outline: none;
+  margin-top: 1em;
+  padding: 1em 3em;
+  border-radius: 4px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #F2F2F8;
+  transform: translate3D(0, 0, 0);
+  transition: color .3s, background-color .3s, transform .15s;
+  cursor: pointer;
+}
+
+.glass-button:hover{
+  color: #212121;
+  background-color: #F2F2F8;
+  outline: none;
+}
+
+.glass-button:focus{
+  outline: none;
+}
+
+.glass-button:active {
+  transform: translate3D(0, 2px, 0);
+  outline: none;
+}
+
+.glass-button {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.alert {
+  padding: 0;
+  margin-top: -20px;
+}
+
+.hr {
+    display: flex;
+    flex-basis: 100%;
+    align-items: center;
+    color: #F2F2F8;
+    margin: 8px 0px;
+    font-weight: bold;
+}
+.hr:before,
+.hr:after {
+    content: "";
+    flex-grow: 1;
+    background: rgba(255, 255, 255, 0.35);
+    height: 1px;
+    font-size: 0px;
+    line-height: 0px;
+    margin: 0px 8px;
+}
+
+.image-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.image-container img {
+  width: 100%;
+}
+
+.card-container {
+  margin-bottom: 40px;
+}
+
+.card {
+  background-color: transparent;
+  border: 0;
+}
+
+.input-field{
+  text-align: left;
+  
+}
+
+.input-field input {
+  background-color: rgba(255, 255, 255, 0);
+  margin-bottom: 20px;
+  text-align: center;
+  border-radius: 0;
+  border: 0;
+  border-bottom: solid #FFF 1px;
+  color: #FFF;
+  text-align: left;
+}
+
+.input-field label {
+  font-size: 10px;
+}
+
+.input-field input:focus{
+  background-color: rgba(255, 255, 255, 0);
+  box-shadow: none;
+  border-color: #FFF;
+  color: #FFF;
+}
