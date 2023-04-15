@@ -18,19 +18,86 @@ namespace backend.Controllers
             _context = context;
         }
 
-        [HttpGet("GetVotes")]
-        public IActionResult Get() {
-            return Ok();
+        [HttpGet("GetOwnVotes")]
+        public IActionResult GetOwn(Guid userID) {
+            try
+            {
+                var votes = _context.Votes.Where(v => v.User == userID).ToList();
+                if (votes.Count == 0)
+                {
+                    return StatusCode(404, "No votes found");
+                }
+                return Ok(votes);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error has occured");
+            }
         }
+
+        [HttpGet("GetAllVotes")]
+        public IActionResult GetAll()
+        {
+            try
+            {
+                var votes = _context.Votes.Include(v => v.VoteCategoryNavigation).ToList();
+                if (votes.Count == 0)
+                {
+                    return StatusCode(404, "No votes found");
+                }
+                return Ok(votes);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error has occured");
+            }
+        }
+
         [HttpPost("CreateVote")]
         public IActionResult Create([FromBody] Vote request)
         {
-            return Ok();
+            Vote vote = new Vote();
+            vote.RecordGuid = Guid.NewGuid();
+            vote.User = request.User;
+            vote.Participant = request.Participant;
+            vote.VoteAmount = request.VoteAmount;
+
+            try
+            {
+                _context.Votes.Add(vote);
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error has occured");
+            }
+            var votes = _context.Votes.ToList();
+            return Ok(votes);
         }
         [HttpPut("UpdateVote")]
         public IActionResult Update([FromBody] Vote request)
         {
-            return Ok();
+            try
+            {
+                var vote = _context.Votes.FirstOrDefault(x => x.RecordGuid == request.RecordGuid);
+                if (vote == null)
+                {
+                    return StatusCode(404, "Vote not found");
+                }
+
+                vote.User = request.User;
+                vote.Participant = request.Participant;
+                vote.VoteAmount = request.VoteAmount;
+
+                _context.Entry(vote).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error has occured");
+            }
+            var votes = _context.Users.ToList();
+            return Ok(votes);
         }
 
     }
