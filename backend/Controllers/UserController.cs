@@ -42,15 +42,15 @@ namespace backend.Controllers
             }
         }
         [HttpPost("CreateUser")]
-        public IActionResult Create([FromBody] UserRequest request)
+        public IActionResult Create([FromBody] User request)
         {
             //User user = _context.Users.(u => u.FirstName == "Tomas");
             User user = new User();
             user.RecordGuid = Guid.NewGuid();
-            user.Username = request.username;
-            user.Password = request.password;
-            user.FirstName = request.first_name;
-            user.LastName = request.last_name;
+            user.Username = request.Username;
+            user.Password = request.Password;
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
             
             try {
                 _context.Users.Add(user);
@@ -65,7 +65,7 @@ namespace backend.Controllers
         }
 
         [HttpPut("UpdateUser")]
-        public IActionResult Update([FromBody] UserRequest request)
+        public IActionResult Update([FromBody] User request)
         {
             try {
                 var user = _context.Users.FirstOrDefault(x => x.RecordGuid == request.record_guid);
@@ -74,10 +74,10 @@ namespace backend.Controllers
                     return StatusCode(404, "User not found");
                 }
 
-                user.Username = request.username;
-                user.Password = request.password;
-                user.FirstName = request.first_name;
-                user.LastName = request.last_name;
+                user.Username = request.Username;
+                user.Password = request.Password;
+                user.FirstName = request.FirstName;
+                user.LastName = request.LastName;
 
                 _context.Entry(user).State = EntityState.Modified;
                 _context.SaveChanges();
