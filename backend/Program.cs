@@ -1,9 +1,27 @@
+using backend.Models;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+var conStrBuilder = new SqlConnectionStringBuilder()
+{
+    Password = builder.Configuration["DbPassword"],
+    UserID = builder.Configuration["DbUsername"],
+    DataSource = builder.Configuration["DbServer"],
+    InitialCatalog = "eurovision",
+    TrustServerCertificate = true
+};
+
+builder.Services.AddDbContext<EurovisionContext>(options =>
+        options.UseSqlServer(conStrBuilder.ConnectionString));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
