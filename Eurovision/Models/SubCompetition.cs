@@ -7,11 +7,11 @@ public partial class SubCompetition
 {
     public Guid RecordGuid { get; set; }
 
-    public Guid? Event { get; set; }
+    public Guid? EventId { get; set; }
 
     public string Name { get; set; } = null!;
 
-    public virtual Event? EventNavigation { get; set; }
+    public virtual Event? Event { get; set; }
 
     public virtual ICollection<PerformanceNumber> PerformanceNumbers { get; set; } = new List<PerformanceNumber>();
 }

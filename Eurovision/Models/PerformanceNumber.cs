@@ -7,13 +7,13 @@ public partial class PerformanceNumber
 {
     public Guid RecordGuid { get; set; }
 
-    public Guid? SubCompetition { get; set; }
+    public Guid? SubCompetitionId { get; set; }
 
-    public Guid? Participant { get; set; }
+    public Guid? ParticipantId { get; set; }
 
     public int? PerformanceNr { get; set; }
 
-    public virtual Participant? ParticipantNavigation { get; set; }
+    public virtual Participant? Participant { get; set; }
 
-    public virtual SubCompetition? SubCompetitionNavigation { get; set; }
+    public virtual SubCompetition? SubCompetition { get; set; }
 }
