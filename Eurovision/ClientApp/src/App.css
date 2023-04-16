@@ -20,6 +20,8 @@
 
 :root {
   --default-gap: 12px;
+  --font-color-dark: #333;
+  --font-color-light: #fff;
 }
 
 body {

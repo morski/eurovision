@@ -1,0 +1,17 @@
+/* add styles for container component here */
+
+.select-container {
+    /*container*/
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--default-gap);
+    margin-bottom: var(--default-gap);
+}
+
+.select {
+    color: var(--font-color-dark);
+}
+
+.select * {
+    cursor: pointer;
+}
