@@ -1,6 +1,7 @@
 import EventBus from "../common/EventBus";
 
-const API_URL = "http://localhost:8000/api/auth/";
+const BASE_URL = process.env.REACT_APP_BASE_URL ?? "";
+const API_URL = BASE_URL + "fake/auth/";
 
 class AuthService {
   async login(username: string, password: string) {

@@ -44,7 +44,6 @@ namespace backend.Controllers
         [HttpPost("CreateUser")]
         public IActionResult Create([FromBody] User request)
         {
-            //User user = _context.Users.(u => u.FirstName == "Tomas");
             User user = new User();
             user.RecordGuid = Guid.NewGuid();
             user.Username = request.Username;
@@ -107,12 +106,5 @@ namespace backend.Controllers
             var users = _context.Users.ToList();
             return Ok(users);
         }
-
-        //Test
-        //private List<UserRequest> GetUsers(){
-        //    return new List < UserRequest > { 
-        //    new UserRequest {username = "TomasTest", first_name="Tomas"}
-        //   };
-        //}
     }
 }

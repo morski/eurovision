@@ -1,7 +1,9 @@
 import IEurovisionEvent from '../types/event.type';
 import authHeader from './auth-header';
 
-const API_URL = 'http://localhost:8000/api/event/';
+const BASE_URL = process.env.REACT_APP_BASE_URL ?? "";
+const API_URL = BASE_URL + 'fake/event/';
+
 
 class EventService {
   getActiveEvent() {
