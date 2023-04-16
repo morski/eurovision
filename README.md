@@ -9,9 +9,9 @@ Setup
 5. Then open the solution in Visual Studio. Double click the `.sln` file in the `\Eurovision`
 6. Open the Package Manager Console `(Tools -> Nuget Package Manager -> Package Manager Console)`
 7. Run the following 3 commands
-  - `dotnet user-secrets set "DbServer" "IP,PORT"`
-  - `dotnet user-secrets set "DbUsername" "username"`
-  - `dotnet user-secrets set "DbPassword" "password"`
+    - `dotnet user-secrets set "DbServer" "IP,PORT"`
+    - `dotnet user-secrets set "DbUsername" "username"`
+    - `dotnet user-secrets set "DbPassword" "password"`
 8. Start the project and a browser should pop up with the site
 
 ### Developing backend
