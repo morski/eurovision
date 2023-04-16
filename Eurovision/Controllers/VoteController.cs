@@ -22,7 +22,7 @@ namespace backend.Controllers
         public IActionResult GetOwn(Guid userID) {
             try
             {
-                var votes = _context.Votes.Where(v => v.User == userID).ToList();
+                var votes = _context.Votes.Where(v => v.UserId == userID).ToList();
                 if (votes.Count == 0)
                 {
                     return StatusCode(404, "No votes found");
@@ -40,7 +40,7 @@ namespace backend.Controllers
         {
             try
             {
-                var votes = _context.Votes.Include(v => v.VoteCategoryNavigation).ToList();
+                var votes = _context.Votes.Include(v => v.VoteCategory).ToList();
                 if (votes.Count == 0)
                 {
                     return StatusCode(404, "No votes found");

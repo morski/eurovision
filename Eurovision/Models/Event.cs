@@ -13,11 +13,11 @@ public partial class Event
 
     public string? City { get; set; }
 
-    public Guid? Country { get; set; }
+    public Guid? CountryId { get; set; }
 
     public bool? IsActive { get; set; }
 
-    public virtual Country? CountryNavigation { get; set; }
+    public virtual Country? Country { get; set; }
 
     public virtual ICollection<Participant> Participants { get; set; } = new List<Participant>();
 

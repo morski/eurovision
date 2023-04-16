@@ -69,7 +69,7 @@ public partial class EurovisionContext : DbContext
             entity.Property(e => e.City)
                 .HasMaxLength(50)
                 .HasColumnName("city");
-            entity.Property(e => e.Country).HasColumnName("country");
+            entity.Property(e => e.CountryId).HasColumnName("country");
             entity.Property(e => e.IsActive).HasColumnName("isActive");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
@@ -78,8 +78,8 @@ public partial class EurovisionContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("year");
 
-            entity.HasOne(d => d.CountryNavigation).WithMany(p => p.Events)
-                .HasForeignKey(d => d.Country)
+            entity.HasOne(d => d.Country).WithMany(p => p.Events)
+                .HasForeignKey(d => d.CountryId)
                 .HasConstraintName("FK_event_countries");
         });
 
@@ -95,19 +95,19 @@ public partial class EurovisionContext : DbContext
             entity.Property(e => e.Artist)
                 .HasMaxLength(50)
                 .HasColumnName("artist");
-            entity.Property(e => e.Country).HasColumnName("country");
-            entity.Property(e => e.Event).HasColumnName("event");
+            entity.Property(e => e.CountryId).HasColumnName("country");
+            entity.Property(e => e.EventId).HasColumnName("event");
             entity.Property(e => e.Song)
                 .HasMaxLength(50)
                 .HasColumnName("song");
 
-            entity.HasOne(d => d.CountryNavigation).WithMany(p => p.Participants)
-                .HasForeignKey(d => d.Country)
+            entity.HasOne(d => d.Country).WithMany(p => p.Participants)
+                .HasForeignKey(d => d.CountryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_participants_countries");
 
-            entity.HasOne(d => d.EventNavigation).WithMany(p => p.Participants)
-                .HasForeignKey(d => d.Event)
+            entity.HasOne(d => d.Event).WithMany(p => p.Participants)
+                .HasForeignKey(d => d.EventId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_participants_event");
         });
@@ -121,16 +121,16 @@ public partial class EurovisionContext : DbContext
             entity.Property(e => e.RecordGuid)
                 .ValueGeneratedNever()
                 .HasColumnName("record_guid");
-            entity.Property(e => e.Participant).HasColumnName("participant");
+            entity.Property(e => e.ParticipantId).HasColumnName("participant");
             entity.Property(e => e.PerformanceNr).HasColumnName("performance_nr");
-            entity.Property(e => e.SubCompetition).HasColumnName("sub_competition");
+            entity.Property(e => e.SubCompetitionId).HasColumnName("sub_competition");
 
-            entity.HasOne(d => d.ParticipantNavigation).WithMany(p => p.PerformanceNumbers)
-                .HasForeignKey(d => d.Participant)
+            entity.HasOne(d => d.Participant).WithMany(p => p.PerformanceNumbers)
+                .HasForeignKey(d => d.ParticipantId)
                 .HasConstraintName("FK_performance_numbers_participants");
 
-            entity.HasOne(d => d.SubCompetitionNavigation).WithMany(p => p.PerformanceNumbers)
-                .HasForeignKey(d => d.SubCompetition)
+            entity.HasOne(d => d.SubCompetition).WithMany(p => p.PerformanceNumbers)
+                .HasForeignKey(d => d.SubCompetitionId)
                 .HasConstraintName("FK_performance_numbers_sub_competitions");
         });
 
@@ -143,13 +143,13 @@ public partial class EurovisionContext : DbContext
             entity.Property(e => e.RecordGuid)
                 .ValueGeneratedNever()
                 .HasColumnName("record_guid");
-            entity.Property(e => e.Event).HasColumnName("event");
+            entity.Property(e => e.EventId).HasColumnName("event");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .HasColumnName("name");
 
-            entity.HasOne(d => d.EventNavigation).WithMany(p => p.SubCompetitions)
-                .HasForeignKey(d => d.Event)
+            entity.HasOne(d => d.Event).WithMany(p => p.SubCompetitions)
+                .HasForeignKey(d => d.EventId)
                 .HasConstraintName("FK_sub_competitions_event");
         });
 
@@ -186,22 +186,22 @@ public partial class EurovisionContext : DbContext
             entity.Property(e => e.RecordGuid)
                 .ValueGeneratedNever()
                 .HasColumnName("record_guid");
-            entity.Property(e => e.Participant).HasColumnName("participant");
-            entity.Property(e => e.User).HasColumnName("user");
+            entity.Property(e => e.ParticipantId).HasColumnName("participant");
+            entity.Property(e => e.UserId).HasColumnName("user");
             entity.Property(e => e.VoteAmount).HasColumnName("vote_amount");
-            entity.Property(e => e.VoteCategory).HasColumnName("vote_category");
+            entity.Property(e => e.VoteCategoryId).HasColumnName("vote_category");
 
-            entity.HasOne(d => d.ParticipantNavigation).WithMany(p => p.Votes)
-                .HasForeignKey(d => d.Participant)
+            entity.HasOne(d => d.Participant).WithMany(p => p.Votes)
+                .HasForeignKey(d => d.ParticipantId)
                 .HasConstraintName("FK_votes_participants");
 
-            entity.HasOne(d => d.UserNavigation).WithMany(p => p.Votes)
-                .HasForeignKey(d => d.User)
+            entity.HasOne(d => d.User).WithMany(p => p.Votes)
+                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_votes_users");
 
-            entity.HasOne(d => d.VoteCategoryNavigation).WithMany(p => p.Votes)
-                .HasForeignKey(d => d.VoteCategory)
+            entity.HasOne(d => d.VoteCategory).WithMany(p => p.Votes)
+                .HasForeignKey(d => d.VoteCategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_votes_vote_categories");
         });
