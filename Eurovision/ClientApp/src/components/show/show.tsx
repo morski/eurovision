@@ -11,6 +11,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Container from '@mui/material/Container';
 import Footer from "./footer/footer";
 import Participant from "../participant/participant";
+import Filters from "../filters/filters";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import Box from "@mui/material/Box";
@@ -96,6 +97,9 @@ const Show: FunctionComponent<IShowProps> = ({ showType, year }) => {
       <header className="jumbotron">
         <h1>{event?.location}</h1>
       </header>
+      <div className="filters">
+        <Filters/>
+      </div>
       <Box className="participants-container">
         {event && event.shows && (<Box sx={{
           display: 'flex',
