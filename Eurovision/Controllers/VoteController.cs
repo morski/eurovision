@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class VoteController : ControllerBase
     {
         private readonly ILogger<VoteController> _logger;
