@@ -8,6 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.LowercaseUrls = true;
+});
+
 var conStrBuilder = new SqlConnectionStringBuilder()
 {
     Password = builder.Configuration["DbPassword"],

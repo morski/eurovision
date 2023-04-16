@@ -10,7 +10,7 @@ const port = process.env.PORT;
 
 app.use(cors());
 
-app.post('/api/auth/signin', (req, res) => {
+app.post('/fake/auth/signin', (req, res) => {
     res.json({
         id: 'user_id',
         username: 'my_username_morski ',
@@ -18,7 +18,7 @@ app.post('/api/auth/signin', (req, res) => {
     });
 });
 
-app.post('/api/auth/signup', (req, res) => {
+app.post('/fake/auth/signup', (req, res) => {
     res.json({
         id: 'user_id',
         username: 'my_username_morski ',
@@ -26,7 +26,7 @@ app.post('/api/auth/signup', (req, res) => {
     });
 });
 
-app.get('/api/event', (req, res) => {
+app.get('/fake/event', (req, res) => {
     res.json({
         id: 'event_id',
         year: '2023',
@@ -52,7 +52,7 @@ app.get('/api/event', (req, res) => {
     });
 });
 
-app.get('/api/event/:year/:type', (req, res) => {
+app.get('/fake/event/:year/:type', (req, res) => {
     if (req.params.type == 1) {
         res.json({
             id: 'event_id',
@@ -147,19 +147,19 @@ app.get('/api/event/:year/:type', (req, res) => {
 
 });
 
-app.get('/api/test/user', (req, res) => {
+app.get('/fake/test/user', (req, res) => {
     res.json({
         data: 'some data'
     });
 });
 
-app.get('/api/test/mod', (req, res) => {
+app.get('/fake/test/mod', (req, res) => {
     res.json({
         data: 'some data'
     });
 });
 
-app.get('/api/test/admin', (req, res) => {
+app.get('/fake/test/admin', (req, res) => {
     res.json({
         data: 'some data'
     });
