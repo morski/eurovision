@@ -1,14 +1,16 @@
 ﻿using Azure.Core;
-using backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Metrics;
 using System;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Eurovision.Models.Database;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Eurovision.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class FakeController : ControllerBase
     {
 

@@ -1,12 +1,14 @@
-﻿using backend.Models;
+﻿using Eurovision.Models.Database;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.Controllers
+namespace Eurovision.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class VoteController : ControllerBase
     {
         private readonly ILogger<VoteController> _logger;

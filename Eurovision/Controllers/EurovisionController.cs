@@ -1,26 +1,28 @@
-using backend.Models;
+using Eurovision.Models.Database;
+using Eurovision.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace backend.Controllers
+namespace Eurovision.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class EurovisionController : ControllerBase
     {
         private readonly ILogger<EurovisionController> _logger;
-        private readonly EurovisionContext _context;
-
-
-        public EurovisionController(ILogger<EurovisionController> logger, EurovisionContext context)
+        private readonly IEurovisionService _eurovisionService;
+        public EurovisionController(ILogger<EurovisionController> logger, IEurovisionService eurovisionService)
         {
             _logger = logger;
-            _context = context;
+            _eurovisionService = eurovisionService;
         }
 
-        [HttpGet(Name = "GetAllCountries")]
-        public IEnumerable<string> Get()
+        [HttpGet]
+        [Route("subcompetition/{year}/{type}")]
+        public IActionResult GetSubcompetition(int year, int type)
         {
-            return _context.Countries.Select(c => c.Name).ToArray();
+            return new JsonResult(_eurovisionService.GetSubCompetition(year, type));
         }
     }
 }
