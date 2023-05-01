@@ -1,11 +1,11 @@
 import EventBus from "../common/EventBus";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL ?? "";
-const API_URL = BASE_URL + "fake/auth/";
+const API_URL = BASE_URL + "api/auth/";
 
 class AuthService {
   async login(username: string, password: string) {
-    return fetch(API_URL + "signin", {
+    return fetch(API_URL + "login", {
       method: "POST",
       mode: "cors",
       body: JSON.stringify({
@@ -21,11 +21,12 @@ class AuthService {
   }
 
   register(username: string, password: string) {
-    return fetch(API_URL + "signup", {
+    return fetch(API_URL + "register", {
       method: "POST",
       body: JSON.stringify({
         username,
-        password
+        password,
+
       })
     });
   }

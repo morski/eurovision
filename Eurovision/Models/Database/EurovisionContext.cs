@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.Models;
+namespace Eurovision.Models.Database;
 
 public partial class EurovisionContext : DbContext
 {
