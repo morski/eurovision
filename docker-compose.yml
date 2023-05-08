@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  eurovision:
+    image: eurovision:latest
+    container_name: eurovision
+    ports:
+      - "41414:80"
+    labels:
+      - "net.unraid.docker.managed=dockerman"
+      - "net.unraid.docker.icon=/mnt/user/appdata/homer/assets/tools/mwlogo.png"

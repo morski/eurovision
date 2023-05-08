@@ -1,12 +1,14 @@
 import IShow from "./show.type";
 import IParticipant from "./participant.type";
+import ICountry from "./country.type";
 
 export default interface IEurovisionEvent {
     id: string,
     year: number,
-    location: string,
+    city: string,
     active: boolean,
-    country: string,
+    country: ICountry,
+    name: string,
     shows: Array<IShow>,
     participants: Array<IParticipant>
   }

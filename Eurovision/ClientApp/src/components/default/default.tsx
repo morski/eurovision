@@ -14,11 +14,12 @@ import EventService from "../../services/event.service";
 import Navbar from "../navbar/navbar";
 
 import "./default.css";
+import Admin from "../admin/admin";
 
 const Default: FunctionComponent = () => {
 
   const [currentUser, setCurrentUser] = useState<IUser>({} as IUser);
-  const [activeEvent, setActiveEvent] = useState<IEurovisionEvent>({ year: 2022 } as IEurovisionEvent);
+  const [activeEvent, setActiveEvent] = useState<IEurovisionEvent>({ year: 2023 } as IEurovisionEvent);
   const nav = useNavigate();
 
   useEffect(() => {
@@ -26,6 +27,7 @@ const Default: FunctionComponent = () => {
     setCurrentUser(AuthService.getCurrentUser());
     const getEvent = async () => {
       setActiveEvent(await EventService.getActiveEvent());
+      console.log(activeEvent);
     }
     getEvent();
   }, []);
@@ -54,6 +56,7 @@ const Default: FunctionComponent = () => {
         <Route path="/semi-final-2" element={<Show key={2} showType={2} year={activeEvent.year} />} />
         <Route path="/grand-final" element={<Show key={3} showType={3} year={activeEvent.year} />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </div>
   );

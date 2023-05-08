@@ -1,4 +1,5 @@
 ﻿using Eurovision.Models.Database;
+using Eurovision.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,94 +13,49 @@ namespace Eurovision.Controllers
     public class VoteController : ControllerBase
     {
         private readonly ILogger<VoteController> _logger;
-        private readonly EurovisionContext _context;
+        private readonly IVoteService _voteService;
 
-        public VoteController(ILogger<VoteController> logger, EurovisionContext context)
+        public VoteController(ILogger<VoteController> logger, IVoteService voteService)
         {
             _logger = logger;
-            _context = context;
+            _voteService = voteService;
         }
 
-        [HttpGet("GetOwnVotes")]
-        public IActionResult GetOwn(Guid userID) {
-            try
-            {
-                var votes = _context.Votes.Where(v => v.UserId == userID).ToList();
-                if (votes.Count == 0)
-                {
-                    return StatusCode(404, "No votes found");
-                }
-                return Ok(votes);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "An error has occured");
-            }
-        }
-
-        [HttpGet("GetAllVotes")]
-        public IActionResult GetAll()
+        [HttpGet]
+        [Route("user")]
+        public IActionResult GetVotesForUser()
         {
-            try
+            if (HttpContext.Items["User"] is not User user)
             {
-                var votes = _context.Votes.Include(v => v.VoteCategory).ToList();
-                if (votes.Count == 0)
-                {
-                    return StatusCode(404, "No votes found");
-                }
-                return Ok(votes);
+                return StatusCode(404, "User not found");
             }
-            catch (Exception)
-            {
-                return StatusCode(500, "An error has occured");
-            }
+            return new JsonResult(_voteService.GetUserVotes(user.RecordGuid));
         }
 
-        [HttpPost("CreateVote")]
-        public IActionResult Create([FromBody] Vote request)
+        [HttpGet]
+        [Route("categories")]
+        public IActionResult GetVoteCategories()
         {
-            Vote vote = new Vote();
-            vote.RecordGuid = Guid.NewGuid();
-            vote.User = request.User;
-            vote.Participant = request.Participant;
-            vote.VoteAmount = request.VoteAmount;
-
-            try
-            {
-                _context.Votes.Add(vote);
-                _context.SaveChanges();
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "An error has occured");
-            }
-            var votes = _context.Votes.ToList();
-            return Ok(votes);
+            return new JsonResult(_voteService.GetVoteCategories());
         }
-        [HttpPut("UpdateVote")]
+
+        [HttpGet]
+        [Route("all")]
+        public IActionResult GetAllVotes()
+        {
+            return new JsonResult(_voteService.GetAllVotes());
+        }
+
+        [HttpPut]
+        [Route("update")]
         public IActionResult Update([FromBody] Vote request)
         {
-            try
+            if (HttpContext.Items["User"] is not User user)
             {
-                var vote = _context.Votes.FirstOrDefault(x => x.RecordGuid == request.RecordGuid);
-                if (vote == null)
-                {
-                    return StatusCode(404, "Vote not found");
-                }
-
-                vote.User = request.User;
-                vote.Participant = request.Participant;
-                vote.VoteAmount = request.VoteAmount;
-
-                _context.Entry(vote).State = EntityState.Modified;
-                _context.SaveChanges();
+                return StatusCode(404, "User not found");
             }
-            catch (Exception)
-            {
-                return StatusCode(500, "An error has occured");
-            }
-            var votes = _context.Users.ToList();
-            return Ok(votes);
+
+            return new JsonResult(_voteService.UpdateVote(request, user.RecordGuid));
         }
 
     }

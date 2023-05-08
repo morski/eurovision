@@ -1,7 +1,11 @@
+import ICountry from "./country.type";
+import IVote from "./vote.type";
+
 export default interface IParticipant {
-    id?: string,
-    name?: string,
+    id: string,
+    artist?: string,
     song?: string,
     order?: number,
-    country?: string
+    country?: ICountry
+    votes: Array<IVote>
   }

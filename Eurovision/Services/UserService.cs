@@ -37,19 +37,26 @@ namespace Eurovision.Services
             {
                 if (newUser != null)
                 {
+                    var existingUser = GetUserDetails(newUser.Username);
+                    if (existingUser != null)
+                    {
+                        throw new Exception("Username already exists!");
+                    }
+
                     newUser.Validate();
                     newUser.RecordGuid = Guid.NewGuid();
 
                     _context.Users.Add(newUser);
                     _context.SaveChanges();
-                    var tokenString = new JwtUtil(_configuration).GenerateJwtToken(newUser.RecordGuid);
-                    return new { Token = tokenString, UserId = newUser.RecordGuid, newUser.Username };
+                    var token = new JwtUtil(_configuration).GenerateJwtToken(newUser.RecordGuid, 1, false);
+                    var refreshToken = new JwtUtil(_configuration).GenerateJwtToken(newUser.RecordGuid, 24, true);
+                    return new { Token = token, RefreshToken = refreshToken, UserId = newUser.RecordGuid, newUser.Username };
                 }
                     
                 throw new Exception("Shit hit the fan. Try again!");
                 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

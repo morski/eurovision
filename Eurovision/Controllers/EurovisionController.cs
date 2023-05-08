@@ -20,9 +20,25 @@ namespace Eurovision.Controllers
 
         [HttpGet]
         [Route("subcompetition/{year}/{type}")]
-        public IActionResult GetSubcompetition(int year, int type)
+        public IActionResult GetSubcompetition(int year, int type, bool includeVotes)
         {
-            return new JsonResult(_eurovisionService.GetSubCompetition(year, type));
+            var user = HttpContext.Items["User"];
+            return new JsonResult(_eurovisionService.GetSubCompetition(year, type, includeVotes, user as User));
+        }
+
+        [HttpGet]
+        [Route("event/{year}")]
+        public IActionResult GetEvent(int year)
+        {
+            return new JsonResult(_eurovisionService.GetEvent(year));
+        }
+
+        [HttpGet]
+        [Route("event/active")]
+        public IActionResult GetActiveEvent()
+        {
+            var result = new JsonResult(_eurovisionService.GetActiveEvent());
+            return result;
         }
     }
 }

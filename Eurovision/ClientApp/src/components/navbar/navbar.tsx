@@ -44,8 +44,8 @@ const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
     };
 
     return (
-        <AppBar position="sticky">
-            <Container maxWidth="xl">
+        <AppBar position="sticky" sx={{backgroundColor: '#0043ff'}}>
+            <Container maxWidth="md">
                 <Toolbar disableGutters>
                     <Box
                         component="img"
@@ -54,10 +54,13 @@ const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
                             display: { xs: 'none', md: 'flex' },
                             mr: 1,
                             mt: 1,
-                            mb: 1
+                            mb: 1,
+                            cursor: 'pointer'
                         }}
                         alt="Your logo."
                         src={`/images/${year}/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png`}
+                        onClick={() => navigateToPage("/")}
+
                     />
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
@@ -88,6 +91,9 @@ const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
+                            <MenuItem key={'Home'} onClick={() => navigateToPage("/")}>
+                                <Typography textAlign="center">{'Home'}</Typography>
+                            </MenuItem>
                             <MenuItem key={'First Semi-Final'} onClick={() => navigateToPage("/semi-final-1")}>
                                 <Typography textAlign="center">{'First Semi-Final'}</Typography>
                             </MenuItem>
@@ -114,7 +120,7 @@ const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
                                 mt: 1,
                                 mb: 1,
                             }}
-                            alt="Your logo."
+                            alt="Eurovision Logo"
                             src={`/images/${year}/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png`}
                         />
                     </Box>
@@ -145,9 +151,9 @@ const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
+                        <Tooltip title="Menu">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt={user.username?.toUpperCase()} src="/static/images/avatar/2.jpg" />
+                                <Avatar sx={{backgroundColor: '#FF0087', fontFamily: 'gotham-book', fontWeight: '600'}} alt={user.username?.toUpperCase()} src="/static/images/avatar/2.jpg" />
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -166,9 +172,6 @@ const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            <MenuItem key={'account'} onClick={handleCloseUserMenu}>
-                                <Typography textAlign="center">Account</Typography>
-                            </MenuItem>
                             <MenuItem key={'logout'} onClick={() => EventBus.dispatch("logout")}>
                                 <Typography textAlign="center">Logout</Typography>
                             </MenuItem>

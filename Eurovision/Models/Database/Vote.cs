@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Eurovision.Models.Database;
 
@@ -15,9 +16,12 @@ public partial class Vote
 
     public int? VoteAmount { get; set; }
 
+    [JsonIgnore]
     public virtual Participant? Participant { get; set; }
 
-    public virtual User User { get; set; } = null!;
+    [JsonIgnore]
+    public virtual User? User { get; set; } = null!;
 
-    public virtual VoteCategory VoteCategory { get; set; } = null!;
+    [JsonIgnore]
+    public virtual VoteCategory? VoteCategory { get; set; } = null!;
 }

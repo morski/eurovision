@@ -37,7 +37,7 @@ namespace Eurovision.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new{ Error = ex.Message});
             }
         }
 
@@ -59,7 +59,27 @@ namespace Eurovision.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(new { Error = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("refreshToken")]
+        public IActionResult RefreshToken()
+        {
+            try
+            {
+                var user = HttpContext.Items["User"] as User;
+                if (user != null)
+                {
+                    return new JsonResult(_authService.RefreshToken(user.RecordGuid));
+                }
+
+                throw new ArgumentNullException(nameof(user));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message });
             }
         }
     }

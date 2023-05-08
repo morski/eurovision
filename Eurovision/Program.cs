@@ -35,7 +35,13 @@ builder.Services.AddDbContext<EurovisionContext>(options =>
 
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<IEurovisionService, EurovisionService>();
+builder.Services.AddTransient<IVoteService, VoteService>();
+builder.Services.AddTransient<IEurovisionService, EurovisionService>(e => {
+    var service = e.GetService<IVoteService>();
+    var context = e.GetService<EurovisionContext>();
+    return new EurovisionService(context, service);
+});
+
 builder.Services.AddTransient<JwtUtil>();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -108,12 +114,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseMiddleware<JWTMiddleware>();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseRouting();
-
+app.UseMiddleware<JWTMiddleware>();
 
 
 app.UseAuthorization();

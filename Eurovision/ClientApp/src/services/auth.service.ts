@@ -1,4 +1,5 @@
 import EventBus from "../common/EventBus";
+import { refreshAuthHeader } from "./auth-header";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL ?? "";
 const API_URL = BASE_URL + "api/auth/";
@@ -8,6 +9,7 @@ class AuthService {
     return fetch(API_URL + "login", {
       method: "POST",
       mode: "cors",
+      headers: new Headers({'content-type': 'application/json'}),
       body: JSON.stringify({
         username,
         password
@@ -17,16 +19,19 @@ class AuthService {
 
   logout() {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
     EventBus.dispatch("navigate", "/login");
   }
 
   register(username: string, password: string) {
     return fetch(API_URL + "register", {
       method: "POST",
+      mode: "cors",
+      headers: new Headers({'content-type': 'application/json'}),
       body: JSON.stringify({
         username,
         password,
-
       })
     });
   }
@@ -38,6 +43,34 @@ class AuthService {
     }
     else {
       this.logout();
+    }
+  }
+
+  async refreshToken() {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (refreshToken) {
+      return fetch(API_URL + "refreshToken", {
+        method: "GET",
+        mode: "cors",
+        headers: refreshAuthHeader()        
+      })
+      .then(response => {
+        if(response.ok) {
+          return response.json();
+        }
+        else {
+          EventBus.dispatch("logout");
+        }
+        
+      })
+      .then(response => {
+        if (response.token) {
+          localStorage.setItem("token", response.token);
+          localStorage.setItem("refreshToken", response.refreshToken);
+          localStorage.setItem("user", JSON.stringify({userId: response.userId, username: response.username}));
+          return true;
+        }
+      })
     }
   }
 }

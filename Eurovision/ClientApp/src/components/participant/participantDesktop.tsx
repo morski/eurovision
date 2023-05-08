@@ -2,8 +2,12 @@ import { FunctionComponent, useEffect, useState } from "react";
 import IParticipant from "../../types/participant.type";
 import "./participant.css";
 import Box from '@mui/material/Box';
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
 import Vote from "./Vote/vote";
 import IVoteCategory from "../../types/votecategory.type";
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { Card, CardMedia, CardContent, Typography, CardActions, Collapse, IconButtonProps, styled, IconButton } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -33,14 +37,14 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     }),
 }));
 
-const Participant: FunctionComponent<Props> = ({ iParticipant, eventYear, expanded, setExpanded, index, voteCategories }) => {
+const ParticipantDesktop: FunctionComponent<Props> = ({ iParticipant, eventYear, expanded, setExpanded, index, voteCategories }) => {
     const [participant, setParticipant] = useState<IParticipant>(iParticipant || '');
 
     return (
         <Card sx={{ width: '100%', backgroundColor: '#1d1b54', color: 'white', position: 'relative', marginBottom: '20px'}}>
             <CardContent sx={{display: 'flex', justifyContent: 'space-between'}}>
                 <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '30px'}}>
-                        {participant.order}
+                    {participant.order}
                     <Box component="img"
                         className="flag"
                         src={`/images/flag/${participant.country?.name?.toLowerCase().trim().replace(' ', '_')}.svg`}
@@ -138,4 +142,4 @@ const Participant: FunctionComponent<Props> = ({ iParticipant, eventYear, expand
     )
 }
 
-export default Participant;
+export default ParticipantDesktop;

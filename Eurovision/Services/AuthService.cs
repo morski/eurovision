@@ -26,17 +26,37 @@ namespace Eurovision.Services
                 if (user != null)
                 {
                     var jwtUtil = scope.ServiceProvider.GetRequiredService<JwtUtil>();
-                    var tokenString = jwtUtil.GenerateJwtToken(user.RecordGuid);
-                    return new { Token = tokenString, UserId = user.RecordGuid, user.Username };
+                    var token = jwtUtil.GenerateJwtToken(user.RecordGuid, 1, false);
+                    var refreshToken = jwtUtil.GenerateJwtToken(user.RecordGuid, 24, true);
+                    return new { Token = token, RefreshToken = refreshToken, UserId = user.RecordGuid, user.Username };
                 }
             }
 
-            throw new Exception("Please pass the valid Username and Password");
+            throw new Exception("Invalid Username or Password");
+        }
+
+        public dynamic RefreshToken(Guid userId)
+        {
+            using var scope = _services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<EurovisionContext>();
+            var user = context.Users.FirstOrDefault(u => u.RecordGuid == userId);
+
+            if (user != null)
+            {
+                var jwtUtil = scope.ServiceProvider.GetRequiredService<JwtUtil>();
+                var token = jwtUtil.GenerateJwtToken(userId, 1, false);
+                var refreshToken = jwtUtil.GenerateJwtToken(userId, 24, true);
+                return new { Token = token, RefreshToken = refreshToken, UserId = user.RecordGuid, user.Username };
+            }
+
+            throw new Exception("Invalid UserId");
         }
     }
 
     public interface IAuthService
     {
         dynamic ValidateLogin(LoginModel login);
+
+        dynamic RefreshToken(Guid userId);
     }
 }

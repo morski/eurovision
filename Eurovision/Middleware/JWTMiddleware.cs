@@ -1,18 +1,21 @@
 ﻿using Eurovision.Models.Database;
 using Eurovision.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace Middleware
 {
     public class JWTMiddleware
-    {
+    {   
         private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
         public IServiceProvider _services { get; }
@@ -26,15 +29,31 @@ namespace Middleware
 
         public async Task Invoke(HttpContext context)
         {
+            var endpoint = context.GetEndpoint();
+            if(endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() is object)
+            {
+                await _next(context);
+                return;
+            }
+
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            
+            var validatedToken = ValidateToken(token);
 
-            if (token != null)
-                attachAccountToContext(context, token);
-
-            await _next(context);
+            if (validatedToken != null)
+            {
+                await attachAccountToContextAsync(context, validatedToken);
+                await _next(context);
+            }
+            else
+            {
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                await context.Response.StartAsync();
+            }
         }
 
-        private void attachAccountToContext(HttpContext context, string token)
+        private SecurityToken? ValidateToken(string token)
         {
             try
             {
@@ -51,7 +70,18 @@ namespace Middleware
                     ValidIssuer = _configuration["Jwt:Issuer"],
                     ValidAudience = _configuration["Jwt:Audience"]
                 }, out SecurityToken validatedToken);
+                
+                return validatedToken;
+            }
+            catch {
+                return null;
+            }
+        }
 
+        private async Task attachAccountToContextAsync(HttpContext context, SecurityToken validatedToken)
+        {
+            try
+            {
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userId = jwtToken.Claims.First(x => x.Type == "id").Value;
 
@@ -60,11 +90,7 @@ namespace Middleware
                 var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
                 context.Items["User"] = userService.GetUserDetails(Guid.Parse(userId));
             }
-            catch
-            {
-                // do nothing if jwt validation fails
-                // account is not attached to context so request won't have access to secure routes
-            }
+            catch { }
         }
     }
 }

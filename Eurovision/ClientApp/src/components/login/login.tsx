@@ -1,10 +1,54 @@
 import { FunctionComponent, useState } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import './login.css'
 
 import AuthService from "../../services/auth.service";
 import { useNavigate } from "react-router";
+import { Box, Button, CircularProgress, TextField, styled, useMediaQuery } from "@mui/material";
+import { error } from "console";
+
+const CssTextField = styled(TextField)({
+  paddingBottom: '16px',
+  color: 'white',
+  width: '75%',
+  fontFamily: 'gotham-book',
+  '& label.Mui-focused': {
+    color: 'white',
+  },
+  '& label': {
+    color: 'white',
+    fontFamily: 'gotham-book',
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: 'white',
+  },
+  '& .MuiOutlinedInput-root': {
+    fontFamily: 'gotham-book',
+    '& fieldset': {
+      borderColor: 'white',
+      color: 'white'
+    },
+    '&:hover fieldset': {
+      borderColor: 'white',
+      borderWidth: '2px'
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: 'white',
+    },
+    '& .MuiOutlinedInput-input': {
+      color: 'white'
+    }
+  },
+});
+
+const StyledButton = styled(Button)({
+  borderColor: 'white',
+  color: 'white',
+  fontFamily: 'gotham-book',
+  margin: '16px 0',
+  '&:hover': {
+    borderColor: 'white',
+  }
+});
 
 const Login: FunctionComponent = () => {
   const [username, setUsername] = useState<string>('');
@@ -14,89 +58,71 @@ const Login: FunctionComponent = () => {
 
   const navigate = useNavigate();
 
-  const validationSchema = () => {
-    return Yup.object().shape({
-      username: Yup.string().required("This field is required!"),
-      password: Yup.string().required("This field is required!"),
-    });
-  }
-
-  const handleLogin = (formValue: { username: string; password: string }) => {
-    const { username, password } = formValue;
+  const handleLogin = () => {
     setMessage('');
     setLoading(true);
 
     AuthService.login(username, password)
-    .then(response => response.json())
+    .then(response => {
+      if(response.ok) {
+        return response.json();
+      }
+      else {
+        throw response;
+      }
+    })
     .then(response => {
       console.log(response);
-      if (response.accessToken) {
-        localStorage.setItem("user", JSON.stringify(response));
+      if (response.token) {
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("refreshToken", response.refreshToken);
+        localStorage.setItem("user", JSON.stringify({userId: response.userId, username: response.username}));
         navigate("/");
       }
     })
-    .catch(error => {
-      console.log("We got error when logging in!!!");
-      console.log(error); 
-      const resMessage =
-      (error.response &&
-        error.response.data &&
-        error.response.data.message) ||
-      error.message ||
-      error.toString();
-
-      setLoading(false);
-      setMessage(resMessage);
+    .catch(err => {
+      err.json().then((error: any) => {
+        setLoading(false);
+        setMessage(error.error);
+      });      
     });
   }
 
-  
-
-  const initialValues = {
-    username: "",
-    password: "",
-  };
+  const mobile = useMediaQuery('(max-width:600px)');
 
   return (
-    <div className="glass-container login-container">
-      <div className="col-md-12">
-        <div className="image-container">
-          <img src="/images/2023/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png" alt="logo"></img>
-        </div>
-        <div className="card card-container">
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleLogin}
-          >
-            <Form>
-              <div className="form-group input-field">
-                <label htmlFor="username">Username</label>
-                <Field name="username" type="text" className="form-control" />
-              </div>
-
-              <div className="form-group input-field">
-                <label htmlFor="password">Password</label>
-                <Field name="password" type="password" className="form-control" />
-              </div>
-
-              <div className="form-group">
-                <button type="submit" className="glass-button" disabled={loading}>
-                  {loading && (
-                    <span className="spinner-border spinner-border-sm"></span>
-                  )}
-                  <span>Login</span>
-                </button>
-              </div>
-            </Form>
-          </Formik>
-        </div>
-        <div className="hr">OR</div>
-        <div>
-          <a className="glass-button" href="/register">Register</a>
-        </div>
-      </div>
-    </div>
+    <Box sx={{
+      display: 'flex', 
+      flexDirection: 'column', 
+      position: 'absolute', 
+      top: '50%', 
+      left: '50%', 
+      transform: 'translate(-50%, -50%)', 
+      justifyContent: 'center', 
+      alignItems: 'center',
+      width: 'calc(100% - 40px)',
+      maxWidth: '900px',
+      backgroundColor: '#1d1b54',
+      borderRadius: '4px',
+      fontFamily: 'gotham-book',
+      py: '16px'}}>
+      <Box sx={{maxWidth: mobile ? '100%' : '75%', justifyContent: 'center', paddingBottom: '16px', px: '16px'}}>
+          <Box component="img" src="/images/2023/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png" alt="logo" sx={{maxWidth: '100%'}}/>
+      </Box>
+      <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
+        <CssTextField key={'username'} id="outlined-basic" label="Username" variant="outlined" value={username} onChange={(e) => setUsername(e.target.value)}/>
+        <CssTextField key={'password'} id="outlined-basic" label="Password" type="password" variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)}/>
+        <Box>{message}</Box>
+        <Box sx={{display: loading ? 'block' : 'none'}}><CircularProgress /></Box>
+        <StyledButton variant="outlined" size="large" onClick={() => handleLogin()}>Login</StyledButton>
+      </Box>
+      <Box>
+        OR
+      </Box>
+      <Box>
+        <StyledButton variant="outlined" size="large" href="/register">Register</StyledButton>
+      </Box>
+    </Box>
   );
 }
 

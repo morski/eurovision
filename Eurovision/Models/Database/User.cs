@@ -32,15 +32,5 @@ public partial class User
         {
             throw new ArgumentNullException("Password missing");
         }
-
-        if (FirstName == null)
-        {
-            throw new ArgumentNullException("Username missing");
-        }
-
-        if (LastName == null)
-        {
-            throw new ArgumentNullException("Password missing");
-        }
     }
 }

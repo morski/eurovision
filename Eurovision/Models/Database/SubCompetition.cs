@@ -1,17 +1,21 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Eurovision.Models.Database;
 
 public partial class SubCompetition
 {
+    [JsonIgnore]
     public Guid RecordGuid { get; set; }
 
+    [JsonIgnore]
     public Guid? EventId { get; set; }
 
     public string Name { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual Event? Event { get; set; }
 
     public virtual ICollection<PerformanceNumber> PerformanceNumbers { get; set; } = new List<PerformanceNumber>();
