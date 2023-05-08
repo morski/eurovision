@@ -3,7 +3,7 @@ WORKDIR /app
 EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Eurovision/Eurovision.csproj", "."]
+COPY ./Eurovision/Eurovision.csproj .
 RUN dotnet restore "./Eurovision.csproj"
 COPY ./Eurovision .
 WORKDIR "/src/."
