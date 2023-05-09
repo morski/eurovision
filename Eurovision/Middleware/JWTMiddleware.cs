@@ -47,10 +47,12 @@ namespace Middleware
             }
             else
             {
-                var bytes = Encoding.UTF8.GetBytes("JWT MIDDLEWARE TOOK IT TO 401 - " + context.Request.Path);
-                await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                var bytes = Encoding.UTF8.GetBytes("JWT MIDDLEWARE TOOK IT TO 401 - " + context.Request.Path);
+                await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                
                 
                 await context.Response.StartAsync();
             }
