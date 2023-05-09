@@ -169,8 +169,6 @@ public partial class EurovisionContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("last_name");
             entity.Property(e => e.Password)
-                .HasMaxLength(30)
-                .IsFixedLength()
                 .HasColumnName("password");
             entity.Property(e => e.Username)
                 .HasMaxLength(50)

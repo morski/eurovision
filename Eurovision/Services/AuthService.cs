@@ -17,18 +17,27 @@ namespace Eurovision.Services
 
         public dynamic ValidateLogin(LoginModel login)
         {
-            if (login != null && login.Username != null)
+            if (login != null && login.Username != null && login.Password != null)
             {
                 using var scope = _services.CreateScope();
                 var context = scope.ServiceProvider.GetRequiredService<EurovisionContext>();
-                var user = context.Users.FirstOrDefault(u => u.Username == login.Username && u.Password == login.Password);
+                var user = context.Users.FirstOrDefault(u => u.Username == login.Username);
+
+
+                
 
                 if (user != null)
                 {
-                    var jwtUtil = scope.ServiceProvider.GetRequiredService<JwtUtil>();
-                    var token = jwtUtil.GenerateJwtToken(user.RecordGuid, 1, false);
-                    var refreshToken = jwtUtil.GenerateJwtToken(user.RecordGuid, 24, true);
-                    return new { Token = token, RefreshToken = refreshToken, UserId = user.RecordGuid, user.Username };
+                    PasswordHasher hasher = new PasswordHasher();
+                    var ok = hasher.Check(user.Password, login.Password);
+
+                    if(ok)
+                    {
+                        var jwtUtil = scope.ServiceProvider.GetRequiredService<JwtUtil>();
+                        var token = jwtUtil.GenerateJwtToken(user.RecordGuid, 1, false);
+                        var refreshToken = jwtUtil.GenerateJwtToken(user.RecordGuid, 24, true);
+                        return new { Token = token, RefreshToken = refreshToken, UserId = user.RecordGuid, user.Username };
+                    }
                 }
             }
 
@@ -51,6 +60,8 @@ namespace Eurovision.Services
 
             throw new Exception("Invalid UserId");
         }
+
+        
     }
 
     public interface IAuthService

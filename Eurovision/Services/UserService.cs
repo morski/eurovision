@@ -46,6 +46,11 @@ namespace Eurovision.Services
                     newUser.Validate();
                     newUser.RecordGuid = Guid.NewGuid();
 
+                    PasswordHasher hasher = new();
+                    var hashedPassword = hasher.Hash(newUser.Password);
+
+                    newUser.Password = hashedPassword;
+
                     _context.Users.Add(newUser);
                     _context.SaveChanges();
                     var token = new JwtUtil(_configuration).GenerateJwtToken(newUser.RecordGuid, 1, false);
