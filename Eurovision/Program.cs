@@ -21,7 +21,7 @@ builder.Services.Configure<RouteOptions>(options =>
     options.LowercaseUrls = true;
 });
 
-builder.Configuration.AddKeyPerFile("/secret/", true);
+builder.Configuration.AddKeyPerFile("/secrets/", true);
 
 var conStrBuilder = new SqlConnectionStringBuilder()
 {
