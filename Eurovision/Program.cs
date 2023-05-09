@@ -120,7 +120,11 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseRouting();
-app.UseMiddleware<JWTMiddleware>();
+
+app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
+{
+    appBuilder.UseMiddleware<JWTMiddleware>();
+});
 
 
 app.UseAuthorization();
