@@ -21,6 +21,8 @@ builder.Services.Configure<RouteOptions>(options =>
     options.LowercaseUrls = true;
 });
 
+builder.Configuration.AddKeyPerFile("/secret/", true);
+
 var conStrBuilder = new SqlConnectionStringBuilder()
 {
     Password = builder.Configuration["DbPassword"],

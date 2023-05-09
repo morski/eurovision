@@ -5,7 +5,7 @@ services:
     image: eurovision:latest
     container_name: eurovision
     volumes:
-      - /mnt/user/appdata/eurovision/data/:/root/.microsoft/usersecrets:ro
+      - /mnt/user/appdata/eurovision/secrets/:/secrets/:ro
     ports:
       - "41414:80"
     labels:
