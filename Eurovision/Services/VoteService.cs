@@ -44,7 +44,7 @@ namespace Eurovision.Services
         {
             try
             {
-                var vote = _context.Votes.FirstOrDefault(x => x.VoteCategoryId == updatedVote.VoteCategoryId && x.ParticipantId == updatedVote.ParticipantId);
+                var vote = _context.Votes.FirstOrDefault(x => x.VoteCategoryId == updatedVote.VoteCategoryId && x.ParticipantId == updatedVote.ParticipantId && x.UserId == userId);
                 if(vote == null)
                 {
                     vote = AddVote(updatedVote, userId);
