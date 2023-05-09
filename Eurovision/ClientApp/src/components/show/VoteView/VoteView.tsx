@@ -95,7 +95,7 @@ const VoteView: FunctionComponent<IVoteViewProps> = ({ showType, year }) => {
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
-            height: 'calc(100vh - 80px)'
+            height: 'calc(100vh - 160px)'
           }}>
             <IconButton sx={{display: drawerOpen ? 'none' : 'inline-flex', position: 'absolute', bottom: '75px', right: '20px', zIndex: '9999', backgroundColor: 'white', height: '50px', width: '50px'}} onClick={toggleDrawer(true)}>
                 <SortRoundedIcon  />

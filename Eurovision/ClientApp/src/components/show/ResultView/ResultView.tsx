@@ -72,7 +72,7 @@ const ResultView: FunctionComponent<IResultViewProps> = ({showType, year}) => {
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
-            height: 'calc(100vh - 80px)'
+            height: 'calc(100vh - 160px)'
           }}>
             <Box sx={{fontSize: '24px', fontFamily: 'gotham-book', fontWeight: '600', textAlign: 'center', my: '16px'}}>
                 {subcompetition?.name.toUpperCase()} RESULTS

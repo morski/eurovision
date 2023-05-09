@@ -15,7 +15,7 @@ const Footer: FunctionComponent<IFooterProps> = ({ view, setView }) => {
 
   return (
     <Paper sx={{
-      position: 'sticky',
+      position: 'fixed',
       bottom: 0,
       left: 0,
       right: 0,
