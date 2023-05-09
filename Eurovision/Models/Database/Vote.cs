@@ -14,6 +14,8 @@ public partial class Vote
 
     public Guid VoteCategoryId { get; set; }
 
+    public Guid SubCompetitionId { get; set; }
+
     public int? VoteAmount { get; set; }
 
     [JsonIgnore]
@@ -24,4 +26,7 @@ public partial class Vote
 
     [JsonIgnore]
     public virtual VoteCategory? VoteCategory { get; set; } = null!;
+
+    [JsonIgnore]
+    public virtual SubCompetition? SubCompetition { get; set; } = null!;
 }

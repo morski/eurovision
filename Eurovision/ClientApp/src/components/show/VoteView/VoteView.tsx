@@ -5,7 +5,6 @@ import VoteService from "../../../services/vote.service";
 import ISubcompetition from "../../../types/subcompetition.type";
 import IVoteCategory from "../../../types/votecategory.type";
 import useMediaQuery from '@mui/material/useMediaQuery';
-import ParticipantDesktop from "../../participant/participantDesktop";
 import { Checkbox, Drawer, FormControl, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup } from "@mui/material";
 import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import IParticipant from "../../../types/participant.type";
@@ -115,10 +114,7 @@ const VoteView: FunctionComponent<IVoteViewProps> = ({ showType, year }) => {
                 justifyContent: 'center'
                 }}>
                 {voteCategories && participants!.filter(filterUnfinished).sort(sortParticipants).map((item, index) =>
-                    mobile ?
-                    <Participant key={item.id} iParticipant={item} eventYear={year} expanded={expanded} setExpanded={handleChange} index={index} voteCategories={voteCategories} />
-                    :
-                    <ParticipantDesktop key={item.id} iParticipant={item} eventYear={year} expanded={expanded} setExpanded={handleChange} index={index} voteCategories={voteCategories} />
+                    <Participant key={item.id} iParticipant={item} eventYear={year} expanded={expanded} setExpanded={handleChange} index={index} voteCategories={voteCategories} subcompetition={subcompetition} />
                 )}
                 </Box>)}
             </Box>

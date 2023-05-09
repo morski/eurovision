@@ -19,6 +19,9 @@ public partial class SubCompetition
     public virtual Event? Event { get; set; }
 
     public virtual ICollection<PerformanceNumber> PerformanceNumbers { get; set; } = new List<PerformanceNumber>();
+
+    [JsonIgnore]
+    public virtual ICollection<Vote> Votes { get; set; } = new List<Vote>();
 }
 
 public static class SubCompetitionTypes

@@ -7,6 +7,7 @@ import IVoteCategory from "../../types/votecategory.type";
 import { Card, CardMedia, CardContent, Typography, CardActions, Collapse, IconButtonProps, styled, IconButton } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CircularProgress from '@mui/material/CircularProgress';
+import ISubcompetition from "../../types/subcompetition.type";
 
 type Props = {
     iParticipant: IParticipant,
@@ -14,7 +15,8 @@ type Props = {
     expanded: string,
     setExpanded: (panel: string) => any,
     index: number,
-    voteCategories: Array<IVoteCategory>
+    voteCategories: Array<IVoteCategory>,
+    subcompetition: ISubcompetition
 };
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -33,7 +35,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     }),
 }));
 
-const Participant: FunctionComponent<Props> = ({ iParticipant, eventYear, expanded, setExpanded, index, voteCategories }) => {
+const Participant: FunctionComponent<Props> = ({ iParticipant, eventYear, expanded, setExpanded, index, voteCategories, subcompetition }) => {
     const [participant, setParticipant] = useState<IParticipant>(iParticipant || '');
 
     return (
@@ -131,7 +133,7 @@ const Participant: FunctionComponent<Props> = ({ iParticipant, eventYear, expand
             </CardContent>
             <Collapse in={expanded === `panel${index}`} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <Vote participant={participant} updateParticipant={setParticipant}  voteCategories={voteCategories}/>
+                    <Vote subcompetition={subcompetition} participant={participant} updateParticipant={setParticipant}  voteCategories={voteCategories}/>
                 </CardContent>
             </Collapse>
         </Card>

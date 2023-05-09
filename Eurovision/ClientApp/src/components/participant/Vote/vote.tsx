@@ -8,14 +8,16 @@ import IVoteCategory from "../../../types/votecategory.type";
 import IVote from "../../../types/vote.type";
 import { number } from "yup";
 import voteService from "../../../services/vote.service";
+import ISubcompetition from "../../../types/subcompetition.type";
 
 type Props = {
+    subcompetition: ISubcompetition,
     participant: IParticipant,
     voteCategories: Array<IVoteCategory>
     updateParticipant: React.Dispatch<React.SetStateAction<IParticipant>>
 };
 
-const Vote: FunctionComponent<Props> = ({ participant, voteCategories, updateParticipant }) => {
+const Vote: FunctionComponent<Props> = ({ subcompetition, participant, voteCategories, updateParticipant }) => {
 
     function valuetext(value: number) {
         return `${value}°C`;        
@@ -24,12 +26,11 @@ const Vote: FunctionComponent<Props> = ({ participant, voteCategories, updatePar
     const handleChange = (event: Event, newValue: number | number[]) => {
         if (typeof newValue === 'number') {
             const categoryId = (event.target as HTMLInputElement).name;
-            voteService.updateVote(categoryId, participant.id, newValue);
+            voteService.updateVote(subcompetition.id, categoryId, participant.id, newValue);
             const vote = participant.votes.find(v => v.categoryId == categoryId);
             if(vote != undefined) {
                 console.log(vote);
                 vote.amount = newValue;
-                
             }
             else {
                 const newVote: IVote = {
