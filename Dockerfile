@@ -2,6 +2,10 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+RUN apt-get install -y curl \
+  && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
+  && apt-get install -y nodejs \
+  && curl -L https://www.npmjs.com/install.sh | sh
 WORKDIR /src
 COPY ./Eurovision/Eurovision.csproj .
 RUN dotnet restore "./Eurovision.csproj"
