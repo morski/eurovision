@@ -43,11 +43,27 @@ namespace Eurovision.Services
         {
             return _context.Events.Include(e => e.Country).Include(e => e.Participants).ThenInclude(p => p.Country).FirstOrDefault(e => e.IsActive == true);
         }
+
+        public SubCompetitionResultView GetSubCompetitionResults(int year, int type)
+        {
+            var subCompetitionName = SubCompetitionTypes.GetSubCompetitionType(type);
+            var subCompetition = _context.SubCompetitions
+                .Include(s => s.PerformanceNumbers)
+                    .ThenInclude(p => p.Participant)
+                    .ThenInclude(p => p.Country)
+                .First(s => s.Event.Year == year.ToString() && s.Name == subCompetitionName);
+
+            var allVOtes = _voteService.GetAllVotes();
+
+            return new SubCompetitionResultView(subCompetition, allVOtes);
+        }
     }
 
     public interface IEurovisionService
     {
         public SubCompetitionView GetSubCompetition(int year, int type, bool includeVotes, User user);
+
+        public SubCompetitionResultView GetSubCompetitionResults(int year, int type);
 
         public Event? GetEvent(int year);
 

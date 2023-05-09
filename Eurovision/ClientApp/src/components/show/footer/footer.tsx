@@ -6,9 +6,12 @@ import HowToVoteIcon from '@mui/icons-material/HowToVote';
 import StackedBarChartIcon from '@mui/icons-material/StackedBarChart';
 import "./footer.css";
 
-const Footer: FunctionComponent = () => {
+type IFooterProps = {
+  view: number,
+  setView: React.Dispatch<React.SetStateAction<number>>,
+};
 
-  const [value, setValue] = useState(0);
+const Footer: FunctionComponent<IFooterProps> = ({ view, setView }) => {
 
   return (
     <Paper sx={{
@@ -20,16 +23,18 @@ const Footer: FunctionComponent = () => {
       flexDirection: 'column',
       display: 'flex',
       justifyContent: 'center',
+      backgroundColor: '#0043ff', color: 'white'
     }} elevation={3} >
       <BottomNavigation
         showLabels
-        value={value}
+        value={view}
         onChange={(event, newValue) => {
-          setValue(newValue);
+          setView(newValue);
         }}
+        sx={{backgroundColor: '#0043ff', color: 'white'}}
       >
-        <BottomNavigationAction label="Vote" icon={<HowToVoteIcon />} />
-        <BottomNavigationAction label="Result" icon={<StackedBarChartIcon />} />
+        <BottomNavigationAction label="VOTE" icon={<HowToVoteIcon />} sx={{color: 'white', fontFamily: 'gotham-book', '.MuiBottomNavigationAction-label': {'&.Mui-selected': {fontSize: '16px'}, fontFamily: 'gotham-book'}, '&.Mui-selected': {color: '#ff0087', textDecoration: 'underline'}}} />
+        <BottomNavigationAction label="RESULT" icon={<StackedBarChartIcon />} sx={{color: 'white', '.MuiBottomNavigationAction-label': {'&.Mui-selected': {fontSize: '16px'}, fontFamily: 'gotham-book'}, '&.Mui-selected': {color: '#ff0087', textDecoration: 'underline'}}} />
       </BottomNavigation>
     </Paper >
 

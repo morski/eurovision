@@ -74,6 +74,29 @@ class EventService {
     });
   }
 
+  getSubCompetitionResults = (year: number, showType: number): Promise<ISubcompetition> => {
+    return fetch(API_URL + "subcompetition/" + year + '/' + showType + "/result", {
+      headers: authHeader(),
+      mode: "cors",
+    })
+    .then(async response => {
+      if(response.ok) {
+          return response.json();
+      }
+      else {
+        return await authService.refreshToken()
+        .then(async response => {
+            if(response) {
+                return await this.getSubCompetitionResults(year, showType);
+            }
+        });
+      }
+    })
+    .then(response => {
+      return response;
+    });
+  }
+
   saveEventToLocalStorage(event: IEurovisionEvent) {
     localStorage.setItem('activeEvent', JSON.stringify(event));
   }
