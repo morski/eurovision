@@ -1,5 +1,7 @@
-import { Box, Card, CardContent, CardMedia, Collapse, IconButton, IconButtonProps, styled } from "@mui/material";
+import { Box, Card, CardContent, Collapse, IconButton, IconButtonProps, styled } from "@mui/material";
 import { FunctionComponent, useEffect, useState } from "react";
+import Tabs, { tabsClasses } from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 import VoteService from "../../../services/vote.service";
 import EventService from "../../../services/event.service";
@@ -36,6 +38,7 @@ const ResultView: FunctionComponent<IResultViewProps> = ({showType, year}) => {
     const [voteCategories, setVoteCategories] = useState<Array<IVoteCategory>>();
     const [participants, setParticipants] = useState<Array<IParticipant>>();
     const [expanded, setExpanded] = useState<string>('');
+    const [selectedTab, setSelectedTab] = useState<number>(0);
     
     useEffect(() => {
         if (year && showType && !loaded) {
@@ -51,6 +54,12 @@ const ResultView: FunctionComponent<IResultViewProps> = ({showType, year}) => {
             });
         }
     }, []);
+
+    
+
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+        setSelectedTab(newValue);
+    };
 
     const handleChange =
     (panel: string) => {
@@ -74,6 +83,33 @@ const ResultView: FunctionComponent<IResultViewProps> = ({showType, year}) => {
             overflow: 'hidden',
             height: 'calc(100vh - 160px)'
           }}>
+            <Box
+            sx={{
+                flexGrow: 1,
+                bgcolor: 'background.paper',
+            }}
+            >
+                <Tabs
+                    value={selectedTab}
+                    onChange={handleTabChange}
+                    variant="scrollable"
+                    scrollButtons
+                    aria-label="visible arrows tabs example"
+                    sx={{
+                    [`& .${tabsClasses.scrollButtons}`]: {
+                        '&.Mui-disabled': { opacity: 0.3 },
+                    },
+                    }}
+                >
+                    <Tab label="Item One" />
+                    <Tab label="Item Two" />
+                    <Tab label="Item Three" />
+                    <Tab label="Item Four" />
+                    <Tab label="Item Five" />
+                    <Tab label="Item Six" />
+                    <Tab label="Item Seven" />
+                </Tabs>
+            </Box>
             <Box sx={{fontSize: '24px', fontFamily: 'gotham-book', fontWeight: '600', textAlign: 'center', my: '16px'}}>
                 {subcompetition?.name.toUpperCase()} RESULTS
             </Box>
