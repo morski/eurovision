@@ -76,6 +76,11 @@ const VoteView: FunctionComponent<IVoteViewProps> = ({ showType, year }) => {
       if(order === 'country') {
         return a.country!.name.localeCompare(b.country!.name);
       }
+      else if(order === 'points'){
+        const aTotal = a.votes.reduce((a,b) => a + b.amount, 0);
+        const bTotal = b.votes.reduce((a,b) => a + b.amount, 0);
+        return bTotal - aTotal;
+      }
       else {
         return a.order! - b.order!;
       }
@@ -150,6 +155,12 @@ const VoteView: FunctionComponent<IVoteViewProps> = ({ showType, year }) => {
                         color: 'white'
                         },
                     }} />} label='Country' />
+                    <FormControlLabel value='points' control={<Radio sx={{
+                        '& .MuiSvgIcon-root': {
+                        fontSize: 28,
+                        color: 'white'
+                        },
+                    }} />} label='Total points' />
                 </RadioGroup>
                 <FormLabel id="demo-radio-buttons-group-label" focused={false} sx={{color: 'white', fontSize: '24px', fontWeight: '600', pt: '16px'}} >Filter</FormLabel>
                 <FormControlLabel control={<Checkbox sx={{color: 'white', '&.Mui-checked': {color: 'white'}}} checked={filterChecked} onChange={handleFilterChange} />} label="Only unfinished" />

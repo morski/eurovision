@@ -48,6 +48,41 @@ const Vote: FunctionComponent<Props> = ({ participant, voteCategories, updatePar
         "#0043ff"
     ]
 
+    const points = [
+        {
+            value: 1
+        },
+        {
+            value: 2
+        },
+        {
+            value: 3
+        },
+        {
+            value: 4
+        },
+        {
+            value: 5
+        },
+        {
+            value: 6
+        },
+        {
+            value: 7
+        },
+        {
+            value: 8
+        },
+        {
+            value: 10
+        },
+        {
+            value: 12
+        }
+      ]
+
+      
+
     return (
         <Box>
             {voteCategories.map((item, index) =>
@@ -61,11 +96,11 @@ const Vote: FunctionComponent<Props> = ({ participant, voteCategories, updatePar
                     value={participant.votes.find(v => v.categoryId == item.categoryId)?.amount ?? 0}
                     defaultValue={0}
                     getAriaValueText={valuetext}
-                    valueLabelDisplay="auto"
-                    step={1}
-                    marks
+                    valueLabelDisplay="off"
+                    step={null}
+                    marks={points}
                     min={1}
-                    max={10}
+                    max={12}
                     onChange={handleChange}
                     name={item.categoryId}
                     />
