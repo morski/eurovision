@@ -26,7 +26,6 @@ const Vote: FunctionComponent<Props> = ({ subcompetition, participant, voteCateg
     const handleChange = (event: Event, newValue: number | number[]) => {
         if (typeof newValue === 'number') {
             const categoryId = (event.target as HTMLInputElement).name;
-            voteService.updateVote(subcompetition.id, categoryId, participant.id, newValue);
             const vote = participant.votes.find(v => v.categoryId == categoryId);
             if(vote != undefined) {
                 console.log(vote);
@@ -41,6 +40,13 @@ const Vote: FunctionComponent<Props> = ({ subcompetition, participant, voteCateg
             }
             updateParticipant({...participant}  );
         }
+    }
+
+    const handleChangeCommited = (value: number | Array<number>, categoryId: string) => {
+        if (typeof value === 'number') {
+            voteService.updateVote(subcompetition.id, categoryId, participant.id, value);
+        }
+        
     }
 
     const colors = [
@@ -102,6 +108,7 @@ const Vote: FunctionComponent<Props> = ({ subcompetition, participant, voteCateg
                     marks={points}
                     min={1}
                     max={12}
+                    onChangeCommitted={(event: React.SyntheticEvent | Event, value: number | Array<number>) => handleChangeCommited(value, item.categoryId)}
                     onChange={handleChange}
                     name={item.categoryId}
                     />

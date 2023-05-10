@@ -12,18 +12,21 @@ import EventService from "../../../services/event.service";
 
 type IVoteViewProps = {
     showType: number,
-    year: number
+    year: number,
+    order: string,
+    handleRadioChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
+    filterChecked: boolean,
+    handleFilterChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 };
 
-const VoteView: FunctionComponent<IVoteViewProps> = ({ showType, year }) => {
+const VoteView: FunctionComponent<IVoteViewProps> = ({ showType, year, order, handleRadioChange, filterChecked, handleFilterChange }) => {
     const [subcompetition, setSubcompetition] = useState<ISubcompetition>();
     const [voteCategories, setVoteCategories] = useState<Array<IVoteCategory>>();
     const [participants, setParticipants] = useState<Array<IParticipant>>();
     const [loaded, setLoaded] = useState<boolean>(false);
     const [expanded, setExpanded] = useState<string>('');
     const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
-    const [order, setOrder] = useState<string>('start-order');
-    const [filterChecked, setFilterChecked] = useState<boolean>(false);
+
   
 
   const handleChange =
@@ -48,13 +51,7 @@ const VoteView: FunctionComponent<IVoteViewProps> = ({ showType, year }) => {
       setDrawerOpen(open);
   };
 
-  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setOrder((event.target as HTMLInputElement).value);
-  };
 
-  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilterChecked(event.target.checked);
-  };
 
   useEffect(() => {
     if (year && showType && !loaded) {
@@ -99,7 +96,7 @@ const VoteView: FunctionComponent<IVoteViewProps> = ({ showType, year }) => {
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
-            height: 'calc(100vh - 160px)'
+            height: 'calc(100vh - 140px)'
           }}>
             <IconButton sx={{display: drawerOpen ? 'none' : 'inline-flex', position: 'absolute', bottom: '75px', right: '20px', zIndex: '9999', backgroundColor: 'white', height: '50px', width: '50px'}} onClick={toggleDrawer(true)}>
                 <SortRoundedIcon  />
