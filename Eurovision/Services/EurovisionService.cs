@@ -28,7 +28,7 @@ namespace Eurovision.Services
 
             if (includeVotes)
             {
-                votes = _voteService.GetUserVotes(user.RecordGuid);
+                votes = _voteService.GetUserVotes(user.RecordGuid, subCompetition.RecordGuid);
             }
 
             return new SubCompetitionView(subCompetition, votes);
@@ -53,7 +53,7 @@ namespace Eurovision.Services
                     .ThenInclude(p => p.Country)
                 .First(s => s.Event.Year == year.ToString() && s.Name == subCompetitionName);
 
-            var allVOtes = _voteService.GetAllVotes();
+            var allVOtes = _voteService.GetAllVotes(subCompetition.RecordGuid);
 
             return new SubCompetitionResultView(subCompetition, allVOtes);
         }

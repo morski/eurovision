@@ -19,7 +19,7 @@ const Footer: FunctionComponent<IFooterProps> = ({ view, setView }) => {
       bottom: 0,
       left: 0,
       right: 0,
-      height: '80px',
+      height: '60px',
       flexDirection: 'column',
       display: 'flex',
       justifyContent: 'center',
@@ -33,8 +33,8 @@ const Footer: FunctionComponent<IFooterProps> = ({ view, setView }) => {
         }}
         sx={{backgroundColor: '#0043ff', color: 'white'}}
       >
-        <BottomNavigationAction label="VOTE" icon={<HowToVoteIcon />} sx={{color: 'white', fontFamily: 'gotham-book', '.MuiBottomNavigationAction-label': {'&.Mui-selected': {fontSize: '16px'}, fontFamily: 'gotham-book'}, '&.Mui-selected': {color: '#ff0087', textDecoration: 'underline'}}} />
-        <BottomNavigationAction label="RESULT" icon={<StackedBarChartIcon />} sx={{color: 'white', '.MuiBottomNavigationAction-label': {'&.Mui-selected': {fontSize: '16px'}, fontFamily: 'gotham-book'}, '&.Mui-selected': {color: '#ff0087', textDecoration: 'underline'}}} />
+        <BottomNavigationAction label="VOTE" icon={<HowToVoteIcon />} sx={{color: 'white', fontFamily: 'gotham-book', '.MuiBottomNavigationAction-label': {'&.Mui-selected': {fontSize: '16px', fontWeight: '600'}, fontFamily: 'gotham-book'}, '&.Mui-selected': {color: '#ff0087', textDecoration: 'underline'}}} />
+        <BottomNavigationAction label="RESULT" icon={<StackedBarChartIcon />} sx={{color: 'white', '.MuiBottomNavigationAction-label': {'&.Mui-selected': {fontSize: '16px', fontWeight: '600'}, fontFamily: 'gotham-book'}, '&.Mui-selected': {color: '#ff0087', textDecoration: 'underline'}}} />
       </BottomNavigation>
     </Paper >
 

@@ -186,12 +186,17 @@ public partial class EurovisionContext : DbContext
                 .HasColumnName("record_guid");
             entity.Property(e => e.ParticipantId).HasColumnName("participant");
             entity.Property(e => e.UserId).HasColumnName("user");
+            entity.Property(e => e.SubCompetitionId).HasColumnName("subcompetition");
             entity.Property(e => e.VoteAmount).HasColumnName("vote_amount");
             entity.Property(e => e.VoteCategoryId).HasColumnName("vote_category");
 
             entity.HasOne(d => d.Participant).WithMany(p => p.Votes)
                 .HasForeignKey(d => d.ParticipantId)
                 .HasConstraintName("FK_votes_participants");
+
+            entity.HasOne(d => d.SubCompetition).WithMany(p => p.Votes)
+                .HasForeignKey(d => d.SubCompetitionId)
+                .HasConstraintName("FK_votes_sub_competitions");
 
             entity.HasOne(d => d.User).WithMany(p => p.Votes)
                 .HasForeignKey(d => d.UserId)

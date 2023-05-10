@@ -8,14 +8,16 @@ import IVoteCategory from "../../../types/votecategory.type";
 import IVote from "../../../types/vote.type";
 import { number } from "yup";
 import voteService from "../../../services/vote.service";
+import ISubcompetition from "../../../types/subcompetition.type";
 
 type Props = {
+    subcompetition: ISubcompetition,
     participant: IParticipant,
     voteCategories: Array<IVoteCategory>
     updateParticipant: React.Dispatch<React.SetStateAction<IParticipant>>
 };
 
-const Vote: FunctionComponent<Props> = ({ participant, voteCategories, updateParticipant }) => {
+const Vote: FunctionComponent<Props> = ({ subcompetition, participant, voteCategories, updateParticipant }) => {
 
     function valuetext(value: number) {
         return `${value}°C`;        
@@ -24,12 +26,10 @@ const Vote: FunctionComponent<Props> = ({ participant, voteCategories, updatePar
     const handleChange = (event: Event, newValue: number | number[]) => {
         if (typeof newValue === 'number') {
             const categoryId = (event.target as HTMLInputElement).name;
-            voteService.updateVote(categoryId, participant.id, newValue);
             const vote = participant.votes.find(v => v.categoryId == categoryId);
             if(vote != undefined) {
                 console.log(vote);
                 vote.amount = newValue;
-                
             }
             else {
                 const newVote: IVote = {
@@ -40,6 +40,13 @@ const Vote: FunctionComponent<Props> = ({ participant, voteCategories, updatePar
             }
             updateParticipant({...participant}  );
         }
+    }
+
+    const handleChangeCommited = (value: number | Array<number>, categoryId: string) => {
+        if (typeof value === 'number') {
+            voteService.updateVote(subcompetition.id, categoryId, participant.id, value);
+        }
+        
     }
 
     const colors = [
@@ -101,6 +108,7 @@ const Vote: FunctionComponent<Props> = ({ participant, voteCategories, updatePar
                     marks={points}
                     min={1}
                     max={12}
+                    onChangeCommitted={(event: React.SyntheticEvent | Event, value: number | Array<number>) => handleChangeCommited(value, item.categoryId)}
                     onChange={handleChange}
                     name={item.categoryId}
                     />

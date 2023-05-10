@@ -16,6 +16,16 @@ type IShowProps = {
 
 const Show: FunctionComponent<IShowProps> = ({ showType, year }) => {
   const [view, setView] = useState<number>(0);
+  const [order, setOrder] = useState<string>('start-order');
+  const [filterChecked, setFilterChecked] = useState<boolean>(false);
+
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setOrder((event.target as HTMLInputElement).value);
+  };
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterChecked(event.target.checked);
+  };
 
   return (
     <Container maxWidth="md" className="main-content" sx={{
@@ -23,7 +33,7 @@ const Show: FunctionComponent<IShowProps> = ({ showType, year }) => {
       height: '100%'
     }}>
       {view === 0 ?
-        <VoteView showType={showType} year={year} />
+        <VoteView showType={showType} year={year} order={order} handleRadioChange={handleRadioChange} filterChecked={filterChecked} handleFilterChange={handleFilterChange} />
         :
         <ResultView showType={showType} year={year} />
     }

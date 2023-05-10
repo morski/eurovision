@@ -81,7 +81,7 @@ const ResultView: FunctionComponent<IResultViewProps> = ({showType, year}) => {
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
-            height: 'calc(100vh - 160px)'
+            height: 'calc(100vh - 140px)'
           }}>
             <Box
             sx={{

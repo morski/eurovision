@@ -7,6 +7,7 @@ namespace Eurovision.Views
     {
         public SubCompetitionView(SubCompetition subCompetition, List<Vote> votes)
         {
+            Id = subCompetition.RecordGuid;
             Name = subCompetition.Name;
             Participants = subCompetition.PerformanceNumbers.Select(x =>
             {
@@ -25,6 +26,8 @@ namespace Eurovision.Views
 
             }).ToList();
         }
+
+        public Guid? Id { get; set; } = null;
 
         public string Name { get; set; } = null!;
 

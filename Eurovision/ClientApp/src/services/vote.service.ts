@@ -32,12 +32,12 @@ class VoteService {
         });
     }
 
-    updateVote(categoryId: string, participantId: string, voteAmount: number): Promise<IVote>{
+    updateVote(subcompetitionId: string, categoryId: string, participantId: string, voteAmount: number): Promise<IVote>{
         return fetch(API_URL + "update", {
             headers: authHeader(),
             mode: "cors",
             method: "PUT",
-            body: JSON.stringify({ ParticipantId: participantId, VoteCategoryId: categoryId, VoteAmount: voteAmount})
+            body: JSON.stringify({ ParticipantId: participantId, VoteCategoryId: categoryId, SubCompetitionId: subcompetitionId, VoteAmount: voteAmount})
         })
         .then(async response => {
             if(response.ok) {
@@ -47,7 +47,7 @@ class VoteService {
                 return await authService.refreshToken()
                 .then(async response => {
                     if(response) {
-                        return await this.updateVote(categoryId, participantId, voteAmount);
+                        return await this.updateVote(subcompetitionId, categoryId, participantId, voteAmount);
                     }
                 });
             }
