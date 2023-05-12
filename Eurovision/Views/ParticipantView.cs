@@ -15,5 +15,7 @@ namespace Eurovision.Views
         public CountryView Country { get; set; } = null!;
 
         public List<VoteView> Votes { get; set; }
+
+        public List<UserVoteView> UserVotes { get; set; }
     }
 }

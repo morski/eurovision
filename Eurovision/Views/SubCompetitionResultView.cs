@@ -20,7 +20,8 @@ namespace Eurovision.Views
                     {
                         Name = x.Participant.Country.Name
                     },
-                    Votes = VoteView.ConvertVotesToVoteView(votes.Where(v => v.ParticipantId == x.ParticipantId).GroupBy(v => v.VoteCategoryId).Select(g => new Vote { VoteCategoryId = g.Key, VoteAmount = g.Sum(v => v.VoteAmount) }).ToList())
+                    Votes = VoteView.ConvertVotesToVoteView(votes.Where(v => v.ParticipantId == x.ParticipantId).GroupBy(v => v.VoteCategoryId).Select(g => new Vote { VoteCategoryId = g.Key, VoteAmount = g.Sum(v => v.VoteAmount) }).ToList()),
+                    UserVotes = UserVoteView.ConvertVotesToUserVotes(votes.Where(v => v.ParticipantId == x.ParticipantId).ToList())
                 };
 
             }).ToList();

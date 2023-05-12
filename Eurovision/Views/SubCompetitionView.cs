@@ -21,7 +21,7 @@ namespace Eurovision.Views
                     {
                         Name = x.Participant.Country.Name
                     },
-                    Votes = VoteView.ConvertVotesToVoteView(votes.Where(v => v.ParticipantId == x.ParticipantId).ToList())
+                    Votes = VoteView.ConvertVotesToVoteView(votes.Where(v => v.ParticipantId == x.ParticipantId).ToList()),
                 };
 
             }).ToList();

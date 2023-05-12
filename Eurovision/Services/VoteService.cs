@@ -35,7 +35,7 @@ namespace Eurovision.Services
                 {
                     var userIds = room.RoomUsers.Select(user => user.UserId).ToList();
 
-                    return _context.Votes.Include(v => v.VoteCategory).Where(v => v.SubCompetitionId == subcompetitionId && userIds.Contains(v.UserId)).ToList();
+                    return _context.Votes.Include(v => v.VoteCategory).Include(v => v.User).Where(v => v.SubCompetitionId == subcompetitionId && userIds.Contains(v.UserId)).ToList();
                 }
 
                 throw new ArgumentException("Invalid room");

@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Collapse, Container, IconButton, IconButtonProps, Typography, styled } from "@mui/material";
+import { Box, Button, Card, CardContent, Collapse, Container, Divider, IconButton, IconButtonProps, Typography, styled } from "@mui/material";
 import { FunctionComponent, useEffect, useState } from "react";
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -203,6 +203,17 @@ const ResultView: FunctionComponent<IResultViewProps> = ({showType, year}) => {
                                         </Box>
                                         <Box>
                                             {participant.votes.find(v => v.categoryId == category.categoryId)?.amount ?? 0}
+                                        </Box>
+                                    </Box>
+                                )}
+                                <Divider variant="middle" sx={{ mx: 0, borderColor: '#FF0087', my: '16px'}} />
+                                {participant.userVotes.sort((a,b) => b.voteAmount - a.voteAmount).map((uservote, index) => 
+                                    <Box key={uservote.name} sx={{width: "100%", fontSize: "25px", alignItems: "center", display: "flex", justifyContent: "space-between"}}>
+                                        <Box>
+                                            {uservote.name}
+                                        </Box>
+                                        <Box>
+                                            {uservote.voteAmount}
                                         </Box>
                                     </Box>
                                 )}
