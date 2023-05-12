@@ -38,6 +38,7 @@ builder.Services.AddDbContext<EurovisionContext>(options =>
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IVoteService, VoteService>();
+builder.Services.AddTransient<IRoomService, RoomService>();
 builder.Services.AddTransient<IEurovisionService, EurovisionService>(e => {
     var service = e.GetService<IVoteService>();
     var context = e.GetService<EurovisionContext>();
@@ -135,3 +136,5 @@ app.MapControllers().RequireAuthorization();
 app.MapFallbackToFile("index.html");
 
 app.Run();
+
+

@@ -43,6 +43,7 @@ namespace Eurovision.Controllers
                 return StatusCode(500, "An error has occured");
             }
         }
+
         [HttpPost("CreateUser")]
         public IActionResult Create([FromBody] User request)
         {

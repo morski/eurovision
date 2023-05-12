@@ -25,6 +25,8 @@ const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
     const navigateToPage = (page: string) => {
+        setAnchorElNav(null);
+        setAnchorElUser(null);
         EventBus.dispatch("navigate", page);
     };
 
@@ -172,9 +174,13 @@ const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
+                            <MenuItem key={'rooms'} onClick={() => navigateToPage("/rooms")}>
+                                <Typography textAlign="center">Rooms</Typography>
+                            </MenuItem>
                             <MenuItem key={'logout'} onClick={() => EventBus.dispatch("logout")}>
                                 <Typography textAlign="center">Logout</Typography>
                             </MenuItem>
+                            
                         </Menu>
                     </Box>
                 </Toolbar>

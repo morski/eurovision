@@ -28,7 +28,6 @@ const Vote: FunctionComponent<Props> = ({ subcompetition, participant, voteCateg
             const categoryId = (event.target as HTMLInputElement).name;
             const vote = participant.votes.find(v => v.categoryId == categoryId);
             if(vote != undefined) {
-                console.log(vote);
                 vote.amount = newValue;
             }
             else {
@@ -38,7 +37,7 @@ const Vote: FunctionComponent<Props> = ({ subcompetition, participant, voteCateg
                 };
                 participant.votes.push(newVote);
             }
-            updateParticipant({...participant}  );
+            updateParticipant({...participant});
         }
     }
 
@@ -46,7 +45,6 @@ const Vote: FunctionComponent<Props> = ({ subcompetition, participant, voteCateg
         if (typeof value === 'number') {
             voteService.updateVote(subcompetition.id, categoryId, participant.id, value);
         }
-        
     }
 
     const colors = [

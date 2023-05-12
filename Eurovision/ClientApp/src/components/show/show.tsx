@@ -8,10 +8,11 @@ import Container from '@mui/material/Container';
 import Footer from "./footer/footer";
 import VoteView from "./VoteView/VoteView";
 import ResultView from "./ResultView/ResultView";
+import IRoom from "../../types/room.type";
 
 type IShowProps = {
   showType: number,
-  year: number
+  year: number,
 };
 
 const Show: FunctionComponent<IShowProps> = ({ showType, year }) => {

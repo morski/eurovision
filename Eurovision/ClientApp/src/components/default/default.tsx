@@ -15,6 +15,9 @@ import Navbar from "../navbar/navbar";
 
 import "./default.css";
 import Admin from "../admin/admin";
+import IRoom from "../../types/room.type";
+import RoomService from "../../services/room.service";
+import Room from "../room/room";
 
 const Default: FunctionComponent = () => {
 
@@ -27,8 +30,8 @@ const Default: FunctionComponent = () => {
     setCurrentUser(AuthService.getCurrentUser());
     const getEvent = async () => {
       setActiveEvent(await EventService.getActiveEvent());
-      console.log(activeEvent);
     }
+    
     getEvent();
   }, []);
 
@@ -51,12 +54,13 @@ const Default: FunctionComponent = () => {
     <div>
       <Navbar user={currentUser} year={activeEvent.year} />
       <Routes>
-        <Route path="*" element={<Home event={activeEvent} />} />
+        <Route path="*" element={<Home event={activeEvent} user={currentUser} />} />
         <Route path="/semi-final-1" element={<Show key={1} showType={1} year={activeEvent.year} />} />
         <Route path="/semi-final-2" element={<Show key={2} showType={2} year={activeEvent.year} />} />
         <Route path="/grand-final" element={<Show key={3} showType={3} year={activeEvent.year} />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/rooms" element={<Room />} />
       </Routes>
     </div>
   );

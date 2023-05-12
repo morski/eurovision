@@ -46,7 +46,7 @@ class AuthService {
     }
   }
 
-  async refreshToken() {
+  async refreshToken(): Promise<boolean> {
     const refreshToken = localStorage.getItem("refreshToken");
     if (refreshToken) {
       return fetch(API_URL + "refreshToken", {
@@ -58,10 +58,6 @@ class AuthService {
         if(response.ok) {
           return response.json();
         }
-        else {
-          EventBus.dispatch("logout");
-        }
-        
       })
       .then(response => {
         if (response.token) {
@@ -70,8 +66,11 @@ class AuthService {
           localStorage.setItem("user", JSON.stringify({userId: response.userId, username: response.username}));
           return true;
         }
+        return false;
       })
     }
+
+    return false;
   }
 }
 

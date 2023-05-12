@@ -21,6 +21,9 @@ public partial class User
     [SwaggerSchema(ReadOnly = true)]
     public virtual ICollection<Vote> Votes { get; set; } = new List<Vote>();
 
+    [SwaggerSchema(ReadOnly = true)]
+    public virtual ICollection<RoomUser> RoomUsers { get; set; } = new List<RoomUser>();
+
     public void Validate()
     {
         if (Username == null)

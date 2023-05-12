@@ -1,35 +1,68 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 
 import IEurovisionEvent from "../../types/event.type";
 import "./home.css";
-import Participant from "../participant/participant";
-import { Box, Container, Typography } from "@mui/material";
-import HomeParticipant from "./homeParticipant";
+import { Box, Button, Container, Modal, TextField, Typography, styled } from "@mui/material";
+import RoomService from "../../services/room.service";
+import IRoom from "../../types/room.type";
+import IUser from "../../types/user.type";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
-  event: IEurovisionEvent
+  event: IEurovisionEvent,
+  user: IUser
 };
 
-const Home: FunctionComponent<Props> = ({ event }) => {
+const StyledButton = styled(Button)({
+  borderColor: 'white',
+  color: 'white',
+  fontFamily: 'gotham-book',
+  margin: '16px 0',
+  '&:hover': {
+    borderColor: 'white',
+  }
+});
+
+const Home: FunctionComponent<Props> = ({ event, user }) => {
+  const [rooms, setRooms] = useState<Array<IRoom>>([] as Array<IRoom>);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  
+  useEffect(() => {
+    RoomService.GetRooms()
+      .then(res => {
+        if(res.ok) {
+          res.json().then(res => setRooms(res))
+        }
+        else {
+          res.json().then(res => setErrorMessage(res))
+        }
+      })
+  }, [])
+  
+  const nav = useNavigate();
+
+
+
   if (!event.participants || !event.city || !event.country) {
     return <div />
   }
 
   return (
-    <Container maxWidth='md' sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}} >
-      <Box sx={{borderRadius: '4px', backgroundColor: '#1D1B54', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <Box component="img" src={`/images/logo/Eurovision_generic_white.png`} alt="Eurovision Logo" sx={{width: '75%', my: '32px'}} />
-        <Box>
-          <Typography textAlign="center" fontFamily={'gotham-book'} fontSize={'30px'} color={'#FF0087'} fontWeight={600} >{event.name.toUpperCase()}</Typography>
-          <Typography textAlign="center" fontFamily={'gotham-book'} fontSize={'50px'} color={'#FFF800'} fontWeight={600} >{event.city.toUpperCase()}</Typography>
-          <Typography textAlign="center" fontFamily={'gotham-book'} fontSize={'40px'} color={'#0043ff'} fontWeight={600} >{event.country.name.toUpperCase()}</Typography>
-          <Typography textAlign="center" fontFamily={'gotham-book'} fontSize={'50px'} color={'#FF0087'} fontWeight={600}>{event.year}</Typography>
+    <Container maxWidth='md' sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', p: '16px'}} >
+      <Box sx={{borderRadius: '4px', backgroundColor: '#1D1B54', display: 'flex', flexDirection: 'column', alignItems: 'center', py: '16px', width: '100%'}}>
+        <Box component="img" src={`/images/${event.year}/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png`} alt="Eurovision Logo" sx={{width: '75%'}} />
+        <Box sx={{my: '16px'}}> 
+          <Typography textAlign="center" fontFamily={'gotham-book'} fontSize={'25px'} color={'#FF0087'} fontWeight={600} textTransform={"uppercase"} >Welcome {user.username}!</Typography>
         </Box>
-      </Box>
-      <Box sx={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center'}}>
-        {event.participants.sort((a, b) => a.country!.name.localeCompare(b.country!.name)).map((participant, index) => 
-          <HomeParticipant participant={participant} year={event.year} key={index} />
-        )}
+        {
+          rooms.length === 0 &&
+          <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <Typography textAlign="center" fontFamily={'gotham-book'} fontSize={'30px'} color={'#FF0087'} fontWeight={600} >
+              You have not yet joined any party rooms. Click below to join or create some party rooms!
+            </Typography>
+            <StyledButton variant="outlined" size="large" onClick={() => nav('/rooms')}>Manage rooms</StyledButton>
+          </Box>
+        }        
       </Box>
     </Container>
   )
