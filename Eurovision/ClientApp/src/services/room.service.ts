@@ -1,63 +1,36 @@
 import IRoom from '../types/room.type';
 import { authHeader } from './auth-header';
 import authService from './auth.service';
+import requestService from './request.service';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL ?? "";
 const API_URL = BASE_URL + 'api/room/';
 
 class RoomService {
-    createRoom(roomName: string, password: string): Promise<IRoom> {
-        return fetch(API_URL + "create", {
-        headers: authHeader(),
-        mode: "cors",
-        body: JSON.stringify({
-            roomName,
+    CreateRoom(name: string, password: string): Promise<Response> {
+        const payload = {
+            name,
             password,
-        })
-        })
-        .then(async response => {
-        if(response.ok) {
-            return response.json();
         }
-        else {
-            return await authService.refreshToken()
-            .then(async response => {
-                if(response) {
-                    return await this.createRoom(roomName, password);
-                }
-            });
-        }
-        })
-        .then(response => {
-            return response;
-        });
+
+        return requestService.sendApiRequest("POST", API_URL + "create", payload);
     }
 
-    joinRoom(roomName: string, password: string): Promise<IRoom> {
-        return fetch(API_URL + "join", {
-        headers: authHeader(),
-        mode: "cors",
-        body: JSON.stringify({
-            roomName,
+    async JoinRoom(name: string, password: string): Promise<Response> {
+        const payload = {
+            name,
             password,
-        })
-        })
-        .then(async response => {
-        if(response.ok) {
-            return response.json();
         }
-        else {
-            return await authService.refreshToken()
-            .then(async response => {
-                if(response) {
-                    return await this.joinRoom(roomName, password);
-                }
-            });
-        }
-        })
-        .then(response => {
-            return response;
-        });
+
+        return requestService.sendApiRequest("POST", API_URL + "join", payload);
+    }
+
+    async LeaveRoom(roomId: string): Promise<Response> {
+        return requestService.sendApiRequest("DELETE", API_URL + "leave/" + roomId, null);
+    }
+
+    async GetRooms(): Promise<Response> {
+        return requestService.sendApiRequest("GET", API_URL + "all", null);
     }
 }
 

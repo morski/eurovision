@@ -11,7 +11,6 @@ const API_URL = BASE_URL + 'api/eurovision/';
 class EventService {
   getActiveEvent() {
     const event = localStorage.getItem("activeEvent");
-    console.log("Do we have the event?" + event);
     if (event) {
       return JSON.parse(event);
     }
@@ -74,8 +73,8 @@ class EventService {
     });
   }
 
-  getSubCompetitionResults = (year: number, showType: number): Promise<ISubcompetition> => {
-    return fetch(API_URL + "subcompetition/" + year + '/' + showType + "/result", {
+  getSubCompetitionResults = (year: number, showType: number, roomId: string): Promise<ISubcompetition> => {
+    return fetch(API_URL + "subcompetition/" + year + '/' + showType + "/result/" + roomId, {
       headers: authHeader(),
       mode: "cors",
     })
@@ -87,7 +86,7 @@ class EventService {
         return await authService.refreshToken()
         .then(async response => {
             if(response) {
-                return await this.getSubCompetitionResults(year, showType);
+                return await this.getSubCompetitionResults(year, showType, roomId);
             }
         });
       }

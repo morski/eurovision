@@ -31,6 +31,10 @@ public partial class EurovisionContext : DbContext
 
     public virtual DbSet<VoteCategory> VoteCategories { get; set; }
 
+    public virtual DbSet<Room> Rooms { get; set; }
+
+    public virtual DbSet<RoomUser> RoomUsers { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer();
 
@@ -221,6 +225,42 @@ public partial class EurovisionContext : DbContext
             entity.Property(e => e.VoteName)
                 .HasMaxLength(50)
                 .HasColumnName("vote_name");
+        });
+
+        modelBuilder.Entity<Room>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.ToTable("rooms");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Name)
+                .HasColumnName("name");
+            entity.Property(e => e.Password)
+                .HasColumnName("password");
+        });
+
+        modelBuilder.Entity<RoomUser>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.ToTable("room_users");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.RoomId).HasColumnName("room_id");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.Room).WithMany(p => p.RoomUsers)
+                .HasForeignKey(d => d.RoomId)
+                .HasConstraintName("FK_room_users_rooms");
+
+            entity.HasOne(d => d.User).WithMany(p => p.RoomUsers)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_room_users_users");
         });
 
         OnModelCreatingPartial(modelBuilder);

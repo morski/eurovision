@@ -27,11 +27,10 @@ namespace Eurovision.Controllers
         }
 
         [HttpGet]
-        [Route("subcompetition/{year}/{type}/result")]
-        public IActionResult GetSubcompetitionResults(int year, int type)
+        [Route("subcompetition/{year}/{type}/result/{roomId}")]
+        public IActionResult GetSubcompetitionResults(int year, int type, Guid roomId)
         {
-            var user = HttpContext.Items["User"];
-            return new JsonResult(_eurovisionService.GetSubCompetitionResults(year, type));
+            return new JsonResult(_eurovisionService.GetSubCompetitionResults(year, type, roomId));
         }
 
         [HttpGet]

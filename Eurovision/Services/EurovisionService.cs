@@ -44,7 +44,7 @@ namespace Eurovision.Services
             return _context.Events.Include(e => e.Country).Include(e => e.Participants).ThenInclude(p => p.Country).FirstOrDefault(e => e.IsActive == true);
         }
 
-        public SubCompetitionResultView GetSubCompetitionResults(int year, int type)
+        public SubCompetitionResultView GetSubCompetitionResults(int year, int type, Guid roomId)
         {
             var subCompetitionName = SubCompetitionTypes.GetSubCompetitionType(type);
             var subCompetition = _context.SubCompetitions
@@ -53,7 +53,7 @@ namespace Eurovision.Services
                     .ThenInclude(p => p.Country)
                 .First(s => s.Event.Year == year.ToString() && s.Name == subCompetitionName);
 
-            var allVOtes = _voteService.GetAllVotes(subCompetition.RecordGuid);
+            var allVOtes = _voteService.GetRoomVotesForSubcompetition(roomId, subCompetition.RecordGuid);
 
             return new SubCompetitionResultView(subCompetition, allVOtes);
         }
@@ -63,7 +63,7 @@ namespace Eurovision.Services
     {
         public SubCompetitionView GetSubCompetition(int year, int type, bool includeVotes, User user);
 
-        public SubCompetitionResultView GetSubCompetitionResults(int year, int type);
+        public SubCompetitionResultView GetSubCompetitionResults(int year, int type, Guid roomId);
 
         public Event? GetEvent(int year);
 

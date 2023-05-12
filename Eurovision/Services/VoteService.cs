@@ -26,6 +26,26 @@ namespace Eurovision.Services
             }
         }
 
+        public List<Vote> GetRoomVotesForSubcompetition(Guid roomId, Guid subcompetitionId)
+        {
+            try
+            {
+                var room = _context.Rooms.Include(r => r.RoomUsers).FirstOrDefault(r => r.Id == roomId);
+                if(room != null) 
+                {
+                    var userIds = room.RoomUsers.Select(user => user.UserId).ToList();
+
+                    return _context.Votes.Include(v => v.VoteCategory).Where(v => v.SubCompetitionId == subcompetitionId && userIds.Contains(v.UserId)).ToList();
+                }
+
+                throw new ArgumentException("Invalid room");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public List<Vote> GetUserVotes(Guid userId, Guid subcompetitionId)
         {
             return _context.Votes
@@ -44,18 +64,31 @@ namespace Eurovision.Services
         {
             try
             {
-                var vote = _context.Votes.FirstOrDefault(x => x.VoteCategoryId == updatedVote.VoteCategoryId && x.ParticipantId == updatedVote.ParticipantId && x.SubCompetitionId == updatedVote.SubCompetitionId && x.UserId == userId);
-                if(vote == null)
+                var votes = _context.Votes.Where(x => x.VoteCategoryId == updatedVote.VoteCategoryId && x.ParticipantId == updatedVote.ParticipantId && x.SubCompetitionId == updatedVote.SubCompetitionId && x.UserId == userId).ToList();
+
+                if(votes.Any())
                 {
-                    vote = AddVote(updatedVote, userId);
-                } 
+                    if (votes.Count > 1)
+                    {
+                        for(int i = 1; i < votes.Count; i++)
+                        {
+                            _context.Remove(votes[i]);
+                        }
+
+                        _context.SaveChanges();
+                        return UpdateVote(updatedVote, userId);
+                    }
+                    else
+                    {
+                        votes.First().VoteAmount = updatedVote.VoteAmount;
+                        _context.SaveChanges();
+                        return votes.First();
+                    }
+                }
                 else
                 {
-                    vote.VoteAmount = updatedVote.VoteAmount;
-                    _context.SaveChanges();
+                    return AddVote(updatedVote, userId);
                 }
-
-                return vote;
             }
             catch (Exception)
             {
@@ -65,6 +98,8 @@ namespace Eurovision.Services
 
         private Vote AddVote(Vote newVote, Guid userId)
         {
+            var existingVote = _context.Votes.FirstOrDefault(x => x.VoteCategoryId == newVote.VoteCategoryId && x.ParticipantId == newVote.ParticipantId && x.SubCompetitionId == newVote.SubCompetitionId && x.UserId == userId);
+
             Vote vote = new()
             {
                 RecordGuid = Guid.NewGuid(),
@@ -97,5 +132,7 @@ namespace Eurovision.Services
         public List<Vote> GetAllVotes(Guid subcompetitionId);
 
         public Vote UpdateVote(Vote vote, Guid userId);
+
+        public List<Vote> GetRoomVotesForSubcompetition(Guid roomId, Guid subcompetitionId);
     }
 }
