@@ -58,6 +58,8 @@ class AuthService {
         if(response.ok) {
           return response.json();
         }
+
+        EventBus.dispatch('logout');
       })
       .then(response => {
         if (response.token) {
@@ -69,7 +71,7 @@ class AuthService {
         return false;
       })
     }
-
+    EventBus.dispatch('logout');
     return false;
   }
 }

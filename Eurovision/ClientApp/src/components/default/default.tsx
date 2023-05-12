@@ -36,12 +36,10 @@ const Default: FunctionComponent = () => {
   }, []);
 
   const logout = () => {
-    console.log('in the logout');
     AuthService.logout();
   }
 
   const navigate = (e: CustomEvent): void => {
-    console.log(e);
     nav(e.detail);
   }
 

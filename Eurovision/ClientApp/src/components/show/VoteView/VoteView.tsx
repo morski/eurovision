@@ -60,9 +60,11 @@ const VoteView: FunctionComponent<IVoteViewProps> = ({ showType, year, order, ha
         setVoteCategories(response);
         EventService.getSubcompetition(year, showType)
         .then(subcompetition => {
-          setSubcompetition(subcompetition);
-          setLoaded(true);
-          setParticipants([...subcompetition.participants]);
+          if(subcompetition){
+            setSubcompetition(subcompetition);
+            setLoaded(true);
+            setParticipants([...subcompetition.participants]);
+          }
         });
       });
     }
