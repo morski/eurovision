@@ -50,7 +50,7 @@ const Home: FunctionComponent<Props> = ({ event, user }) => {
   return (
     <Container maxWidth='md' sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', p: '16px'}} >
       <Box sx={{borderRadius: '4px', backgroundColor: '#1D1B54', display: 'flex', flexDirection: 'column', alignItems: 'center', py: '16px', width: '100%'}}>
-        <Box component="img" src={`/images/${event.year}/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png`} alt="Eurovision Logo" sx={{width: '75%'}} />
+        <Box component="img" src={`/images/${event.year}/logo/eurovision_${event.year}_white.png`} alt="Eurovision Logo" sx={{width: '75%'}} />
         <Box sx={{my: '16px'}}> 
           <Typography textAlign="center" fontFamily={'gotham-book'} fontSize={'25px'} color={'#FF0087'} fontWeight={600} textTransform={"uppercase"} >Welcome {user.username}!</Typography>
         </Box>

@@ -100,6 +100,19 @@ class EventService {
     localStorage.setItem('activeEvent', JSON.stringify(event));
   }
 
+  getActiveEventYear = (): Promise<string | undefined> => {
+    return fetch(API_URL + "event/active/year", {
+      headers: new Headers({'content-type': 'application/json'}),
+      mode: "cors",
+    })
+      .then(async response => {
+        if(response.ok) {
+            return (await response.text()).replaceAll('\"', '');
+        }})
+        .then(response => {
+          return response;
+        });
+  }
   
 }
 

@@ -57,6 +57,11 @@ namespace Eurovision.Services
 
             return new SubCompetitionResultView(subCompetition, allVOtes);
         }
+
+        public string GetActiveEventYear()
+        {
+            return _context.Events.FirstOrDefault(e => e.IsActive == true).Year;
+        }
     }
 
     public interface IEurovisionService
@@ -68,5 +73,7 @@ namespace Eurovision.Services
         public Event? GetEvent(int year);
 
         public Event? GetActiveEvent();
+
+        public string GetActiveEventYear();
     }
 }

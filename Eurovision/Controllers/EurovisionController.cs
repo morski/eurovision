@@ -47,5 +47,13 @@ namespace Eurovision.Controllers
             var result = new JsonResult(_eurovisionService.GetActiveEvent());
             return result;
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("event/active/year")]
+        public IActionResult GetEventYear()
+        {
+            return new JsonResult(_eurovisionService.GetActiveEventYear());
+        }
     }
 }

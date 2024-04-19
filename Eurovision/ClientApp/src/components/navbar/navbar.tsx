@@ -60,7 +60,7 @@ const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
                             cursor: 'pointer'
                         }}
                         alt="Your logo."
-                        src={`/images/${year}/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png`}
+                        src={`/images/${year}/logo/eurovision_${year}_white.png`}
                         onClick={() => navigateToPage("/")}
 
                     />
@@ -123,7 +123,7 @@ const Navbar: FunctionComponent<INavbarProps> = ({ user, year }) => {
                                 mb: 1,
                             }}
                             alt="Eurovision Logo"
-                            src={`/images/${year}/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png`}
+                            src={`/images/${year}/logo/eurovision_${year}_white.png`}
                         />
                     </Box>
 

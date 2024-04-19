@@ -1,7 +1,8 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import './login.css'
 
 import AuthService from "../../services/auth.service";
+import EventService from "../../services/event.service";
 import { useNavigate } from "react-router";
 import { Box, Button, CircularProgress, TextField, styled, useMediaQuery } from "@mui/material";
 import { error } from "console";
@@ -55,6 +56,7 @@ const Login: FunctionComponent = () => {
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
+  const [eventYear, setEventYear] = useState<string>('');
 
   const navigate = useNavigate();
 
@@ -87,6 +89,18 @@ const Login: FunctionComponent = () => {
     });
   }
 
+  useEffect(() => {
+    const getEventYear = async () => {
+      const year = await EventService.getActiveEventYear();
+      if(year){
+        setEventYear(year);
+      }
+      
+    }
+    
+    getEventYear();
+  }, [])
+
   const mobile = useMediaQuery('(max-width:600px)');
 
   return (
@@ -106,7 +120,7 @@ const Login: FunctionComponent = () => {
       fontFamily: 'gotham-book',
       py: '16px'}}>
       <Box sx={{maxWidth: mobile ? '100%' : '75%', justifyContent: 'center', paddingBottom: '16px', px: '16px'}}>
-          <Box component="img" src="/images/2023/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png" alt="logo" sx={{maxWidth: '100%'}}/>
+          {eventYear && <Box component="img" src={`/images/${eventYear}/logo/eurovision_${eventYear}_white.png`} alt="logo" sx={{maxWidth: '100%'}}/> }
       </Box>
       <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
         <CssTextField key={'username'} id="outlined-basic" label="Username" variant="outlined" value={username} onChange={(e) => setUsername(e.target.value)}/>

@@ -1,8 +1,9 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import "./register.css";
 import AuthService from "../../services/auth.service";
+import EventService from "../../services/event.service";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, CircularProgress, TextField, styled, useMediaQuery } from "@mui/material";
 
@@ -62,6 +63,8 @@ const Register: FunctionComponent = () => {
   const [message, setMessage] = useState<string>('');
   const navigate = useNavigate();
 
+  const [eventYear, setEventYear] = useState<string>('');
+
   const handleRegister = () => {
     
     if(username.length == 0 || password.length == 0) {
@@ -108,6 +111,18 @@ const Register: FunctionComponent = () => {
       });
   }
 
+  useEffect(() => {
+    const getEventYear = async () => {
+      const year = await EventService.getActiveEventYear();
+      if(year){
+        setEventYear(year);
+      }
+      
+    }
+    
+    getEventYear();
+  }, [])
+
   const isUserNameValid = () => username.length > 0 || !usernameChanged ? true : false;
   const getUsernameHelperText = () => username.length > 0 || !usernameChanged ? '' : 'Username is empty';
   const isPasswordValid = () => password.length > 0 || !passwordChanged ? true : false;
@@ -132,7 +147,7 @@ const Register: FunctionComponent = () => {
       fontFamily: 'gotham-book',
       py: '16px'}}>
       <Box sx={{maxWidth: mobile ? '100%' : '75%', justifyContent: 'center', paddingBottom: '16px', px: '16px'}}>
-          <Box component="img" src="/images/2023/logo/ESC2023_Ukraine_LIVERPOOL_RGB_White.png" alt="logo" sx={{maxWidth: '100%'}}/>
+        {eventYear && <Box component="img" src={`/images/${eventYear}/logo/eurovision_${eventYear}_white.png`} alt="logo" sx={{maxWidth: '100%'}}/> }
       </Box>
       <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
         <CssTextField error={!isUserNameValid()} helperText={getUsernameHelperText()} key={'username'} id="outlined-basic" label="Username" variant="outlined" value={username} onChange={(e) => {setUsername(e.target.value); setUsernameChanged(true)}}/>
