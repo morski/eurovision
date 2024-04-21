@@ -8,29 +8,17 @@ import EventService from "../../services/event.service";
 import IEurovisionEvent from "../../types/event.type";
 import IUser from "../../types/user.type";
 
-<<<<<<< HEAD
-import "./default.css";
-import Admin from "../admin/admin";
-import Room from "../room/room";
-=======
 import Home from "../Home/Home";
 import Navbar from "../Navbar/Navbar";
 import Profile from "../profile.component";
 import Room from "../Room/Room";
 import Show from "../Show/Show";
->>>>>>> 088ed8e (Changed components into JSX elements with function declaration. Renamed components. Organized imports.)
 
 import "./Default.css";
 
 function Default() {
   const [currentUser, setCurrentUser] = useState<IUser>({} as IUser);
-<<<<<<< HEAD
   const [activeEvent, setActiveEvent] = useState<IEurovisionEvent | null>(null);
-=======
-  const [activeEvent, setActiveEvent] = useState<IEurovisionEvent>({
-    year: 2024,
-  } as IEurovisionEvent);
->>>>>>> 088ed8e (Changed components into JSX elements with function declaration. Renamed components. Organized imports.)
   const nav = useNavigate();
 
   useEffect(() => {
