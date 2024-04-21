@@ -1,10 +1,12 @@
-import { Box, Button, Container, Typography, styled } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import IEurovisionEvent from "../../types/event.type";
 import IRoom from "../../types/room.type";
 import IUser from "../../types/user.type";
+
+import StyledButton from "../shared/StyledButton/StyledButton";
 
 import RoomService from "../../services/room.service";
 
@@ -14,16 +16,6 @@ type HomeProps = {
   event: IEurovisionEvent;
   user: IUser;
 };
-
-const StyledButton = styled(Button)({
-  borderColor: "white",
-  color: "white",
-  fontFamily: "gotham-book",
-  margin: "16px 0",
-  "&:hover": {
-    borderColor: "white",
-  },
-});
 
 function Home({ event, user }: HomeProps) {
   const [rooms, setRooms] = useState<IRoom[]>([]);
@@ -85,7 +77,7 @@ function Home({ event, user }: HomeProps) {
             Welcome {user.username}!
           </Typography>
         </Box>
-        {rooms.length === 0 && (
+        {rooms.length !== 0 && (
           <Box
             sx={{
               display: "flex",
@@ -103,11 +95,7 @@ function Home({ event, user }: HomeProps) {
               You have not yet joined any party rooms. Click below to join or
               create some party rooms!
             </Typography>
-            <StyledButton
-              variant='outlined'
-              size='large'
-              onClick={() => nav("/rooms")}
-            >
+            <StyledButton onClick={() => nav("/rooms")}>
               Manage rooms
             </StyledButton>
           </Box>

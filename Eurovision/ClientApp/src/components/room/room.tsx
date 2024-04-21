@@ -6,13 +6,14 @@ import IRoom from "../../types/room.type";
 
 import {
   Box,
-  Button,
   Container,
   Divider,
   TextField,
   Typography,
   styled,
 } from "@mui/material";
+
+import StyledButton from "../shared/StyledButton/StyledButton";
 
 const CssTextField = styled(TextField)({
   paddingBottom: "16px",
@@ -45,16 +46,6 @@ const CssTextField = styled(TextField)({
     "& .MuiOutlinedInput-input": {
       color: "white",
     },
-  },
-});
-
-const StyledButton = styled(Button)({
-  borderColor: "white",
-  color: "white",
-  fontFamily: "gotham-book",
-  margin: "16px 0",
-  "&:hover": {
-    borderColor: "white",
   },
 });
 
@@ -190,12 +181,8 @@ function Room() {
             width: "100%",
           }}
         >
-          <StyledButton variant='outlined' size='large' onClick={joinRoom}>
-            Join
-          </StyledButton>
-          <StyledButton variant='outlined' size='large' onClick={createRoom}>
-            Create
-          </StyledButton>
+          <StyledButton onClick={joinRoom}>Join</StyledButton>
+          <StyledButton onClick={createRoom}>Create</StyledButton>
         </Box>
         {errorMessage !== "" && <Box sx={{ my: "16px" }}>{errorMessage}</Box>}
         {rooms && rooms.length > 0 && (
@@ -233,11 +220,7 @@ function Room() {
                   >
                     {index + 1}. {room.name}
                   </Typography>
-                  <StyledButton
-                    variant='outlined'
-                    size='large'
-                    onClick={() => leaveRoom(room.id)}
-                  >
+                  <StyledButton onClick={() => leaveRoom(room.id)}>
                     Leave
                   </StyledButton>
                 </Box>

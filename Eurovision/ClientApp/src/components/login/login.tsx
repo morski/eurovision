@@ -6,12 +6,13 @@ import EventService from "../../services/event.service";
 
 import {
   Box,
-  Button,
   CircularProgress,
   TextField,
   styled,
   useMediaQuery,
 } from "@mui/material";
+
+import StyledButton from "../shared/StyledButton/StyledButton";
 
 import "./Login.css";
 
@@ -46,16 +47,6 @@ const CssTextField = styled(TextField)({
     "& .MuiOutlinedInput-input": {
       color: "white",
     },
-  },
-});
-
-const StyledButton = styled(Button)({
-  borderColor: "white",
-  color: "white",
-  fontFamily: "gotham-book",
-  margin: "16px 0",
-  "&:hover": {
-    borderColor: "white",
   },
 });
 
@@ -181,19 +172,11 @@ function Login() {
         <Box sx={{ display: loading ? "block" : "none" }}>
           <CircularProgress />
         </Box>
-        <StyledButton
-          variant='outlined'
-          size='large'
-          onClick={() => handleLogin()}
-        >
-          Login
-        </StyledButton>
+        <StyledButton onClick={() => handleLogin()}>Login</StyledButton>
       </Box>
       <Box>OR</Box>
       <Box>
-        <StyledButton variant='outlined' size='large' href='/register'>
-          Register
-        </StyledButton>
+        <StyledButton href='/register'>Register</StyledButton>
       </Box>
     </Box>
   );
