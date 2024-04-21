@@ -4,51 +4,12 @@ import { useNavigate } from "react-router";
 import AuthService from "../../services/auth.service";
 import EventService from "../../services/event.service";
 
-import {
-  Box,
-  CircularProgress,
-  TextField,
-  styled,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, CircularProgress, useMediaQuery } from "@mui/material";
 
 import StyledButton from "../shared/StyledButton/StyledButton";
+import StyledTextField from "../shared/StyledTextField/StyledTextField";
 
 import "./Login.css";
-
-const CssTextField = styled(TextField)({
-  paddingBottom: "16px",
-  color: "white",
-  width: "75%",
-  fontFamily: "gotham-book",
-  "& label.Mui-focused": {
-    color: "white",
-  },
-  "& label": {
-    color: "white",
-    fontFamily: "gotham-book",
-  },
-  "& .MuiInput-underline:after": {
-    borderBottomColor: "white",
-  },
-  "& .MuiOutlinedInput-root": {
-    fontFamily: "gotham-book",
-    "& fieldset": {
-      borderColor: "white",
-      color: "white",
-    },
-    "&:hover fieldset": {
-      borderColor: "white",
-      borderWidth: "2px",
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "white",
-    },
-    "& .MuiOutlinedInput-input": {
-      color: "white",
-    },
-  },
-});
 
 function Login() {
   const [username, setUsername] = useState<string>("");
@@ -151,20 +112,18 @@ function Login() {
           width: "100%",
         }}
       >
-        <CssTextField
-          key={"username"}
+        <StyledTextField
+          fieldKey={"username"}
           id='outlined-basic'
           label='Username'
-          variant='outlined'
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <CssTextField
-          key={"password"}
+        <StyledTextField
+          fieldKey={"password"}
           id='outlined-basic'
           label='Password'
           type='password'
-          variant='outlined'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />

@@ -4,51 +4,12 @@ import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.service";
 import EventService from "../../services/event.service";
 
-import {
-  Box,
-  CircularProgress,
-  TextField,
-  styled,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, CircularProgress, useMediaQuery } from "@mui/material";
 
 import StyledButton from "../shared/StyledButton/StyledButton";
+import StyledTextField from "../shared/StyledTextField/StyledTextField";
 
 import "./Register.css";
-
-const CssTextField = styled(TextField)({
-  paddingBottom: "16px",
-  color: "white",
-  width: "75%",
-  fontFamily: "gotham-book",
-  "& label.Mui-focused": {
-    color: "white",
-  },
-  "& label": {
-    color: "white",
-    fontFamily: "gotham-book",
-  },
-  "& .MuiInput-underline:after": {
-    borderBottomColor: "white",
-  },
-  "& .MuiOutlinedInput-root": {
-    fontFamily: "gotham-book",
-    "& fieldset": {
-      borderColor: "white",
-      color: "white",
-    },
-    "&:hover fieldset": {
-      borderColor: "white",
-      borderWidth: "2px",
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "white",
-    },
-    "& .MuiOutlinedInput-input": {
-      color: "white",
-    },
-  },
-});
 
 function Register() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -175,27 +136,25 @@ function Register() {
           width: "100%",
         }}
       >
-        <CssTextField
+        <StyledTextField
           error={!isUserNameValid()}
           helperText={getUsernameHelperText()}
-          key={"username"}
-          id='outlined-basic'
+          fieldKey={"username"}
+          id='username'
           label='Username'
-          variant='outlined'
           value={username}
           onChange={(e) => {
             setUsername(e.target.value);
             setUsernameChanged(true);
           }}
         />
-        <CssTextField
+        <StyledTextField
           error={!isPasswordValid()}
           helperText={getPasswordHelperText()}
-          key={"password"}
-          id='outlined-basic'
+          fieldKey={"password"}
+          id='password'
           label='Password'
           type='password'
-          variant='outlined'
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);

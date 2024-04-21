@@ -1,0 +1,43 @@
+/* Rewrite this mess */
+
+div.textfield--styled {
+  color: white;
+  font-family: "gotham-book";
+  padding-bottom: 1rem;
+  width: 75%;
+}
+
+div.textfield--styled label {
+  color: white;
+  font-family: inherit;
+}
+
+div.textfield--styled label.Mui-focused {
+  color: white;
+}
+
+div.textfield--styled .MuiInput-underline:after {
+  border-bottom-color: white;
+}
+
+div.textfield--styled .MuiOutlinedInput-root {
+  font-family: "gotham-book";
+}
+
+div.textfield--styled .MuiOutlinedInput-root fieldset {
+  border-color: white;
+  color: white;
+}
+
+div.textfield--styled .MuiOutlinedInput-root:hover fieldset {
+  border-color: white;
+  border-width: 2px;
+}
+
+div.textfield--styled .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: white;
+}
+
+div.textfield--styled .MuiOutlinedInput-root .MuiOutlinedInput-input {
+  color: white;
+}

@@ -4,50 +4,10 @@ import RoomService from "../../services/room.service";
 
 import IRoom from "../../types/room.type";
 
-import {
-  Box,
-  Container,
-  Divider,
-  TextField,
-  Typography,
-  styled,
-} from "@mui/material";
+import { Box, Container, Divider, Typography } from "@mui/material";
 
 import StyledButton from "../shared/StyledButton/StyledButton";
-
-const CssTextField = styled(TextField)({
-  paddingBottom: "16px",
-  color: "white",
-  width: "75%",
-  fontFamily: "gotham-book",
-  "& label.Mui-focused": {
-    color: "white",
-  },
-  "& label": {
-    color: "white",
-    fontFamily: "gotham-book",
-  },
-  "& .MuiInput-underline:after": {
-    borderBottomColor: "white",
-  },
-  "& .MuiOutlinedInput-root": {
-    fontFamily: "gotham-book",
-    "& fieldset": {
-      borderColor: "white",
-      color: "white",
-    },
-    "&:hover fieldset": {
-      borderColor: "white",
-      borderWidth: "2px",
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "white",
-    },
-    "& .MuiOutlinedInput-input": {
-      color: "white",
-    },
-  },
-});
+import StyledTextField from "../shared/StyledTextField/StyledTextField";
 
 function Room() {
   const [rooms, setRooms] = useState<Array<IRoom>>();
@@ -158,19 +118,17 @@ function Room() {
         >
           Party Rooms
         </Typography>
-        <CssTextField
-          key={"roomName"}
+        <StyledTextField
+          fieldKey={"roomName"}
           id='outlined-basic'
           label='Room name'
-          variant='outlined'
           value={roomName}
           onChange={(e) => setRoomName(e.target.value)}
         />
-        <CssTextField
-          key={"roomPassword"}
+        <StyledTextField
+          fieldKey={"roomPassword"}
           id='outlined-basic'
           label='Password'
-          variant='outlined'
           value={roomPassword}
           onChange={(e) => setRoomPassword(e.target.value)}
         />
