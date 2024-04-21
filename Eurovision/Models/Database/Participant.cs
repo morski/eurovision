@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Eurovision.Models.Database;
@@ -7,13 +8,8 @@ namespace Eurovision.Models.Database;
 public partial class Participant
 {
     [JsonIgnore]
-    public Guid RecordGuid { get; set; }
-
-    [JsonIgnore]
-    public Guid CountryId { get; set; }
-
-    [JsonIgnore]
-    public Guid EventId { get; set; }
+    [Key]
+    public int Id { get; set; }
 
     public string? Artist { get; set; }
 

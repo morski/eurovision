@@ -4,7 +4,7 @@ namespace Eurovision.Views
 {
     public class ParticipantView
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public string Artist { get; set; } = null!;
 

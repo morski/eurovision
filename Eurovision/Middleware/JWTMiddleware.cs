@@ -93,7 +93,7 @@ namespace Middleware
                 // attach account to context on successful jwt validation
                 using var scope = _services.CreateScope();
                 var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
-                context.Items["User"] = userService.GetUserDetails(Guid.Parse(userId));
+                context.Items["User"] = userService.GetUserDetails(int.Parse(userId));
             }
             catch { }
         }

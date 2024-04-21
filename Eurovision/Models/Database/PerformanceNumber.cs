@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Eurovision.Models.Database;
@@ -7,13 +8,8 @@ namespace Eurovision.Models.Database;
 public partial class PerformanceNumber
 {
     [JsonIgnore]
-    public Guid RecordGuid { get; set; }
-
-    [JsonIgnore]
-    public Guid? SubCompetitionId { get; set; }
-
-    [JsonIgnore]
-    public Guid? ParticipantId { get; set; }
+    [Key]
+    public int Id { get; set; }
 
     public int? PerformanceNr { get; set; }
 

@@ -6,7 +6,7 @@ namespace Eurovision.Models.Database;
 
 public partial class VoteCategory
 {
-    public Guid RecordGuid { get; set; }
+    public int Id { get; set; }
 
     public string? VoteName { get; set; }
 

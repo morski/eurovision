@@ -47,13 +47,14 @@ namespace Eurovision.Controllers
         [HttpPost("CreateUser")]
         public IActionResult Create([FromBody] User request)
         {
-            User user = new User();
-            user.RecordGuid = Guid.NewGuid();
-            user.Username = request.Username;
-            user.Password = request.Password;
-            user.FirstName = request.FirstName;
-            user.LastName = request.LastName;
-            
+            User user = new()
+            {
+                Username = request.Username,
+                Password = request.Password,
+                FirstName = request.FirstName,
+                LastName = request.LastName
+            };
+
             try {
                 _context.Users.Add(user);
                 _context.SaveChanges();
@@ -70,7 +71,7 @@ namespace Eurovision.Controllers
         public IActionResult Update([FromBody] User request)
         {
             try {
-                var user = _context.Users.FirstOrDefault(x => x.RecordGuid == request.RecordGuid);
+                var user = _context.Users.FirstOrDefault(x => x.Id == request.Id);
                 if(user == null)
                 {
                     return StatusCode(404, "User not found");
@@ -90,11 +91,11 @@ namespace Eurovision.Controllers
             var users = _context.Users.ToList();
             return Ok(users);
         }
-        [HttpDelete("DeleteUser/{record_guid}")]
-        public IActionResult Delete([FromRoute] Guid record_guid)
+        [HttpDelete("DeleteUser/{userId}")]
+        public IActionResult Delete([FromRoute] int userId)
         {
             try {
-                var user = _context.Users.FirstOrDefault(x => x.RecordGuid == record_guid);
+                var user = _context.Users.FirstOrDefault(x => x.Id == userId);
                 if (user == null)
                 {
                     return StatusCode(404, "User not found");

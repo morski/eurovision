@@ -1,6 +1,7 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Eurovision.Models.Database;
@@ -8,7 +9,8 @@ namespace Eurovision.Models.Database;
 public partial class User
 {
     [SwaggerSchema(ReadOnly = true)]
-    public Guid RecordGuid { get; set; }
+    [Key]
+    public int Id { get; set; }
 
     public string Username { get; set; } = null!;
 
@@ -17,6 +19,9 @@ public partial class User
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }
+
+    [SwaggerSchema(ReadOnly = true)]
+    public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 
     [SwaggerSchema(ReadOnly = true)]
     public virtual ICollection<Vote> Votes { get; set; } = new List<Vote>();

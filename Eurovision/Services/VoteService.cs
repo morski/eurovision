@@ -14,11 +14,11 @@ namespace Eurovision.Services
             _context = context;
         }
 
-        public List<Vote> GetAllVotes(Guid subcompetitionId)
+        public List<Vote> GetAllVotes(int subcompetitionId)
         {
             try
             {
-                return _context.Votes.Include(v => v.VoteCategory).Where(v => v.SubCompetitionId == subcompetitionId).ToList();
+                return _context.Votes.Include(v => v.VoteCategory).Where(v => v.SubCompetition.Id == subcompetitionId).ToList();
             }
             catch (Exception)
             {
@@ -26,16 +26,18 @@ namespace Eurovision.Services
             }
         }
 
-        public List<Vote> GetRoomVotesForSubcompetition(Guid roomId, Guid subcompetitionId)
+        public List<Vote> GetRoomVotesForSubcompetition(int roomId, int subcompetitionId)
         {
             try
             {
                 var room = _context.Rooms.Include(r => r.RoomUsers).FirstOrDefault(r => r.Id == roomId);
+                var subCompetition = _context.SubCompetitions.FirstOrDefault(s => s.Id == subcompetitionId);
+
                 if(room != null) 
                 {
-                    var userIds = room.RoomUsers.Select(user => user.UserId).ToList();
+                    var users = room.RoomUsers.Select(user => user.User).ToList();
 
-                    return _context.Votes.Include(v => v.VoteCategory).Include(v => v.User).Where(v => v.SubCompetitionId == subcompetitionId && userIds.Contains(v.UserId)).ToList();
+                    return _context.Votes.Include(v => v.VoteCategory).Include(v => v.User).Include(v => v.SubCompetition).Where(v => v.SubCompetition == subCompetition && users.Contains(v.User)).ToList();
                 }
 
                 throw new ArgumentException("Invalid room");
@@ -46,12 +48,12 @@ namespace Eurovision.Services
             }
         }
 
-        public List<Vote> GetUserVotes(Guid userId, Guid subcompetitionId)
+        public List<Vote> GetUserVotes(int userId, int subcompetitionId)
         {
             return _context.Votes
                 .Include(v => v.VoteCategory)
                 .Include(v => v.Participant)
-                .Where(v => v.UserId == userId && v.SubCompetitionId == subcompetitionId).ToList();
+                .Where(v => v.User.Id == userId && v.SubCompetition.Id == subcompetitionId).ToList();
         }
 
         public List<VoteCategoryView> GetVoteCategories()
@@ -60,11 +62,11 @@ namespace Eurovision.Services
             return VoteCategoryView.ConvertVoteCategoriesToVoteCategoryViews(voteCategories);
         }
 
-        public Vote UpdateVote(Vote updatedVote, Guid userId)
+        public Vote UpdateVote(Vote updatedVote, int userId)
         {
             try
             {
-                var votes = _context.Votes.Where(x => x.VoteCategoryId == updatedVote.VoteCategoryId && x.ParticipantId == updatedVote.ParticipantId && x.SubCompetitionId == updatedVote.SubCompetitionId && x.UserId == userId).ToList();
+                var votes = _context.Votes.Where(x => x.VoteCategory.Id == updatedVote.VoteCategory.Id && x.Participant.Id == updatedVote.Participant.Id && x.SubCompetition.Id == updatedVote.SubCompetition.Id && x.User.Id == userId).ToList();
 
                 if(votes.Any())
                 {
@@ -96,17 +98,16 @@ namespace Eurovision.Services
             }
         }
 
-        private Vote AddVote(Vote newVote, Guid userId)
+        private Vote AddVote(Vote newVote, int userId)
         {
-            var existingVote = _context.Votes.FirstOrDefault(x => x.VoteCategoryId == newVote.VoteCategoryId && x.ParticipantId == newVote.ParticipantId && x.SubCompetitionId == newVote.SubCompetitionId && x.UserId == userId);
+            var existingVote = _context.Votes.FirstOrDefault(x => x.VoteCategory.Id == newVote.VoteCategory.Id && x.Participant.Id == newVote.Participant.Id && x.SubCompetition.Id == newVote.SubCompetition.Id && x.User.Id == userId);
 
             Vote vote = new()
             {
-                RecordGuid = Guid.NewGuid(),
-                ParticipantId = newVote.ParticipantId,
-                VoteCategoryId = newVote.VoteCategoryId,
-                SubCompetitionId = newVote.SubCompetitionId,
-                UserId = userId,
+                Participant = newVote.Participant,
+                SubCompetition = newVote.SubCompetition,
+                VoteCategory = newVote.VoteCategory,
+                User = newVote.User,
                 VoteAmount = newVote.VoteAmount
             };
 
@@ -125,14 +126,14 @@ namespace Eurovision.Services
 
     public interface IVoteService
     {
-        public List<Vote> GetUserVotes(Guid userId, Guid subcompetitionId);
+        public List<Vote> GetUserVotes(int userId, int subcompetitionId);
 
         public List<VoteCategoryView> GetVoteCategories();
 
-        public List<Vote> GetAllVotes(Guid subcompetitionId);
+        public List<Vote> GetAllVotes(int subcompetitionId);
 
-        public Vote UpdateVote(Vote vote, Guid userId);
+        public Vote UpdateVote(Vote vote, int userId);
 
-        public List<Vote> GetRoomVotesForSubcompetition(Guid roomId, Guid subcompetitionId);
+        public List<Vote> GetRoomVotesForSubcompetition(int roomId, int subcompetitionId);
     }
 }

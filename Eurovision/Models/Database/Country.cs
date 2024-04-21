@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Eurovision.Models.Database;
@@ -8,7 +9,8 @@ namespace Eurovision.Models.Database;
 public partial class Country
 {
     [JsonIgnore]
-    public Guid RecordGuid { get; set; }
+    [Key]
+    public int Id { get; set; }
 
     public string? Name { get; set; }
 

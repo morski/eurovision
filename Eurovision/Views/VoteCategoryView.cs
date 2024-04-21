@@ -4,7 +4,7 @@ namespace Eurovision.Views
 {
     public class VoteCategoryView
     {
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
         public string Name { get; set; }
 
@@ -12,7 +12,7 @@ namespace Eurovision.Views
         {
             return voteCategories.Select(v => new VoteCategoryView
             {
-                CategoryId = v.RecordGuid,
+                CategoryId = v.Id,
                 Name = v.VoteName
             }).ToList();
         }

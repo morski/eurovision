@@ -7,13 +7,13 @@ namespace Eurovision.Views
     {
         public SubCompetitionView(SubCompetition subCompetition, List<Vote> votes)
         {
-            Id = subCompetition.RecordGuid;
+            Id = subCompetition.Id;
             Name = subCompetition.Name;
             Participants = subCompetition.PerformanceNumbers.Select(x =>
             {
                 return new ParticipantView
                 {
-                    Id = x.Participant.RecordGuid,
+                    Id = x.Participant.Id,
                     Artist = x.Participant.Artist,
                     Song = x.Participant.Song,
                     Order = x.PerformanceNr,
@@ -21,13 +21,13 @@ namespace Eurovision.Views
                     {
                         Name = x.Participant.Country.Name
                     },
-                    Votes = VoteView.ConvertVotesToVoteView(votes.Where(v => v.ParticipantId == x.ParticipantId).ToList()),
+                    Votes = VoteView.ConvertVotesToVoteView(votes.Where(v => v.Participant.Id == x.Participant.Id).ToList()),
                 };
 
             }).ToList();
         }
 
-        public Guid? Id { get; set; } = null;
+        public int? Id { get; set; } = null;
 
         public string Name { get; set; } = null!;
 

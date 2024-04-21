@@ -21,9 +21,9 @@ namespace Eurovision.Services
             _configuration = configuration;
         }
 
-        public User? GetUserDetails(Guid userId)
+        public User? GetUserDetails(int userId)
         {
-            return _context.Users.FirstOrDefault(u => u.RecordGuid == userId);
+            return _context.Users.FirstOrDefault(u => u.Id == userId);
         }
 
         public User? GetUserDetails(string username)
@@ -44,7 +44,6 @@ namespace Eurovision.Services
                     }
 
                     newUser.Validate();
-                    newUser.RecordGuid = Guid.NewGuid();
 
                     PasswordHasher hasher = new();
                     var hashedPassword = hasher.Hash(newUser.Password);
@@ -53,9 +52,10 @@ namespace Eurovision.Services
 
                     _context.Users.Add(newUser);
                     _context.SaveChanges();
-                    var token = new JwtUtil(_configuration).GenerateJwtToken(newUser.RecordGuid, 1, false);
-                    var refreshToken = new JwtUtil(_configuration).GenerateJwtToken(newUser.RecordGuid, 24, true);
-                    return new { Token = token, RefreshToken = refreshToken, UserId = newUser.RecordGuid, newUser.Username };
+
+                    var token = new JwtUtil(_configuration).GenerateJwtToken(newUser.Id, 1, false);
+                    var refreshToken = new JwtUtil(_configuration).GenerateJwtToken(newUser.Id, 24, true);
+                    return new { Token = token, RefreshToken = refreshToken, UserId = newUser.Id, newUser.Username };
                 }
                     
                 throw new Exception("Shit hit the fan. Try again!");
@@ -71,7 +71,7 @@ namespace Eurovision.Services
 
     public interface IUserService
     {
-        User? GetUserDetails(Guid userId);
+        User? GetUserDetails(int userId);
 
         User? GetUserDetails(string username);
 

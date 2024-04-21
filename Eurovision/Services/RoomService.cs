@@ -14,9 +14,9 @@ namespace Eurovision.Services
             _context = context;
         }
 
-        public bool LeaveRoom(Guid roomId, Guid userId)
+        public bool LeaveRoom(int roomId, int userId)
         {
-            var roomUser = _context.RoomUsers.FirstOrDefault(r => r.UserId == userId && r.RoomId == roomId);
+            var roomUser = _context.RoomUsers.FirstOrDefault(r => r.User.Id == userId && r.Room.Id == roomId);
             if(roomUser != null)
             {
                 _context.Remove(roomUser);
@@ -28,7 +28,7 @@ namespace Eurovision.Services
             return false;
         }
 
-        public RoomView CreateRoom(RoomRequest roomRequest, Guid userId)
+        public RoomView CreateRoom(RoomRequest roomRequest, int userId)
         {
             try
             {
@@ -51,7 +51,6 @@ namespace Eurovision.Services
 
                 var room = new Room
                 {
-                    Id = Guid.NewGuid(),
                     Name = roomRequest.Name,
                     Password = roomRequest.Password,
                 };
@@ -68,25 +67,24 @@ namespace Eurovision.Services
             
         }
 
-        public RoomView JoinRoom(RoomRequest roomRequest, Guid userId)
+        public RoomView JoinRoom(RoomRequest roomRequest, int userId)
         {
             try
             {
                 var room = _context.Rooms.FirstOrDefault(r => r.Name.ToLower() == roomRequest.Name.ToLower() && r.Password.ToLower() == roomRequest.Password.ToLower());
-
+                var user = _context.Users.FirstOrDefault(u => u.Id == userId);
                 if (room != null)
                 {
                     var roomUser = new RoomUser
                     {
-                        Id = Guid.NewGuid(),
-                        RoomId = room.Id,
-                        UserId = userId
+                        Room = room,
+                        User = user
                     };
 
                     _context.RoomUsers.Add(roomUser);
                     _context.SaveChanges();
 
-                    return new RoomView { Id = room.Id, Name = room.Name };
+                    return new RoomView(room) ;
                 }
 
                 throw new Exception("Room not found. Please check room name and/or password");
@@ -97,20 +95,20 @@ namespace Eurovision.Services
             }
         }
 
-        public RoomView[] GetAllRoomsForUser(Guid userId)
+        public RoomView[] GetAllRoomsForUser(int userId)
         {
-            return _context.RoomUsers.Include(r => r.Room).Where(r => r.UserId == userId).Select(r => new RoomView { Id = r.Room.Id, Name = r.Room.Name }).ToArray();
+            return _context.RoomUsers.Where(r => r.User.Id == userId).Select(r => new RoomView(r.Room)).ToArray();
         }
     }
 
     public interface IRoomService
     {
-        public RoomView JoinRoom(RoomRequest roomRequest, Guid userId);
+        public RoomView JoinRoom(RoomRequest roomRequest, int userId);
 
-        public RoomView CreateRoom(RoomRequest roomRequest, Guid userId);
+        public RoomView CreateRoom(RoomRequest roomRequest, int userId);
 
-        public RoomView[] GetAllRoomsForUser(Guid userId);
+        public RoomView[] GetAllRoomsForUser(int userId);
 
-        public bool LeaveRoom(Guid roomId, Guid userId);
+        public bool LeaveRoom(int roomId, int userId);
     }
 }

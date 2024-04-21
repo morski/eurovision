@@ -31,7 +31,7 @@ namespace Eurovision.Controllers
             }
 
             //TODO Fix sub id
-            return new JsonResult(_voteService.GetUserVotes(user.RecordGuid, Guid.Empty));
+            return new JsonResult(_voteService.GetUserVotes(user.Id, 1));
         }
 
         [HttpGet]
@@ -46,7 +46,7 @@ namespace Eurovision.Controllers
         public IActionResult GetAllVotes()
         {
             //TODO Fix sub id
-            return new JsonResult(_voteService.GetAllVotes(Guid.Empty));
+            return new JsonResult(_voteService.GetAllVotes(1));
         }
 
         [HttpPut]
@@ -58,7 +58,7 @@ namespace Eurovision.Controllers
                 return StatusCode(404, "User not found");
             }
 
-            return new JsonResult(_voteService.UpdateVote(request, user.RecordGuid));
+            return new JsonResult(_voteService.UpdateVote(request, user.Id));
         }
 
     }

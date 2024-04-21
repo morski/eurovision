@@ -28,7 +28,7 @@ var conStrBuilder = new SqlConnectionStringBuilder()
     Password = builder.Configuration["DbPassword"],
     UserID = builder.Configuration["DbUsername"],
     DataSource = builder.Configuration["DbServer"],
-    InitialCatalog = "eurovision",
+    InitialCatalog = "eurovision2",
     TrustServerCertificate = true
 };
 

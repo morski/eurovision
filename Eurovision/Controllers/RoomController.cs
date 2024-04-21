@@ -26,7 +26,7 @@ namespace Eurovision.Controllers
             }
             try
             {
-                return new JsonResult(_roomService.CreateRoom(request, user.RecordGuid));
+                return new JsonResult(_roomService.CreateRoom(request, user.Id));
             }
             catch (Exception ex)
             {
@@ -44,7 +44,7 @@ namespace Eurovision.Controllers
 
             try
             {
-                return new JsonResult(_roomService.JoinRoom(request, user.RecordGuid));
+                return new JsonResult(_roomService.JoinRoom(request, user.Id));
             }
             catch (Exception ex)
             {
@@ -53,7 +53,7 @@ namespace Eurovision.Controllers
         }
 
         [HttpDelete("leave/{roomId}")]
-        public IActionResult LeaveRoom(Guid roomId)
+        public IActionResult LeaveRoom(int roomId)
         {
             if (HttpContext.Items["User"] is not User user)
             {
@@ -62,7 +62,7 @@ namespace Eurovision.Controllers
 
             try
             {
-                return new JsonResult(_roomService.LeaveRoom(roomId, user.RecordGuid));
+                return new JsonResult(_roomService.LeaveRoom(roomId, user.Id));
             }
             catch (Exception ex)
             {
@@ -78,7 +78,7 @@ namespace Eurovision.Controllers
                 return StatusCode(404, "User not found");
             }
 
-            return new JsonResult(_roomService.GetAllRoomsForUser(user.RecordGuid));
+            return new JsonResult(_roomService.GetAllRoomsForUser(user.Id));
         }
     }
 }

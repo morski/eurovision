@@ -19,7 +19,7 @@ namespace Eurovision.Utils
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        public string GenerateJwtToken(Guid userId, double exipreTimeinHours, bool refreshToken)
+        public string GenerateJwtToken(int userId, double exipreTimeinHours, bool refreshToken)
         {
             var claims = new[] { new Claim("id", userId.ToString()) };
 

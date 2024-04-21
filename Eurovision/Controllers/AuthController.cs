@@ -72,7 +72,7 @@ namespace Eurovision.Controllers
                 var user = HttpContext.Items["User"] as User;
                 if (user != null)
                 {
-                    return new JsonResult(_authService.RefreshToken(user.RecordGuid));
+                    return new JsonResult(_authService.RefreshToken(user.Id));
                 }
 
                 throw new ArgumentNullException(nameof(user));

@@ -34,9 +34,9 @@ namespace Eurovision.Services
                     if(ok)
                     {
                         var jwtUtil = scope.ServiceProvider.GetRequiredService<JwtUtil>();
-                        var token = jwtUtil.GenerateJwtToken(user.RecordGuid, 1, false);
-                        var refreshToken = jwtUtil.GenerateJwtToken(user.RecordGuid, 24, true);
-                        return new { Token = token, RefreshToken = refreshToken, UserId = user.RecordGuid, user.Username };
+                        var token = jwtUtil.GenerateJwtToken(user.Id, 1, false);
+                        var refreshToken = jwtUtil.GenerateJwtToken(user.Id, 24, true);
+                        return new { Token = token, RefreshToken = refreshToken, UserId = user.Id, user.Username };
                     }
                 }
             }
@@ -44,18 +44,18 @@ namespace Eurovision.Services
             throw new Exception("Invalid Username or Password");
         }
 
-        public dynamic RefreshToken(Guid userId)
+        public dynamic RefreshToken(int userId)
         {
             using var scope = _services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<EurovisionContext>();
-            var user = context.Users.FirstOrDefault(u => u.RecordGuid == userId);
+            var user = context.Users.FirstOrDefault(u => u.Id == userId);
 
             if (user != null)
             {
                 var jwtUtil = scope.ServiceProvider.GetRequiredService<JwtUtil>();
                 var token = jwtUtil.GenerateJwtToken(userId, 1, false);
                 var refreshToken = jwtUtil.GenerateJwtToken(userId, 24, true);
-                return new { Token = token, RefreshToken = refreshToken, UserId = user.RecordGuid, user.Username };
+                return new { Token = token, RefreshToken = refreshToken, UserId = user.Id, user.Username };
             }
 
             throw new Exception("Invalid UserId");
@@ -68,6 +68,6 @@ namespace Eurovision.Services
     {
         dynamic ValidateLogin(LoginModel login);
 
-        dynamic RefreshToken(Guid userId);
+        dynamic RefreshToken(int userId);
     }
 }

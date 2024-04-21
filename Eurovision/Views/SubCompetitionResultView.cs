@@ -12,7 +12,7 @@ namespace Eurovision.Views
             {
                 return new ParticipantView
                 {
-                    Id = x.Participant.RecordGuid,
+                    Id = x.Participant.Id,
                     Artist = x.Participant.Artist,
                     Song = x.Participant.Song,
                     Order = x.PerformanceNr,
@@ -20,8 +20,8 @@ namespace Eurovision.Views
                     {
                         Name = x.Participant.Country.Name
                     },
-                    Votes = VoteView.ConvertVotesToVoteView(votes.Where(v => v.ParticipantId == x.ParticipantId).GroupBy(v => v.VoteCategoryId).Select(g => new Vote { VoteCategoryId = g.Key, VoteAmount = g.Sum(v => v.VoteAmount) }).ToList()),
-                    UserVotes = UserVoteView.ConvertVotesToUserVotes(votes.Where(v => v.ParticipantId == x.ParticipantId).ToList())
+                    Votes = VoteView.ConvertVotesToVoteView(votes.Where(v => v.Participant.Id == x.Participant.Id).GroupBy(v => v.VoteCategory.Id).Select(g => new Vote { VoteCategory = g.First().VoteCategory, VoteAmount = g.Sum(v => v.VoteAmount) }).ToList()),
+                    UserVotes = UserVoteView.ConvertVotesToUserVotes(votes.Where(v => v.Participant.Id == x.Participant.Id).ToList())
                 };
 
             }).ToList();

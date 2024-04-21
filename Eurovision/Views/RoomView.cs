@@ -1,8 +1,16 @@
-﻿namespace Eurovision.Views
+﻿using Eurovision.Models.Database;
+
+namespace Eurovision.Views
 {
     public class RoomView
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; } = null!;
+
+        public RoomView(Room room) 
+        { 
+            Id = room.Id;
+            Name = room.Name;
+        }
     }
 }
