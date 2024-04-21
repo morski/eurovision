@@ -15,14 +15,12 @@ import Navbar from "../navbar/navbar";
 
 import "./default.css";
 import Admin from "../admin/admin";
-import IRoom from "../../types/room.type";
-import RoomService from "../../services/room.service";
 import Room from "../room/room";
 
 const Default: FunctionComponent = () => {
 
   const [currentUser, setCurrentUser] = useState<IUser>({} as IUser);
-  const [activeEvent, setActiveEvent] = useState<IEurovisionEvent>({ year: 2023 } as IEurovisionEvent);
+  const [activeEvent, setActiveEvent] = useState<IEurovisionEvent | null>(null);
   const nav = useNavigate();
 
   useEffect(() => {
@@ -49,6 +47,8 @@ const Default: FunctionComponent = () => {
   }
 
   return (
+    <>
+    {activeEvent &&
     <div>
       <Navbar user={currentUser} year={activeEvent.year} />
       <Routes>
@@ -61,6 +61,8 @@ const Default: FunctionComponent = () => {
         <Route path="/rooms" element={<Room />} />
       </Routes>
     </div>
+    }
+    </>
   );
 }
 
