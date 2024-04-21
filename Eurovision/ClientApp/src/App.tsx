@@ -3,9 +3,9 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import Login from "./components/login/login";
-import Default from "./components/default/default";
-import Register from "./components/register/register";
+import Login from "./components/Login/Login";
+import Default from "./components/Default/Default";
+import Register from "./components/Register/Register";
 import './App.css';
 
 const router = createBrowserRouter([

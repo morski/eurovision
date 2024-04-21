@@ -1,0 +1,12 @@
+button.button--styled,
+a.button--styled {
+  border-color: white;
+  color: white;
+  font-family: "gotham-book";
+  margin: 16px 0;
+}
+
+button.button--styled:hover,
+a.button--styled:hover {
+  border-color: white;
+}
