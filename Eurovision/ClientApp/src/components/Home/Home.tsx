@@ -1,14 +1,11 @@
 import { Box, Container, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import IEurovisionEvent from "../../types/event.type";
-import IRoom from "../../types/room.type";
 import IUser from "../../types/user.type";
 
 import StyledButton from "../shared/StyledButton/StyledButton";
-
-import RoomService from "../../services/room.service";
+import { useGetRooms } from "../../hooks/useRooms";
 
 import "./Home.css";
 
@@ -18,21 +15,14 @@ type HomeProps = {
 };
 
 function Home({ event, user }: HomeProps) {
-  const [rooms, setRooms] = useState<IRoom[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>("");
   const nav = useNavigate();
   const isMissingEventInfo =
     !event.participants || !event.city || !event.country;
 
-  useEffect(() => {
-    RoomService.GetRooms().then((res) => {
-      if (res.ok) {
-        res.json().then((res) => setRooms(res));
-      } else {
-        res.json().then((res) => setErrorMessage(res));
-      }
-    });
-  }, []);
+  const { data, isLoading, error } = useGetRooms();
+  const rooms = data ?? [];
+
+  console.log(rooms)
 
   if (isMissingEventInfo) {
     return <div />;
@@ -65,19 +55,22 @@ function Home({ event, user }: HomeProps) {
           alt='Eurovision Logo'
           sx={{ width: "75%" }}
         />
-        <Box sx={{ my: "16px" }}>
-          <Typography
-            textAlign='center'
-            fontFamily={"gotham-book"}
-            fontSize={"25px"}
-            color={"#FF0087"}
-            fontWeight={600}
-            textTransform={"uppercase"}
-          >
-            Welcome {user.username}!
-          </Typography>
-        </Box>
-        {rooms.length !== 0 && (
+        {isLoading && <p>Loading...</p>}
+        {!isLoading && (
+          <Box sx={{ my: "16px" }}>
+            <Typography
+              textAlign='center'
+              fontFamily={"gotham-book"}
+              fontSize={"25px"}
+              color={"#FF0087"}
+              fontWeight={600}
+              textTransform={"uppercase"}
+            >
+              Welcome {user.username}!
+            </Typography>
+          </Box>
+        )}
+        {!isLoading && !rooms.length && (
           <Box
             sx={{
               display: "flex",

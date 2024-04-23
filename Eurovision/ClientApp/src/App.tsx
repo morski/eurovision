@@ -1,12 +1,9 @@
-import React from 'react';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import Login from "./components/Login/Login";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import "./App.css";
 import Default from "./components/Default/Default";
+import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
-import './App.css';
 
 const router = createBrowserRouter([
   {
@@ -23,10 +20,14 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 const App = () => {
   return (
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   );
-}
+};
 
 export default App;

@@ -1,4 +1,3 @@
-import IRoom from '../types/room.type';
 import { authHeader } from './auth-header';
 import authService from './auth.service';
 
@@ -25,6 +24,9 @@ class RequestService {
                     }
                     return new Response(null);
                 });
+            }
+            if(!response.ok) {
+              return response.json().then(err => Promise.reject(err));
             }
             else {
                 return response;

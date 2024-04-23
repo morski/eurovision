@@ -1,0 +1,1 @@
+export const ROOMS_QUERY_KEY = "rooms";
