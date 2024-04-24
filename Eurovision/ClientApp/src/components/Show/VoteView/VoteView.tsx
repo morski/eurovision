@@ -1,24 +1,10 @@
-import { useEffect, useState } from "react";
-
-import EventService from "../../../services/event.service";
-import VoteService from "../../../services/vote.service";
+import { useState } from "react";
+import { useGetSubcompetition } from "../../../hooks/useEvents";
+import { useGetVoteCategories } from "../../../hooks/useVotes";
 
 import IParticipant from "../../../types/participant.type";
-import ISubcompetition from "../../../types/subcompetition.type";
-import IVoteCategory from "../../../types/votecategory.type";
 
-import {
-  Box,
-  Checkbox,
-  Drawer,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  IconButton,
-  Radio,
-  RadioGroup,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Checkbox, Drawer, FormControl, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup } from "@mui/material";
 
 import SortRoundedIcon from "@mui/icons-material/SortRounded";
 import Participant from "../../Participant/Participant";
@@ -32,20 +18,13 @@ type IVoteViewProps = {
   handleFilterChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-function VoteView({
-  showType,
-  year,
-  order,
-  handleRadioChange,
-  filterChecked,
-  handleFilterChange,
-}: IVoteViewProps) {
-  const [subcompetition, setSubcompetition] = useState<ISubcompetition>();
-  const [voteCategories, setVoteCategories] = useState<Array<IVoteCategory>>();
-  const [participants, setParticipants] = useState<Array<IParticipant>>();
-  const [loaded, setLoaded] = useState<boolean>(false);
+function VoteView({ showType, year, order, handleRadioChange, filterChecked, handleFilterChange }: IVoteViewProps) {
   const [expanded, setExpanded] = useState<string>("");
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+
+  const { data: voteCategories } = useGetVoteCategories();
+  const { data: subcompetition } = useGetSubcompetition({ year, showType });
+  const participants = subcompetition ? [...subcompetition.participants] : [];
 
   const handleChange = (panel: string) => {
     if (panel === expanded) {
@@ -55,34 +34,12 @@ function VoteView({
     }
   };
 
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
-      setDrawerOpen(open);
-    };
-
-  useEffect(() => {
-    if (year && showType && !loaded) {
-      VoteService.getVoteCategories().then((response) => {
-        setVoteCategories(response);
-        EventService.getSubcompetition(year, showType).then(
-          (subcompetition) => {
-            if (subcompetition) {
-              setSubcompetition(subcompetition);
-              setLoaded(true);
-              setParticipants([...subcompetition.participants]);
-            }
-          }
-        );
-      });
+  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    if (event.type === "keydown" && ((event as React.KeyboardEvent).key === "Tab" || (event as React.KeyboardEvent).key === "Shift")) {
+      return;
     }
-  }, []);
+    setDrawerOpen(open);
+  };
 
   const sortParticipants = (a: IParticipant, b: IParticipant) => {
     if (order === "country") {
@@ -104,7 +61,6 @@ function VoteView({
     }
   };
 
-  const mobile = useMediaQuery("(max-width:600px)");
   return (
     <Box
       sx={{
@@ -181,20 +137,10 @@ function VoteView({
         }}
       >
         <FormControl>
-          <FormLabel
-            id='demo-radio-buttons-group-label'
-            focused={false}
-            sx={{ color: "white", fontSize: "24px", fontWeight: "600" }}
-          >
+          <FormLabel id='demo-radio-buttons-group-label' focused={false} sx={{ color: "white", fontSize: "24px", fontWeight: "600" }}>
             Order by
           </FormLabel>
-          <RadioGroup
-            aria-labelledby='demo-radio-buttons-group-label'
-            defaultValue='start-order'
-            name='radio-buttons-group'
-            value={order}
-            onChange={handleRadioChange}
-          >
+          <RadioGroup aria-labelledby='demo-radio-buttons-group-label' defaultValue='start-order' name='radio-buttons-group' value={order} onChange={handleRadioChange}>
             <FormControlLabel
               value='start-order'
               control={
@@ -250,16 +196,7 @@ function VoteView({
           >
             Filter
           </FormLabel>
-          <FormControlLabel
-            control={
-              <Checkbox
-                sx={{ color: "white", "&.Mui-checked": { color: "white" } }}
-                checked={filterChecked}
-                onChange={handleFilterChange}
-              />
-            }
-            label='Only unfinished'
-          />
+          <FormControlLabel control={<Checkbox sx={{ color: "white", "&.Mui-checked": { color: "white" } }} checked={filterChecked} onChange={handleFilterChange} />} label='Only unfinished' />
         </FormControl>
       </Drawer>
     </Box>

@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react";
-
-import RoomService from "../../services/room.service";
-
-import IRoom from "../../types/room.type";
+import { useState } from "react";
+import { useCreateRoom, useGetRooms, useJoinRoom, useLeaveRoom } from "../../hooks/useRooms";
 
 import { Box, Container, Divider, Typography } from "@mui/material";
 
@@ -10,77 +7,39 @@ import StyledButton from "../shared/StyledButton/StyledButton";
 import StyledTextField from "../shared/StyledTextField/StyledTextField";
 
 function Room() {
-  const [rooms, setRooms] = useState<Array<IRoom>>();
   const [roomName, setRoomName] = useState<string>("");
   const [roomPassword, setRoomPassword] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  useEffect(() => {
-    RoomService.GetRooms().then((res) => {
-      if (res.ok) {
-        res.json().then((res) => setRooms(res));
-      } else {
-        res.json().then((res) => setErrorMessage(res.message));
-      }
-    });
-  }, []);
+  const { mutateAsync: createRoom, error: createError } = useCreateRoom();
+  const { mutate: joinRoom, error: joinError } = useJoinRoom();
+  const { mutate: leaveRoom } = useLeaveRoom();
+  const { data: roomData, isLoading: isLoadingRooms, isFetching: isFetchingRooms } = useGetRooms();
 
-  const joinRoom = () => {
-    RoomService.JoinRoom(roomName, roomPassword).then((res) => {
-      if (res.ok) {
-        res.json().then((res) => {
-          if (rooms) {
-            const rc = [...rooms];
-            rc.push(res);
-            setRooms(rc);
-          }
-          clearInputs();
-        });
-      } else {
-        res.json().then((res) => setErrorMessage(res.message));
-      }
-    });
+  const rooms = roomData ?? [];
+  const isLoading = isLoadingRooms || isFetchingRooms;
+  const errorMessages = [createError, joinError].filter((errorType) => errorType?.message);
+
+  const handleCreateRoom = async () => {
+    try {
+      await createRoom({ roomName, roomPassword });
+      clearInputs();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const leaveRoom = (roomId: string) => {
-    RoomService.LeaveRoom(roomId).then((res) => {
-      if (res.ok) {
-        res.json().then((res) => {
-          if (rooms) {
-            const updatedRoomList = rooms.filter((room) => {
-              return room.id !== roomId;
-            });
-
-            setRooms(updatedRoomList);
-          }
-        });
-      } else {
-        res.json().then((res) => setErrorMessage(res.message));
-      }
-    });
+  const handleJoinRoom = () => {
+    joinRoom({ roomName, roomPassword });
+    clearInputs();
   };
 
-  const createRoom = () => {
-    RoomService.CreateRoom(roomName, roomPassword).then((res) => {
-      if (res.ok) {
-        res.json().then((res) => {
-          if (rooms) {
-            const rc = [...rooms];
-            rc.push(res);
-            setRooms(rc);
-          }
-          clearInputs();
-        });
-      } else {
-        res.json().then((res) => setErrorMessage(res.message));
-      }
-    });
+  const handleLeaveRoom = (roomId: string) => {
+    leaveRoom({ roomId });
   };
 
   const clearInputs = () => {
     setRoomName("");
     setRoomPassword("");
-    setErrorMessage("");
   };
 
   const colors = ["#FF0087", "#FFF800", "#0043ff"];
@@ -106,32 +65,11 @@ function Room() {
           width: "100%",
         }}
       >
-        <Typography
-          key={"title"}
-          textAlign='center'
-          fontFamily={"gotham-book"}
-          fontSize={"30px"}
-          color={"#FF0087"}
-          fontWeight={600}
-          mb={"16px"}
-          textTransform={"uppercase"}
-        >
+        <Typography key={"title"} textAlign='center' fontFamily={"gotham-book"} fontSize={"30px"} color={"#FF0087"} fontWeight={600} mb={"16px"} textTransform={"uppercase"}>
           Party Rooms
         </Typography>
-        <StyledTextField
-          fieldKey={"roomName"}
-          id='outlined-basic'
-          label='Room name'
-          value={roomName}
-          onChange={(e) => setRoomName(e.target.value)}
-        />
-        <StyledTextField
-          fieldKey={"roomPassword"}
-          id='outlined-basic'
-          label='Password'
-          value={roomPassword}
-          onChange={(e) => setRoomPassword(e.target.value)}
-        />
+        <StyledTextField fieldKey={"roomName"} id='outlined-basic' label='Room name' value={roomName} onChange={(e) => setRoomName(e.target.value)} />
+        <StyledTextField fieldKey={"roomPassword"} id='outlined-basic' label='Password' value={roomPassword} onChange={(e) => setRoomPassword(e.target.value)} />
         <Box
           sx={{
             display: "flex",
@@ -139,22 +77,26 @@ function Room() {
             width: "100%",
           }}
         >
-          <StyledButton onClick={joinRoom}>Join</StyledButton>
-          <StyledButton onClick={createRoom}>Create</StyledButton>
+          <StyledButton onClick={handleJoinRoom} disabled={isLoading}>
+            Join
+          </StyledButton>
+          <StyledButton onClick={handleCreateRoom} disabled={isLoading}>
+            Create
+          </StyledButton>
         </Box>
-        {errorMessage !== "" && <Box sx={{ my: "16px" }}>{errorMessage}</Box>}
-        {rooms && rooms.length > 0 && (
+        {errorMessages.map(
+          (error) =>
+            error && (
+              <Box key={error.message} sx={{ my: "16px" }}>
+                {error.message}
+              </Box>
+            )
+        )}
+        {isLoading && <p>Loading...</p>}
+        {!isLoading && rooms.length > 0 && (
           <Box sx={{ width: "calc(100% - 32px)" }}>
             <Divider variant='middle' sx={{ mx: 0, borderColor: "#FF0087" }} />
-            <Typography
-              textAlign='left'
-              fontFamily={"gotham-book"}
-              fontSize={"30px"}
-              color={"#FBF401"}
-              fontWeight={600}
-              my={"16px"}
-              lineHeight={1}
-            >
+            <Typography textAlign='left' fontFamily={"gotham-book"} fontSize={"30px"} color={"#FBF401"} fontWeight={600} my={"16px"} lineHeight={1}>
               Your Rooms
             </Typography>
             {rooms.map((room, index) => (
@@ -167,25 +109,12 @@ function Room() {
                 }}
               >
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Typography
-                    textAlign='left'
-                    fontFamily={"gotham-book"}
-                    fontSize={"30px"}
-                    color={colors[index % 3]}
-                    fontWeight={600}
-                    my={"16px"}
-                    lineHeight={1.5}
-                  >
+                  <Typography textAlign='left' fontFamily={"gotham-book"} fontSize={"30px"} color={colors[index % 3]} fontWeight={600} my={"16px"} lineHeight={1.5}>
                     {index + 1}. {room.name}
                   </Typography>
-                  <StyledButton onClick={() => leaveRoom(room.id)}>
-                    Leave
-                  </StyledButton>
+                  <StyledButton onClick={() => handleLeaveRoom(room.id)}>Leave</StyledButton>
                 </Box>
-                <Divider
-                  variant='middle'
-                  sx={{ mx: 0, borderColor: colors[index % 3] }}
-                />
+                <Divider variant='middle' sx={{ mx: 0, borderColor: colors[index % 3] }} />
               </Box>
             ))}
           </Box>
