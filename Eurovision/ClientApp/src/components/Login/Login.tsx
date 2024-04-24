@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useGetActiveEventYear } from "../../hooks/useEvents";
 
 import AuthService from "../../services/auth.service";
-import EventService from "../../services/event.service";
 
 import { Box, CircularProgress, useMediaQuery } from "@mui/material";
 
@@ -14,7 +14,8 @@ function Login() {
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
-  const [eventYear, setEventYear] = useState<string>("");
+
+  const {data: eventYear} = useGetActiveEventYear();
 
   const navigate = useNavigate();
 
@@ -51,17 +52,6 @@ function Login() {
         });
       });
   };
-
-  useEffect(() => {
-    const getEventYear = async () => {
-      const year = await EventService.getActiveEventYear();
-      if (year) {
-        setEventYear(year);
-      }
-    };
-
-    getEventYear();
-  }, []);
 
   const mobile = useMediaQuery("(max-width:600px)");
 

@@ -9,11 +9,11 @@ class AuthService {
     return fetch(API_URL + "login", {
       method: "POST",
       mode: "cors",
-      headers: new Headers({'content-type': 'application/json'}),
+      headers: new Headers({ "content-type": "application/json" }),
       body: JSON.stringify({
         username,
-        password
-      })
+        password,
+      }),
     });
   }
 
@@ -28,11 +28,11 @@ class AuthService {
     return fetch(API_URL + "register", {
       method: "POST",
       mode: "cors",
-      headers: new Headers({'content-type': 'application/json'}),
+      headers: new Headers({ "content-type": "application/json" }),
       body: JSON.stringify({
         username,
         password,
-      })
+      }),
     });
   }
 
@@ -40,8 +40,7 @@ class AuthService {
     const userStr = localStorage.getItem("user");
     if (userStr) {
       return JSON.parse(userStr);
-    }
-    else {
+    } else {
       this.logout();
     }
   }
@@ -52,28 +51,29 @@ class AuthService {
       return fetch(API_URL + "refreshToken", {
         method: "GET",
         mode: "cors",
-        headers: refreshAuthHeader()        
+        headers: refreshAuthHeader(),
       })
-      .then(response => {
-        if(response.ok) {
-          return response.json();
-        }
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
 
-        EventBus.dispatch('logout');
-      })
-      .then(response => {
-        if (response.token) {
-          localStorage.setItem("token", response.token);
-          localStorage.setItem("refreshToken", response.refreshToken);
-          localStorage.setItem("user", JSON.stringify({userId: response.userId, username: response.username}));
-          return true;
-        }
-        return false;
-      })
+          EventBus.dispatch("logout");
+        })
+        .then((response) => {
+          if (response.token) {
+            localStorage.setItem("token", response.token);
+            localStorage.setItem("refreshToken", response.refreshToken);
+            localStorage.setItem("user", JSON.stringify({ userId: response.userId, username: response.username }));
+            return true;
+          }
+          return false;
+        });
     }
-    EventBus.dispatch('logout');
+    EventBus.dispatch("logout");
     return false;
   }
 }
 
-export default new AuthService();
+const authService = new AuthService();
+export default authService;

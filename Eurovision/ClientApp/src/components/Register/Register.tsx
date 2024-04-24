@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useGetActiveEventYear } from "../../hooks/useEvents";
 
 import AuthService from "../../services/auth.service";
-import EventService from "../../services/event.service";
 
 import { Box, CircularProgress, useMediaQuery } from "@mui/material";
 
@@ -21,10 +21,10 @@ function Register() {
   const [message, setMessage] = useState<string>("");
   const navigate = useNavigate();
 
-  const [eventYear, setEventYear] = useState<string>("");
+  const { data: eventYear } = useGetActiveEventYear();
 
   const handleRegister = () => {
-    if (username.length == 0 || password.length == 0) {
+    if (username.length === 0 || password.length === 0) {
       setUsernameChanged(true);
       setPasswordChanged(true);
       return;
@@ -58,34 +58,16 @@ function Register() {
         }
       })
       .catch((err) => {
-        const resMessage =
-          (err.response && err.response.data && err.response.data.message) ||
-          err.message ||
-          err.toString();
+        const resMessage = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
 
         setMessage(resMessage);
       });
   };
 
-  useEffect(() => {
-    const getEventYear = async () => {
-      const year = await EventService.getActiveEventYear();
-      if (year) {
-        setEventYear(year);
-      }
-    };
-
-    getEventYear();
-  }, []);
-
-  const isUserNameValid = () =>
-    username.length > 0 || !usernameChanged ? true : false;
-  const getUsernameHelperText = () =>
-    username.length > 0 || !usernameChanged ? "" : "Username is empty";
-  const isPasswordValid = () =>
-    password.length > 0 || !passwordChanged ? true : false;
-  const getPasswordHelperText = () =>
-    password.length > 0 || !passwordChanged ? "" : "Password is empty";
+  const isUserNameValid = () => (username.length > 0 || !usernameChanged ? true : false);
+  const getUsernameHelperText = () => (username.length > 0 || !usernameChanged ? "" : "Username is empty");
+  const isPasswordValid = () => (password.length > 0 || !passwordChanged ? true : false);
+  const getPasswordHelperText = () => (password.length > 0 || !passwordChanged ? "" : "Password is empty");
 
   const mobile = useMediaQuery("(max-width:600px)");
 
@@ -116,14 +98,7 @@ function Register() {
           px: "16px",
         }}
       >
-        {eventYear && (
-          <Box
-            component='img'
-            src={`/images/${eventYear}/logo/eurovision_${eventYear}_white.png`}
-            alt='logo'
-            sx={{ maxWidth: "100%" }}
-          />
-        )}
+        {eventYear && <Box component='img' src={`/images/${eventYear}/logo/eurovision_${eventYear}_white.png`} alt='logo' sx={{ maxWidth: "100%" }} />}
       </Box>
       <Box
         sx={{
@@ -163,10 +138,7 @@ function Register() {
         <Box sx={{ display: loading ? "block" : "none" }}>
           <CircularProgress />
         </Box>
-        <StyledButton
-          onClick={() => handleRegister()}
-          disabled={!isUserNameValid() || !isPasswordValid()}
-        >
+        <StyledButton onClick={() => handleRegister()} disabled={!isUserNameValid() || !isPasswordValid()}>
           Register
         </StyledButton>
       </Box>

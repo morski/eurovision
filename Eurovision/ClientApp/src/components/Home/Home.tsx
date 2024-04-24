@@ -16,13 +16,10 @@ type HomeProps = {
 
 function Home({ event, user }: HomeProps) {
   const nav = useNavigate();
-  const isMissingEventInfo =
-    !event.participants || !event.city || !event.country;
+  const isMissingEventInfo = !event.participants || !event.city || !event.country;
 
   const { data, isLoading, error } = useGetRooms();
   const rooms = data ?? [];
-
-  console.log(rooms)
 
   if (isMissingEventInfo) {
     return <div />;
@@ -49,23 +46,11 @@ function Home({ event, user }: HomeProps) {
           width: "100%",
         }}
       >
-        <Box
-          component='img'
-          src={`/images/${event.year}/logo/eurovision_${event.year}_white.png`}
-          alt='Eurovision Logo'
-          sx={{ width: "75%" }}
-        />
+        <Box component='img' src={`/images/${event.year}/logo/eurovision_${event.year}_white.png`} alt='Eurovision Logo' sx={{ width: "75%" }} />
         {isLoading && <p>Loading...</p>}
         {!isLoading && (
           <Box sx={{ my: "16px" }}>
-            <Typography
-              textAlign='center'
-              fontFamily={"gotham-book"}
-              fontSize={"25px"}
-              color={"#FF0087"}
-              fontWeight={600}
-              textTransform={"uppercase"}
-            >
+            <Typography textAlign='center' fontFamily={"gotham-book"} fontSize={"25px"} color={"#FF0087"} fontWeight={600} textTransform={"uppercase"}>
               Welcome {user.username}!
             </Typography>
           </Box>
@@ -78,19 +63,16 @@ function Home({ event, user }: HomeProps) {
               alignItems: "center",
             }}
           >
-            <Typography
-              textAlign='center'
-              fontFamily={"gotham-book"}
-              fontSize={"30px"}
-              color={"#DD0087"}
-              fontWeight={600}
-            >
-              You have not yet joined any party rooms. Click below to join or
-              create some party rooms!
-            </Typography>
-            <StyledButton onClick={() => nav("/rooms")}>
-              Manage rooms
-            </StyledButton>
+            {error ? (
+              <p>Error loading rooms</p>
+            ) : (
+              <>
+                <Typography textAlign='center' fontFamily={"gotham-book"} fontSize={"30px"} color={"#DD0087"} fontWeight={600}>
+                  You have not yet joined any party rooms. Click below to join or create some party rooms!
+                </Typography>
+                <StyledButton onClick={() => nav("/rooms")}>Manage rooms</StyledButton>
+              </>
+            )}
           </Box>
         )}
       </Box>

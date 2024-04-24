@@ -1,30 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useGetSubcompetitionResults } from "../../../hooks/useEvents";
+import { useGetRooms } from "../../../hooks/useRooms";
+import { useGetVoteCategories } from "../../../hooks/useVotes";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Collapse,
-  Divider,
-  IconButton,
-  IconButtonProps,
-  Tab,
-  Typography,
-  styled,
-} from "@mui/material";
+import { Box, Button, Card, CardContent, Collapse, Divider, IconButton, IconButtonProps, Tab, Typography, styled } from "@mui/material";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 
-import EventService from "../../../services/event.service";
-import RoomService from "../../../services/room.service";
-import VoteService from "../../../services/vote.service";
-
 import IParticipant from "../../../types/participant.type";
-import IRoom from "../../../types/room.type";
-import ISubcompetition from "../../../types/subcompetition.type";
-import IVoteCategory from "../../../types/votecategory.type";
 
 type IResultViewProps = {
   showType: number;
@@ -48,49 +32,13 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 function ResultView({ showType, year }: IResultViewProps) {
-  const [loaded, setLoaded] = useState<boolean>(false);
-  const [subcompetition, setSubcompetition] = useState<ISubcompetition>();
-  const [voteCategories, setVoteCategories] = useState<Array<IVoteCategory>>();
-  const [participants, setParticipants] = useState<Array<IParticipant>>();
   const [expanded, setExpanded] = useState<string>("");
   const [selectedTab, setSelectedTab] = useState<number>(0);
-  const [rooms, setRooms] = useState<Array<IRoom>>();
-  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  useEffect(() => {
-    if (year && showType && !loaded) {
-      RoomService.GetRooms().then((res) => {
-        if (res.ok) {
-          res.json().then((res) => {
-            setRooms(res);
-            VoteService.getVoteCategories().then((response) => {
-              setVoteCategories(response);
-            });
-          });
-        } else {
-          res.json().then((res) => setErrorMessage(res));
-        }
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchResults();
-  }, [rooms, selectedTab]);
-
-  const fetchResults = () => {
-    if (rooms && rooms.length > 0) {
-      EventService.getSubCompetitionResults(
-        year,
-        showType,
-        rooms[selectedTab].id
-      ).then((subcompetition) => {
-        setSubcompetition(subcompetition);
-        setLoaded(true);
-        setParticipants([...subcompetition.participants]);
-      });
-    }
-  };
+  const { data: rooms } = useGetRooms();
+  const { data: subcompetition } = useGetSubcompetitionResults({ year, showType, roomId: rooms ? rooms[selectedTab].id : "" });
+  const participants = subcompetition ? [...subcompetition.participants] : [];
+  const { data: voteCategories } = useGetVoteCategories();
 
   const nav = useNavigate();
 
@@ -112,6 +60,8 @@ function ResultView({ showType, year }: IResultViewProps) {
     return bTotal - aTotal;
   };
 
+  const sortedParticipants = participants.length ? participants.sort(sortByTotalPoints) : [];
+
   if (rooms && rooms.length === 0) {
     return (
       <Box
@@ -126,16 +76,8 @@ function ResultView({ showType, year }: IResultViewProps) {
           width: "100%",
         }}
       >
-        <Typography
-          textAlign='center'
-          fontFamily={"gotham-book"}
-          fontSize={"30px"}
-          color={"#FF0087"}
-          fontWeight={600}
-          mb={"16px"}
-        >
-          You have not yet joined any party rooms. Click below to join or create
-          some party rooms!
+        <Typography textAlign='center' fontFamily={"gotham-book"} fontSize={"30px"} color={"#FF0087"} fontWeight={600} mb={"16px"}>
+          You have not yet joined any party rooms. Click below to join or create some party rooms!
         </Typography>
         <Button variant='contained' onClick={() => nav("/rooms")}>
           Manage rooms
@@ -143,6 +85,7 @@ function ResultView({ showType, year }: IResultViewProps) {
       </Box>
     );
   }
+
   return (
     <Box
       sx={{
@@ -207,8 +150,8 @@ function ResultView({ showType, year }: IResultViewProps) {
       </Box>
       <Box className='participants-container'>
         {voteCategories &&
-          participants &&
-          participants.sort(sortByTotalPoints).map((participant, index) => (
+          sortedParticipants.length &&
+          sortedParticipants.map((participant, index) => (
             <Card
               sx={{
                 width: "100%",
@@ -219,10 +162,7 @@ function ResultView({ showType, year }: IResultViewProps) {
               }}
               key={participant.id}
             >
-              <CardContent
-                sx={{ display: "flex", justifyContent: "space-between" }}
-                onClick={() => handleChange(`panel${index}`)}
-              >
+              <CardContent sx={{ display: "flex", justifyContent: "space-between" }} onClick={() => handleChange(`panel${index}`)}>
                 <Box
                   sx={{
                     display: "flex",
@@ -235,10 +175,7 @@ function ResultView({ showType, year }: IResultViewProps) {
                   <Box
                     component='img'
                     className='flag'
-                    src={`/images/flag/${participant.country?.name
-                      ?.toLowerCase()
-                      .trim()
-                      .replace(" ", "_")}.svg`}
+                    src={`/images/flag/${participant.country?.name?.toLowerCase().trim().replace(" ", "_")}.svg`}
                     alt='country'
                     sx={{
                       width: "40px",
@@ -269,20 +206,12 @@ function ResultView({ showType, year }: IResultViewProps) {
                       {participant.votes.reduce((a, b) => a + b.amount, 0)}p
                     </Box>
                   </Box>
-                  <ExpandMore
-                    expand={expanded === `panel${index}`}
-                    aria-expanded={expanded === `panel${index}`}
-                    aria-label='show more'
-                  >
+                  <ExpandMore expand={expanded === `panel${index}`} aria-expanded={expanded === `panel${index}`} aria-label='show more'>
                     <ExpandMoreIcon />
                   </ExpandMore>
                 </Box>
               </CardContent>
-              <Collapse
-                in={expanded === `panel${index}`}
-                timeout='auto'
-                unmountOnExit
-              >
+              <Collapse in={expanded === `panel${index}`} timeout='auto' unmountOnExit>
                 <CardContent
                   sx={{
                     display: "flex",
@@ -303,17 +232,10 @@ function ResultView({ showType, year }: IResultViewProps) {
                         }}
                       >
                         <Box>{category.name}</Box>
-                        <Box>
-                          {participant.votes.find(
-                            (v) => v.categoryId == category.categoryId
-                          )?.amount ?? 0}
-                        </Box>
+                        <Box>{participant.votes.find((v) => v.categoryId == category.categoryId)?.amount ?? 0}</Box>
                       </Box>
                     ))}
-                  <Divider
-                    variant='middle'
-                    sx={{ mx: 0, borderColor: "#FF0087", my: "16px" }}
-                  />
+                  <Divider variant='middle' sx={{ mx: 0, borderColor: "#FF0087", my: "16px" }} />
                   {participant.userVotes
                     .sort((a, b) => b.voteAmount - a.voteAmount)
                     .map((uservote, index) => (
