@@ -1,7 +1,7 @@
 .appbar {
     background-image: url("/public/images/2025/bg-header-2025.webp");
     background-position: center;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
 }
 
 .appbar::before {
