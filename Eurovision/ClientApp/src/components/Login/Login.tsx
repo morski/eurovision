@@ -15,9 +15,11 @@ function Login() {
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
-  const {data: eventYear} = useGetActiveEventYear();
+  const { data: eventYear } = useGetActiveEventYear();
 
   const navigate = useNavigate();
+
+  const colors = ["#64d7d6", "#eb54df", "#ea3323;"];
 
   const handleLogin = () => {
     setMessage("");
@@ -68,8 +70,9 @@ function Login() {
         alignItems: "center",
         width: "calc(100% - 40px)",
         maxWidth: "900px",
-        backgroundColor: "#1d1b54",
-        borderRadius: "4px",
+        backgroundColor: "#000",
+        border: "2px solid " + colors[0],
+        borderRadius: "12px",
         fontFamily: "gotham-book",
         py: "16px",
       }}

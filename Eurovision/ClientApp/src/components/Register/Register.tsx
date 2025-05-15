@@ -69,6 +69,8 @@ function Register() {
   const isPasswordValid = () => (password.length > 0 || !passwordChanged ? true : false);
   const getPasswordHelperText = () => (password.length > 0 || !passwordChanged ? "" : "Password is empty");
 
+  const colors = ["#64d7d6", "#eb54df", "#ea3323;"];
+
   const mobile = useMediaQuery("(max-width:600px)");
 
   return (
@@ -84,8 +86,9 @@ function Register() {
         alignItems: "center",
         width: "calc(100% - 40px)",
         maxWidth: "900px",
-        backgroundColor: "#1d1b54",
-        borderRadius: "4px",
+        backgroundColor: "#000",
+        borderRadius: "12px",
+        border: "2px solid " + colors[0],
         fontFamily: "gotham-book",
         py: "16px",
       }}

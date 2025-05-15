@@ -16,7 +16,7 @@ type VoteProps = {
 
 function Vote({ subcompetition, participant, voteCategories, updateParticipant }: VoteProps) {
   const { mutate: updateVote } = useUpdateVote();
-  const colors = ["#FF0087", "#FFF800", "#0043ff"];
+  const colors = ["#64d7d6", "#eb54df", "#ea3323;"];
   const points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   function valuetext(value: number) {
@@ -40,7 +40,16 @@ function Vote({ subcompetition, participant, voteCategories, updateParticipant }
     }
   };
 
-  const handleChangeCommited = (value: number | Array<number>, categoryId: string) => {
+  function isTouchScreen() {
+    const isTouchScreen = 'ontouchstart' in window || (navigator.maxTouchPoints & 0xFF) > 0;
+    return isTouchScreen;
+  }
+
+  const handleChangeCommited = (event: React.SyntheticEvent | Event, value: number | Array<number>, categoryId: string) => {
+    if (isTouchScreen() && event.type == 'mouseup') {
+      return;
+    }
+
     if (typeof value === "number") {
       updateVote({ subcompetitionId: subcompetition.id, categoryId, participantId: participant.id, voteAmount: value });
     }
@@ -62,9 +71,12 @@ function Vote({ subcompetition, participant, voteCategories, updateParticipant }
               marks={points.map((num) => ({ value: num }))}
               min={1}
               max={12}
-              onChangeCommitted={(event: React.SyntheticEvent | Event, value: number | Array<number>) => handleChangeCommited(value, item.categoryId)}
+              onChangeCommitted={(event: React.SyntheticEvent | Event, value: number | Array<number>) => handleChangeCommited(event, value, item.categoryId)}
               onChange={handleChange}
               name={item.categoryId}
+              sx={{
+                color: colors[index]
+              }}
             />
             <Box
               sx={{

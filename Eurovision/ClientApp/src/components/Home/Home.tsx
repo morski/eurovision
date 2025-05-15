@@ -38,7 +38,6 @@ function Home({ event, user }: HomeProps) {
       <Box
         sx={{
           borderRadius: "4px",
-          backgroundColor: "#1D1B54",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -50,7 +49,7 @@ function Home({ event, user }: HomeProps) {
         {isLoading && <p>Loading...</p>}
         {!isLoading && (
           <Box sx={{ my: "16px" }}>
-            <Typography textAlign='center' fontFamily={"gotham-book"} fontSize={"25px"} color={"#FF0087"} fontWeight={600} textTransform={"uppercase"}>
+            <Typography textAlign='center' fontFamily={"gotham-book"} fontSize={"25px"} color={"#eb54df"} fontWeight={600} textTransform={"uppercase"}>
               Welcome {user.username}!
             </Typography>
           </Box>

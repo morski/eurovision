@@ -11,6 +11,7 @@
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: gotham-book;
   src: url("/public/fonts/Gotham\ Book\ Italic.ttf");
@@ -26,8 +27,8 @@
 
 body {
   background-color: #05025e;
-  background-image: url("/public/images/2023/header-right-event-on-2023.webp"), url("/public/images/2023/banner-event-on-2023.webp");
-  background-position: right top 80px, right top 316px;
+  background-image: url("/public/images/2025/bg-footer-2025_2.png");
+  background-position: center bottom;
   background-repeat: no-repeat;
   background-attachment: fixed;
   height: 100vh;
@@ -75,13 +76,13 @@ body {
   cursor: pointer;
 }
 
-.glass-button:hover{
+.glass-button:hover {
   color: #212121;
   background-color: #F2F2F8;
   outline: none;
 }
 
-.glass-button:focus{
+.glass-button:focus {
   outline: none;
 }
 
@@ -101,22 +102,23 @@ body {
 }
 
 .hr {
-    display: flex;
-    flex-basis: 100%;
-    align-items: center;
-    color: #F2F2F8;
-    margin: 8px 0px;
-    font-weight: bold;
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  color: #F2F2F8;
+  margin: 8px 0px;
+  font-weight: bold;
 }
+
 .hr:before,
 .hr:after {
-    content: "";
-    flex-grow: 1;
-    background: rgba(255, 255, 255, 0.35);
-    height: 1px;
-    font-size: 0px;
-    line-height: 0px;
-    margin: 0px 8px;
+  content: "";
+  flex-grow: 1;
+  background: rgba(255, 255, 255, 0.35);
+  height: 1px;
+  font-size: 0px;
+  line-height: 0px;
+  margin: 0px 8px;
 }
 
 .image-container {
@@ -137,9 +139,9 @@ body {
   border: 0;
 }
 
-.input-field{
+.input-field {
   text-align: left;
-  
+
 }
 
 .input-field input {
@@ -157,7 +159,7 @@ body {
   font-size: 10px;
 }
 
-.input-field input:focus{
+.input-field input:focus {
   background-color: rgba(255, 255, 255, 0);
   box-shadow: none;
   border-color: #FFF;

@@ -42,7 +42,7 @@ function Room() {
     setRoomPassword("");
   };
 
-  const colors = ["#FF0087", "#FFF800", "#0043ff"];
+  const colors = ["#64d7d6", "#eb54df", "#ea3323;"];
 
   return (
     <Container
@@ -56,16 +56,17 @@ function Room() {
     >
       <Box
         sx={{
-          borderRadius: "4px",
-          backgroundColor: "#1D1B54",
+          borderRadius: "12px",
+          backgroundColor: "#000",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           py: "16px",
           width: "100%",
+          border: "2px solid " + colors[0],
         }}
       >
-        <Typography key={"title"} textAlign='center' fontFamily={"gotham-book"} fontSize={"30px"} color={"#FF0087"} fontWeight={600} mb={"16px"} textTransform={"uppercase"}>
+        <Typography key={"title"} textAlign='center' fontFamily={"gotham-book"} fontSize={"30px"} color={"#ea3323"} fontWeight={600} mb={"16px"} textTransform={"uppercase"}>
           Party Rooms
         </Typography>
         <StyledTextField fieldKey={"roomName"} id='outlined-basic' label='Room name' value={roomName} onChange={(e) => setRoomName(e.target.value)} />

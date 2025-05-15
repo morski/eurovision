@@ -1,23 +1,23 @@
 /* Rewrite this mess */
 
 div.textfield--styled {
-  color: white;
+  color: #eb54df;
   font-family: "gotham-book";
   padding-bottom: 1rem;
   width: 75%;
 }
 
 div.textfield--styled label {
-  color: white;
+  color: #64d7d6;
   font-family: inherit;
 }
 
 div.textfield--styled label.Mui-focused {
-  color: white;
+  color: #64d7d6;
 }
 
 div.textfield--styled .MuiInput-underline:after {
-  border-bottom-color: white;
+  border-bottom-color: #64d7d6;
 }
 
 div.textfield--styled .MuiOutlinedInput-root {
@@ -25,19 +25,21 @@ div.textfield--styled .MuiOutlinedInput-root {
 }
 
 div.textfield--styled .MuiOutlinedInput-root fieldset {
-  border-color: white;
-  color: white;
+  border-color: #eb54df;
+  color: #64d7d6;
 }
 
 div.textfield--styled .MuiOutlinedInput-root:hover fieldset {
-  border-color: white;
+  border-color: #eb54df;
   border-width: 2px;
 }
 
 div.textfield--styled .MuiOutlinedInput-root.Mui-focused fieldset {
-  border-color: white;
+  border-color: #eb54df;
 }
 
 div.textfield--styled .MuiOutlinedInput-root .MuiOutlinedInput-input {
-  color: white;
+  color: #eb54df;
 }
+
+/* const colors=["#64d7d6","#eb54df","#ea3323;"]; */

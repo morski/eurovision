@@ -10,6 +10,8 @@ import Tabs, { tabsClasses } from "@mui/material/Tabs";
 
 import IParticipant from "../../../types/participant.type";
 
+import StyledButton from "../../shared/StyledButton/StyledButton";
+
 type IResultViewProps = {
   showType: number;
   year: number;
@@ -36,11 +38,13 @@ function ResultView({ showType, year }: IResultViewProps) {
   const [selectedTab, setSelectedTab] = useState<number>(0);
 
   const { data: rooms } = useGetRooms();
-  const { data: subcompetition } = useGetSubcompetitionResults({ year, showType, roomId: rooms ? rooms[selectedTab].id : "" });
+  const { data: subcompetition } = useGetSubcompetitionResults({ year, showType, roomId: rooms != undefined && rooms.length != 0 ? rooms[selectedTab].id : "" });
   const participants = subcompetition ? [...subcompetition.participants] : [];
   const { data: voteCategories } = useGetVoteCategories();
 
   const nav = useNavigate();
+
+  const colors = ["#64d7d6", "#eb54df", "#ea3323;"];
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
@@ -66,22 +70,23 @@ function ResultView({ showType, year }: IResultViewProps) {
     return (
       <Box
         sx={{
-          borderRadius: "4px",
-          backgroundColor: "#1D1B54",
+          borderRadius: "12px",
+          backgroundColor: "#000",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           mt: "16px",
           py: "16px",
           width: "100%",
+          border: "2px solid #eb54df",
         }}
       >
-        <Typography textAlign='center' fontFamily={"gotham-book"} fontSize={"30px"} color={"#FF0087"} fontWeight={600} mb={"16px"}>
+        <Typography textAlign='center' fontFamily={"gotham-book"} fontSize={"30px"} color={"#64d7d6"} fontWeight={600} mb={"16px"}>
           You have not yet joined any party rooms. Click below to join or create some party rooms!
         </Typography>
-        <Button variant='contained' onClick={() => nav("/rooms")}>
+        <StyledButton onClick={() => nav("/rooms")}>
           Manage rooms
-        </Button>
+        </StyledButton>
       </Box>
     );
   }
@@ -98,9 +103,10 @@ function ResultView({ showType, year }: IResultViewProps) {
       <Box
         sx={{
           flexGrow: 1,
-          bgcolor: "#1d1b54",
-          borderRadius: "4px",
+          bgcolor: "#000",
+          borderRadius: "12px",
           mt: "16px",
+          border: "2px solid " + colors[0]
         }}
       >
         <Tabs
@@ -113,9 +119,9 @@ function ResultView({ showType, year }: IResultViewProps) {
             [`& .${tabsClasses.scrollButtons}`]: {
               "&.Mui-disabled": { opacity: 0.3 },
             },
-            color: "#FF0087",
+            color: colors[1],
             "& .MuiTabs-indicator": {
-              backgroundColor: "#FF0087",
+              backgroundColor: colors[1],
             },
           }}
         >
@@ -127,7 +133,7 @@ function ResultView({ showType, year }: IResultViewProps) {
                 sx={{
                   color: "white",
                   fontFamily: "gotham-book",
-                  "&.Mui-selected": { color: "#FF0087", fontWeight: 600 },
+                  "&.Mui-selected": { color: colors[1], fontWeight: 600 },
                 }}
               />
             ))}
@@ -155,10 +161,12 @@ function ResultView({ showType, year }: IResultViewProps) {
             <Card
               sx={{
                 width: "100%",
-                backgroundColor: "#1d1b54",
+                backgroundColor: "#000",
                 color: "white",
                 position: "relative",
                 marginBottom: "20px",
+                border: "2px solid " + colors[index % 3],
+                borderRadius: "12px"
               }}
               key={participant.id}
             >

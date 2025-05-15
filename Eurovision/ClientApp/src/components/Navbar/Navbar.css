@@ -1,0 +1,17 @@
+.appbar {
+    background-image: url("/public/images/2025/bg-header-2025.webp");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.appbar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    height: 100%;
+    width: 100vw;
+    background: rgba(0, 0, 0, 0.7);
+}

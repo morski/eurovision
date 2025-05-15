@@ -61,6 +61,8 @@ function VoteView({ showType, year, order, handleRadioChange, filterChecked, han
     }
   };
 
+  const colors = ["#64d7d6", "#eb54df", "#ea3323;"];
+
   return (
     <Box
       sx={{
@@ -119,6 +121,7 @@ function VoteView({ showType, year, order, handleRadioChange, filterChecked, han
                     index={index}
                     voteCategories={voteCategories}
                     subcompetition={subcompetition}
+                    borderColor={colors[index % 3]}
                   />
                 ))}
           </Box>
@@ -130,7 +133,7 @@ function VoteView({ showType, year, order, handleRadioChange, filterChecked, han
         onClose={toggleDrawer(false)}
         PaperProps={{
           sx: {
-            backgroundColor: "#1d1b54",
+            backgroundColor: "#000",
             color: "white",
             p: "16px",
           },

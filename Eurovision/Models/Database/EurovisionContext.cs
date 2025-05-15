@@ -211,6 +211,9 @@ public partial class EurovisionContext : DbContext
                 .HasForeignKey(d => d.VoteCategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_votes_vote_categories");
+
+            entity.HasIndex(v => new { v.UserId, v.VoteCategoryId, v.ParticipantId, v.SubCompetitionId })
+            .IsUnique();
         });
 
         modelBuilder.Entity<VoteCategory>(entity =>

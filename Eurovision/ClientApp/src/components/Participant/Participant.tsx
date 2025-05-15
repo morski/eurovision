@@ -30,6 +30,7 @@ type ParticipantProps = {
   index: number;
   voteCategories: Array<IVoteCategory>;
   subcompetition: ISubcompetition;
+  borderColor: string;
 };
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -56,6 +57,7 @@ function Participant({
   index,
   voteCategories,
   subcompetition,
+  borderColor
 }: ParticipantProps) {
   const [participant, setParticipant] = useState<IParticipant>(
     iParticipant || ""
@@ -65,10 +67,12 @@ function Participant({
     <Card
       sx={{
         width: "100%",
-        backgroundColor: "#1d1b54",
+        backgroundColor: "#000",
         color: "white",
         position: "relative",
         marginBottom: "20px",
+        borderRadius: "12px",
+        border: "2px solid " + borderColor
       }}
     >
       <CardContent sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -138,9 +142,11 @@ function Participant({
               <CircularProgress
                 variant='determinate'
                 value={(participant.votes.length / voteCategories.length) * 100}
-                color='secondary'
                 size={50}
                 thickness={4}
+                sx={{
+                  color: borderColor
+                }}
               />
               <Box
                 sx={{

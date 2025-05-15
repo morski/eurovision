@@ -18,6 +18,8 @@ import {
 import EventBus from "../../common/EventBus";
 import IUser from "../../types/user.type";
 
+import "./Navbar.css";
+
 type INavbarProps = {
   user: IUser;
   year: number;
@@ -49,7 +51,7 @@ function Navbar({ user, year }: INavbarProps) {
   };
 
   return (
-    <AppBar position='sticky' sx={{ backgroundColor: "#0043ff" }}>
+    <AppBar position='sticky' className="appbar">
       <Container maxWidth='md'>
         <Toolbar disableGutters>
           <Box
@@ -96,19 +98,21 @@ function Navbar({ user, year }: INavbarProps) {
               }}
             >
               <MenuItem key={"Home"} onClick={() => navigateToPage("/")}>
-                <Typography textAlign='center'>{"Home"}</Typography>
+                <Typography textAlign='center' fontFamily='gotham-book' fontWeight='700' textTransform={"uppercase"}>{"Home"}</Typography>
               </MenuItem>
               <MenuItem
                 key={"First Semi-Final"}
                 onClick={() => navigateToPage("/semi-final-1")}
               >
-                <Typography textAlign='center'>{"First Semi-Final"}</Typography>
+                <Typography textAlign='center' fontFamily='gotham-book' fontWeight='700' textTransform={"uppercase"}>
+                  {"First Semi-Final"}
+                </Typography>
               </MenuItem>
               <MenuItem
                 key={"Second Semi-Final"}
                 onClick={() => navigateToPage("/semi-final-2")}
               >
-                <Typography textAlign='center'>
+                <Typography textAlign='center' fontFamily='gotham-book' fontWeight='700' textTransform={"uppercase"}>
                   {"Second Semi-Final"}
                 </Typography>
               </MenuItem>
@@ -116,7 +120,9 @@ function Navbar({ user, year }: INavbarProps) {
                 key={"Grand Final"}
                 onClick={() => navigateToPage("/grand-final")}
               >
-                <Typography textAlign='center'>{"Grand Final"}</Typography>
+                <Typography textAlign='center' fontFamily='gotham-book' fontWeight='700' textTransform={"uppercase"}>
+                  {"Grand Final"}
+                </Typography>
               </MenuItem>
             </Menu>
           </Box>
@@ -145,21 +151,21 @@ function Navbar({ user, year }: INavbarProps) {
             <Button
               key={"First Semi-Final"}
               onClick={() => navigateToPage("/semi-final-1")}
-              sx={{ my: 2, color: "white", display: "block" }}
+              sx={{ my: 2, color: "white", display: "block", fontFamily: 'gotham-book', fontWeight: 700 }}
             >
               {"First Semi-Final"}
             </Button>
             <Button
               key={"Second Semi-Final"}
               onClick={() => navigateToPage("/semi-final-2")}
-              sx={{ my: 2, color: "white", display: "block" }}
+              sx={{ my: 2, color: "white", display: "block", fontFamily: 'gotham-book', fontWeight: 700 }}
             >
               {"Second Semi-Final"}
             </Button>
             <Button
               key={"Grand Final"}
               onClick={() => navigateToPage("/grand-final")}
-              sx={{ my: 2, color: "white", display: "block" }}
+              sx={{ my: 2, color: "white", display: "block", fontFamily: 'gotham-book', fontWeight: 700 }}
             >
               {"Grand Final"}
             </Button>
@@ -170,7 +176,7 @@ function Navbar({ user, year }: INavbarProps) {
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
                   sx={{
-                    backgroundColor: "#FF0087",
+                    backgroundColor: "#eb54df",
                     fontFamily: "gotham-book",
                     fontWeight: "600",
                   }}
