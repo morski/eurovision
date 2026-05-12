@@ -1,7 +1,9 @@
 .appbar {
-    background-image: url("/public/images/2025/bg-header-2025.webp");
-    background-position: center;
-    background-repeat: repeat;
+    background:
+        linear-gradient(90deg, rgba(255, 47, 168, 0.95), rgba(0, 215, 255, 0.9) 48%, rgba(246, 232, 75, 0.92)),
+        #050505;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
 .appbar::before {
@@ -13,5 +15,12 @@
     transform: translateX(-50%);
     height: 100%;
     width: 100vw;
-    background: rgba(0, 0, 0, 0.7);
+    background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.76)),
+        linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.24), transparent);
+}
+
+.appbar .MuiToolbar-root {
+    position: relative;
+    z-index: 1;
 }

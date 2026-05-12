@@ -2,7 +2,7 @@ import IVote from "../types/vote.type";
 import IVoteCategory from "../types/votecategory.type";
 import requestService from "./request.service";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL ?? "";
+const BASE_URL = import.meta.env.VITE_BASE_URL ?? "";
 const API_URL = BASE_URL + "api/vote/";
 
 export const getVoteCategories = async (): Promise<IVoteCategory[]> => {

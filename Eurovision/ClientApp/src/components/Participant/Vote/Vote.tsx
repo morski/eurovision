@@ -16,7 +16,7 @@ type VoteProps = {
 
 function Vote({ subcompetition, participant, voteCategories, updateParticipant }: VoteProps) {
   const { mutate: updateVote } = useUpdateVote();
-  const colors = ["#64d7d6", "#eb54df", "#ea3323;"];
+  const colors = ["var(--esc-cyan)", "var(--esc-pink)", "var(--esc-yellow)", "var(--esc-red)", "var(--esc-lime)"];
   const points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   function valuetext(value: number) {
@@ -59,7 +59,7 @@ function Vote({ subcompetition, participant, voteCategories, updateParticipant }
     <Box>
       {voteCategories.map((item, index) => (
         <div key={index}>
-          <Box sx={{ color: colors[index], fontSize: "24px", fontWeight: "600" }}>{item.name}</Box>
+          <Box sx={{ color: colors[index % colors.length], fontSize: "22px", fontWeight: "800", textTransform: "uppercase" }}>{item.name}</Box>
           <Box sx={{ display: "flex", flexDirection: "row" }}>
             <Slider
               aria-label='Vote 1'
@@ -75,7 +75,20 @@ function Vote({ subcompetition, participant, voteCategories, updateParticipant }
               onChange={handleChange}
               name={item.categoryId}
               sx={{
-                color: colors[index]
+                color: colors[index % colors.length],
+                "& .MuiSlider-rail": {
+                  color: "rgba(255, 255, 255, 0.28)",
+                },
+                "& .MuiSlider-thumb": {
+                  border: "3px solid var(--esc-white)",
+                  boxShadow: "0 0 0 6px rgba(255, 255, 255, 0.12)",
+                },
+                "& .MuiSlider-mark": {
+                  backgroundColor: "rgba(255, 255, 255, 0.55)",
+                  height: 7,
+                  width: 7,
+                  borderRadius: "50%",
+                },
               }}
             />
             <Box
@@ -83,6 +96,8 @@ function Vote({ subcompetition, participant, voteCategories, updateParticipant }
                 width: "50px",
                 textAlign: "center",
                 fontSize: "25px",
+                fontWeight: 800,
+                color: "var(--esc-white)",
                 alignItems: "center",
                 display: "flex",
                 justifyContent: "center",

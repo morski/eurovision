@@ -1,39 +1,79 @@
 @font-face {
   font-family: gotham-book;
-  src: url("/public/fonts/Gotham\ Bold.otf");
+  src: url("/fonts/Gotham\ Bold.otf");
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: gotham-book;
-  src: url("/public/fonts/Gotham\ Book\ Regular.otf");
+  src: url("/fonts/Gotham\ Book\ Regular.otf");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: gotham-book;
-  src: url("/public/fonts/Gotham\ Book\ Italic.ttf");
+  src: url("/fonts/Gotham\ Book\ Italic.ttf");
   font-weight: normal;
   font-style: italic;
 }
 
 :root {
   --default-gap: 12px;
-  --font-color-dark: #333;
+  --font-color-dark: #101010;
   --font-color-light: #fff;
+  --esc-black: #050505;
+  --esc-ink: #101014;
+  --esc-panel: rgba(8, 8, 10, 0.9);
+  --esc-panel-soft: rgba(255, 255, 255, 0.08);
+  --esc-white: #ffffff;
+  --esc-muted: #c9c9d4;
+  --esc-cyan: #00d7ff;
+  --esc-pink: #ff2fa8;
+  --esc-yellow: #f6e84b;
+  --esc-red: #ff4638;
+  --esc-lime: #73ff8f;
+  --esc-border: rgba(255, 255, 255, 0.18);
+  --esc-shadow: 0 18px 50px rgba(0, 0, 0, 0.38);
 }
 
 body {
-  background-color: #05025e;
-  background-image: url("/public/images/2025/bg-footer-2025_2.png");
-  background-position: center bottom;
+  background-color: var(--esc-black);
+  background-image:
+    radial-gradient(circle at 15% 12%, rgba(255, 47, 168, 0.35), transparent 26rem),
+    radial-gradient(circle at 88% 20%, rgba(0, 215, 255, 0.32), transparent 24rem),
+    linear-gradient(135deg, rgba(246, 232, 75, 0.14), transparent 32%),
+    url("/images/2025/bg-header-2025.webp");
+  background-position: center top;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  background-size: cover;
   height: 100vh;
   font-family: gotham-book;
-  color: #FFF;
+  color: var(--esc-white);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    rgba(0, 0, 0, 0.52);
+  background-size: 72px 72px;
+  z-index: -1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  color: var(--esc-black);
+  background: var(--esc-yellow);
 }
 
 .login-container {
@@ -44,15 +84,14 @@ body {
 }
 
 .glass-container {
-  /* From https://css.glass */
-  background: rgba(255, 255, 255, 0.28);
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(7.5px);
-  -webkit-backdrop-filter: blur(7.5px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: var(--esc-panel);
+  border-radius: 8px;
+  box-shadow: var(--esc-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--esc-border);
   padding: 20px;
-  color: #FFF;
+  color: var(--esc-white);
   text-transform: uppercase;
   text-align: center;
   width: 90%;
@@ -64,21 +103,21 @@ body {
   outline: none;
   margin-top: 1em;
   padding: 1em 3em;
-  border-radius: 4px;
+  border-radius: 999px;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: .15em;
+  letter-spacing: 0;
   background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  color: #F2F2F8;
+  border: 1px solid var(--esc-white);
+  color: var(--esc-white);
   transform: translate3D(0, 0, 0);
   transition: color .3s, background-color .3s, transform .15s;
   cursor: pointer;
 }
 
 .glass-button:hover {
-  color: #212121;
-  background-color: #F2F2F8;
+  color: var(--esc-black);
+  background-color: var(--esc-white);
   outline: none;
 }
 
@@ -105,7 +144,7 @@ body {
   display: flex;
   flex-basis: 100%;
   align-items: center;
-  color: #F2F2F8;
+  color: var(--esc-white);
   margin: 8px 0px;
   font-weight: bold;
 }
@@ -114,7 +153,7 @@ body {
 .hr:after {
   content: "";
   flex-grow: 1;
-  background: rgba(255, 255, 255, 0.35);
+  background: var(--esc-border);
   height: 1px;
   font-size: 0px;
   line-height: 0px;
@@ -151,7 +190,7 @@ body {
   border-radius: 0;
   border: 0;
   border-bottom: solid #FFF 1px;
-  color: #FFF;
+  color: var(--esc-white);
   text-align: left;
 }
 
@@ -163,5 +202,5 @@ body {
   background-color: rgba(255, 255, 255, 0);
   box-shadow: none;
   border-color: #FFF;
-  color: #FFF;
+  color: var(--esc-white);
 }

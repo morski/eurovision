@@ -1,7 +1,7 @@
 import IRoom from "../types/room.type";
 import requestService from "./request.service";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL ?? "";
+const BASE_URL = import.meta.env.VITE_BASE_URL ?? "";
 const API_URL = BASE_URL + "api/room/";
 
 export const getAllRooms = async (): Promise<IRoom[]> => {

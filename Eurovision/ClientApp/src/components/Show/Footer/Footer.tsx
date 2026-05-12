@@ -32,7 +32,7 @@ function Footer({ view, setView }: IFooterProps) {
         onChange={(event, newValue) => {
           setView(newValue);
         }}
-        sx={{ background: "rgba(0, 0, 0, 0.7)", color: "white", height: "60px" }}
+        sx={{ background: "rgba(0, 0, 0, 0.82)", color: "white", height: "60px", backdropFilter: "blur(12px)" }}
       >
         <BottomNavigationAction
           label='VOTE'
@@ -44,7 +44,7 @@ function Footer({ view, setView }: IFooterProps) {
               "&.Mui-selected": { fontSize: "16px", fontWeight: "600" },
               fontFamily: "gotham-book",
             },
-            "&.Mui-selected": { color: "#64d7d6", textDecoration: "underline" },
+            "&.Mui-selected": { color: "var(--esc-cyan)" },
           }}
         />
         <BottomNavigationAction
@@ -56,7 +56,7 @@ function Footer({ view, setView }: IFooterProps) {
               "&.Mui-selected": { fontSize: "16px", fontWeight: "600" },
               fontFamily: "gotham-book",
             },
-            "&.Mui-selected": { color: "#64d7d6", textDecoration: "underline" },
+            "&.Mui-selected": { color: "var(--esc-cyan)" },
           }}
         />
       </BottomNavigation>

@@ -26,7 +26,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  color: "white",
+  color: "var(--esc-white)",
   marginLeft: "auto",
   transition: theme.transitions.create("transform", {
     duration: theme.transitions.duration.shortest,
@@ -44,7 +44,7 @@ function ResultView({ showType, year }: IResultViewProps) {
 
   const nav = useNavigate();
 
-  const colors = ["#64d7d6", "#eb54df", "#ea3323;"];
+  const colors = ["var(--esc-cyan)", "var(--esc-pink)", "var(--esc-yellow)", "var(--esc-red)", "var(--esc-lime)"];
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
@@ -70,18 +70,19 @@ function ResultView({ showType, year }: IResultViewProps) {
     return (
       <Box
         sx={{
-          borderRadius: "12px",
-          backgroundColor: "#000",
+          borderRadius: "8px",
+          background: "var(--esc-panel)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           mt: "16px",
           py: "16px",
           width: "100%",
-          border: "2px solid #eb54df",
+          border: "1px solid var(--esc-border)",
+          borderTop: "4px solid var(--esc-pink)",
         }}
       >
-        <Typography textAlign='center' fontFamily={"gotham-book"} fontSize={"30px"} color={"#64d7d6"} fontWeight={600} mb={"16px"}>
+        <Typography textAlign='center' fontFamily={"gotham-book"} fontSize={"30px"} color={"var(--esc-white)"} fontWeight={800} mb={"16px"}>
           You have not yet joined any party rooms. Click below to join or create some party rooms!
         </Typography>
         <StyledButton onClick={() => nav("/rooms")}>
@@ -103,10 +104,12 @@ function ResultView({ showType, year }: IResultViewProps) {
       <Box
         sx={{
           flexGrow: 1,
-          bgcolor: "#000",
-          borderRadius: "12px",
+          background: "var(--esc-panel)",
+          borderRadius: "8px",
           mt: "16px",
-          border: "2px solid " + colors[0]
+          border: "1px solid var(--esc-border)",
+          borderTop: "4px solid " + colors[0],
+          boxShadow: "var(--esc-shadow)",
         }}
       >
         <Tabs
@@ -146,6 +149,8 @@ function ResultView({ showType, year }: IResultViewProps) {
           fontWeight: "600",
           textAlign: "center",
           my: "16px",
+          color: "var(--esc-white)",
+          textTransform: "uppercase",
         }}
       >
         {subcompetition?.name.toUpperCase()}
@@ -161,12 +166,14 @@ function ResultView({ showType, year }: IResultViewProps) {
             <Card
               sx={{
                 width: "100%",
-                backgroundColor: "#000",
-                color: "white",
+                background: "linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03)), var(--esc-panel)",
+                color: "var(--esc-white)",
                 position: "relative",
                 marginBottom: "20px",
-                border: "2px solid " + colors[index % 3],
-                borderRadius: "12px"
+                border: "1px solid var(--esc-border)",
+                borderTop: "4px solid " + colors[index % colors.length],
+                borderRadius: "8px",
+                boxShadow: "var(--esc-shadow)",
               }}
               key={participant.id}
             >
@@ -176,10 +183,11 @@ function ResultView({ showType, year }: IResultViewProps) {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: "30px",
+                    fontSize: { xs: "22px", md: "30px" },
+                    fontWeight: 800,
                   }}
                 >
-                  {index + 1}
+                  <Box sx={{ color: colors[index % colors.length], minWidth: "34px" }}>{index + 1}</Box>
                   <Box
                     component='img'
                     className='flag'
@@ -187,7 +195,7 @@ function ResultView({ showType, year }: IResultViewProps) {
                     alt='country'
                     sx={{
                       width: "40px",
-                      paddingLeft: "8px",
+                      mx: "10px",
                     }}
                   />
                   {participant.country?.name}
@@ -207,8 +215,9 @@ function ResultView({ showType, year }: IResultViewProps) {
                   >
                     <Box
                       sx={{
-                        fontSize: "30px",
+                        fontSize: { xs: "24px", md: "30px" },
                         fontWeight: "bold",
+                        color: "var(--esc-yellow)",
                       }}
                     >
                       {participant.votes.reduce((a, b) => a + b.amount, 0)}p
@@ -243,7 +252,7 @@ function ResultView({ showType, year }: IResultViewProps) {
                         <Box>{participant.votes.find((v) => v.categoryId == category.categoryId)?.amount ?? 0}</Box>
                       </Box>
                     ))}
-                  <Divider variant='middle' sx={{ mx: 0, borderColor: "#FF0087", my: "16px" }} />
+                  <Divider variant='middle' sx={{ mx: 0, borderColor: "var(--esc-border)", my: "16px" }} />
                   {participant.userVotes
                     .sort((a, b) => b.voteAmount - a.voteAmount)
                     .map((uservote, index) => (

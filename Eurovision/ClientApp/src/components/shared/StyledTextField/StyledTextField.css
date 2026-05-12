@@ -1,45 +1,43 @@
-/* Rewrite this mess */
-
 div.textfield--styled {
-  color: #eb54df;
+  color: var(--esc-white);
   font-family: "gotham-book";
   padding-bottom: 1rem;
   width: 75%;
 }
 
 div.textfield--styled label {
-  color: #64d7d6;
+  color: var(--esc-muted);
   font-family: inherit;
 }
 
 div.textfield--styled label.Mui-focused {
-  color: #64d7d6;
+  color: var(--esc-cyan);
 }
 
 div.textfield--styled .MuiInput-underline:after {
-  border-bottom-color: #64d7d6;
+  border-bottom-color: var(--esc-cyan);
 }
 
 div.textfield--styled .MuiOutlinedInput-root {
   font-family: "gotham-book";
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 div.textfield--styled .MuiOutlinedInput-root fieldset {
-  border-color: #eb54df;
-  color: #64d7d6;
+  border-color: var(--esc-border);
+  color: var(--esc-cyan);
 }
 
 div.textfield--styled .MuiOutlinedInput-root:hover fieldset {
-  border-color: #eb54df;
+  border-color: var(--esc-pink);
   border-width: 2px;
 }
 
 div.textfield--styled .MuiOutlinedInput-root.Mui-focused fieldset {
-  border-color: #eb54df;
+  border-color: var(--esc-cyan);
 }
 
 div.textfield--styled .MuiOutlinedInput-root .MuiOutlinedInput-input {
-  color: #eb54df;
+  color: var(--esc-white);
 }
-
-/* const colors=["#64d7d6","#eb54df","#ea3323;"]; */

@@ -42,7 +42,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  color: "white",
+  color: "var(--esc-white)",
   marginLeft: "auto",
   transition: theme.transitions.create("transform", {
     duration: theme.transitions.duration.shortest,
@@ -67,24 +67,28 @@ function Participant({
     <Card
       sx={{
         width: "100%",
-        backgroundColor: "#000",
-        color: "white",
+        background: "linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03)), var(--esc-panel)",
+        color: "var(--esc-white)",
         position: "relative",
-        marginBottom: "20px",
-        borderRadius: "12px",
-        border: "2px solid " + borderColor
+        marginBottom: "0",
+        borderRadius: "8px",
+        border: "1px solid var(--esc-border)",
+        borderTop: "4px solid " + borderColor,
+        boxShadow: "var(--esc-shadow)",
+        overflow: "hidden",
       }}
     >
-      <CardContent sx={{ display: "flex", justifyContent: "space-between" }}>
+      <CardContent sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", py: "12px !important" }}>
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: "30px",
+            fontSize: { xs: "22px", md: "28px" },
+            fontWeight: 800,
           }}
         >
-          {participant.order}
+          <Box sx={{ color: borderColor, minWidth: "34px" }}>{participant.order}</Box>
           <Box
             component='img'
             className='flag'
@@ -95,7 +99,8 @@ function Participant({
             alt='country'
             sx={{
               width: "40px",
-              paddingLeft: "8px",
+              mx: "10px",
+              borderRadius: "2px",
             }}
           />
           {participant.country?.name}
@@ -111,8 +116,9 @@ function Participant({
         >
           <Box
             sx={{
-              fontSize: "30px",
+              fontSize: { xs: "24px", md: "30px" },
               fontWeight: "bold",
+              color: "var(--esc-yellow)",
             }}
           >
             {participant.votes.reduce((a, b) => a + b.amount, 0)}p
@@ -127,6 +133,11 @@ function Participant({
           .trim()
           .replace(" ", "_")}-hero.jpeg`}
         alt={participant.artist}
+        sx={{
+          borderTop: "1px solid var(--esc-border)",
+          borderBottom: "1px solid var(--esc-border)",
+          objectFit: "cover",
+        }}
       />
       <CardContent
         sx={{
@@ -172,15 +183,16 @@ function Participant({
             <Box sx={{ paddingLeft: "16px" }}>
               <Box
                 sx={{
-                  fontSize: "30px",
-                  fontWeight: "600",
+                  fontSize: { xs: "24px", md: "30px" },
+                  fontWeight: "800",
                 }}
               >
                 {participant.artist}
               </Box>
               <Box
                 sx={{
-                  fontSize: "25px",
+                  fontSize: { xs: "18px", md: "24px" },
+                  color: "var(--esc-muted)",
                 }}
               >
                 {participant.song}

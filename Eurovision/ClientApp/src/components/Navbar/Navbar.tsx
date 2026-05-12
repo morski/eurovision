@@ -56,13 +56,13 @@ function Navbar({ user, year }: INavbarProps) {
         <Toolbar disableGutters>
           <Box
             component='img'
-            sx={{
-              height: 64,
-              display: { xs: "none", md: "flex" },
-              mr: 1,
-              mt: 1,
-              mb: 1,
-              cursor: "pointer",
+              sx={{
+                height: 58,
+                display: { xs: "none", md: "flex" },
+                mr: 3,
+                mt: 1,
+                mb: 1,
+                cursor: "pointer",
             }}
             alt='Your logo.'
             src={`/images/${year}/logo/eurovision_${year}_white.png`}
@@ -137,7 +137,7 @@ function Navbar({ user, year }: INavbarProps) {
             <Box
               component='img'
               sx={{
-                height: 64,
+                height: 54,
                 mr: 1,
                 mt: 1,
                 mb: 1,
@@ -176,9 +176,10 @@ function Navbar({ user, year }: INavbarProps) {
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
                   sx={{
-                    backgroundColor: "#eb54df",
+                    background: "linear-gradient(135deg, var(--esc-pink), var(--esc-cyan))",
+                    border: "2px solid rgba(255, 255, 255, 0.84)",
                     fontFamily: "gotham-book",
-                    fontWeight: "600",
+                    fontWeight: "700",
                   }}
                   alt={user.username?.toUpperCase()}
                   src='/static/images/avatar/2.jpg'
