@@ -19,14 +19,9 @@ type VoteProps = {
 };
 
 function Vote({ subcompetition, participant, voteCategories, updateParticipant }: VoteProps) {
-    // updateVote sends the vote to the backend API
-    const { mutate: updateVote } = useUpdateVote();
-
-    // One color per vote category — supports up to 3 categories
-    const colors = ["#64d7d6", "#eb54df", "#ea3323;"];
-
-    // The allowed point values on the slider (Eurovision style: 1-12)
-    const points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const { mutate: updateVote } = useUpdateVote();
+  const colors = ["var(--esc-cyan)", "var(--esc-pink)", "var(--esc-yellow)", "var(--esc-red)", "var(--esc-lime)"];
+  const points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
     // Required by MUI Slider for accessibility labels
     function valuetext(value: number) {
@@ -90,54 +85,62 @@ function Vote({ subcompetition, participant, voteCategories, updateParticipant }
         }
     };
 
-    return (
-        <Box>
-            {/* Render one slider per vote category */}
-            {voteCategories.map((item, index) => (
-                <div key={index}>
-                    {/* Category name displayed in its assigned color */}
-                    <Box sx={{ color: colors[index], fontSize: "24px", fontWeight: "600" }}>
-                        {item.name}
-                    </Box>
-
-                    <Box sx={{ display: "flex", flexDirection: "row" }}>
-                        {/* The voting slider — snaps to whole numbers between 1 and 12 */}
-                        <Slider
-                            aria-label='Vote 1'
-                            // Current value: find the vote for this category, default to 0
-                            value={participant.votes.find((v) => v.categoryId === item.categoryId)?.amount ?? 0}
-                            defaultValue={0}
-                            getAriaValueText={valuetext}
-                            valueLabelDisplay='off'
-                            step={null}  // null means it only snaps to the marks defined below
-                            marks={points.map((num) => ({ value: num }))}
-                            min={1}
-                            max={12}
-                            onChangeCommitted={(event, value) => handleChangeCommited(event, value, item.categoryId)}
-                            onChange={handleChange}
-                            name={item.categoryId}
-                            sx={{ color: colors[index] }}
-                        />
-
-                        {/* Displays the current vote value as a number next to the slider */}
-                        <Box
-                            sx={{
-                                width: "50px",
-                                textAlign: "center",
-                                fontSize: "25px",
-                                alignItems: "center",
-                                display: "flex",
-                                justifyContent: "center",
-                                paddingLeft: "16px",
-                            }}
-                        >
-                            {participant.votes.find((v) => v.categoryId === item.categoryId)?.amount ?? 0}
-                        </Box>
-                    </Box>
-                </div>
-            ))}
-        </Box>
-    );
+  return (
+    <Box>
+      {voteCategories.map((item, index) => (
+        <div key={index}>
+          <Box sx={{ color: colors[index % colors.length], fontSize: "22px", fontWeight: "800", textTransform: "uppercase" }}>{item.name}</Box>
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Slider
+              aria-label='Vote 1'
+              value={participant.votes.find((v) => v.categoryId == item.categoryId)?.amount ?? 0}
+              defaultValue={0}
+              getAriaValueText={valuetext}
+              valueLabelDisplay='off'
+              step={null}
+              marks={points.map((num) => ({ value: num }))}
+              min={1}
+              max={12}
+              onChangeCommitted={(event: React.SyntheticEvent | Event, value: number | Array<number>) => handleChangeCommited(event, value, item.categoryId)}
+              onChange={handleChange}
+              name={item.categoryId}
+              sx={{
+                color: colors[index % colors.length],
+                "& .MuiSlider-rail": {
+                  color: "rgba(255, 255, 255, 0.28)",
+                },
+                "& .MuiSlider-thumb": {
+                  border: "3px solid var(--esc-white)",
+                  boxShadow: "0 0 0 6px rgba(255, 255, 255, 0.12)",
+                },
+                "& .MuiSlider-mark": {
+                  backgroundColor: "rgba(255, 255, 255, 0.55)",
+                  height: 7,
+                  width: 7,
+                  borderRadius: "50%",
+                },
+              }}
+            />
+            <Box
+              sx={{
+                width: "50px",
+                textAlign: "center",
+                fontSize: "25px",
+                fontWeight: 800,
+                color: "var(--esc-white)",
+                alignItems: "center",
+                display: "flex",
+                justifyContent: "center",
+                paddingLeft: "16px",
+              }}
+            >
+              {participant.votes.find((v) => v.categoryId == item.categoryId)?.amount ?? 0}
+            </Box>
+          </Box>
+        </div>
+      ))}
+    </Box>
+  );
 }
 
 export default Vote;

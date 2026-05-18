@@ -61,7 +61,7 @@ function VoteView({ showType, year, order, handleRadioChange, filterChecked, han
     }
   };
 
-  const colors = ["#64d7d6", "#eb54df", "#ea3323;"];
+  const colors = ["var(--esc-cyan)", "var(--esc-pink)", "var(--esc-yellow)", "var(--esc-red)", "var(--esc-lime)"];
 
   return (
     <Box
@@ -80,6 +80,8 @@ function VoteView({ showType, year, order, handleRadioChange, filterChecked, han
           right: "20px",
           zIndex: "9999",
           backgroundColor: "white",
+          color: "var(--esc-black)",
+          border: "2px solid var(--esc-yellow)",
           height: "50px",
           width: "50px",
         }}
@@ -91,9 +93,11 @@ function VoteView({ showType, year, order, handleRadioChange, filterChecked, han
         sx={{
           fontSize: "24px",
           fontFamily: "gotham-book",
-          fontWeight: "600",
+          fontWeight: "800",
           textAlign: "center",
           my: "16px",
+          color: "var(--esc-white)",
+          textTransform: "uppercase",
         }}
       >
         {subcompetition?.name.toUpperCase()}
@@ -136,11 +140,12 @@ function VoteView({ showType, year, order, handleRadioChange, filterChecked, han
             backgroundColor: "#000",
             color: "white",
             p: "16px",
+            borderLeft: "1px solid var(--esc-border)",
           },
         }}
       >
         <FormControl>
-          <FormLabel id='demo-radio-buttons-group-label' focused={false} sx={{ color: "white", fontSize: "24px", fontWeight: "600" }}>
+          <FormLabel id='demo-radio-buttons-group-label' focused={false} sx={{ color: "var(--esc-cyan)", fontSize: "24px", fontWeight: "700" }}>
             Order by
           </FormLabel>
           <RadioGroup aria-labelledby='demo-radio-buttons-group-label' defaultValue='start-order' name='radio-buttons-group' value={order} onChange={handleRadioChange}>
@@ -191,9 +196,9 @@ function VoteView({ showType, year, order, handleRadioChange, filterChecked, han
             id='demo-radio-buttons-group-label'
             focused={false}
             sx={{
-              color: "white",
+              color: "var(--esc-pink)",
               fontSize: "24px",
-              fontWeight: "600",
+              fontWeight: "700",
               pt: "16px",
             }}
           >

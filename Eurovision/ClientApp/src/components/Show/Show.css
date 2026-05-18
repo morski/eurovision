@@ -10,6 +10,7 @@
     flex-direction: column;
     overflow: hidden;
     max-height: calc(100vh - 80px);
+    padding-top: 18px;
 }
 
 .participant-container {
@@ -38,6 +39,10 @@
     flex: 1 1 auto;
     overflow-y: scroll;
     padding-right: var(--default-gap);
+}
+
+.participants-container > div {
+    gap: 14px;
 }
 
 

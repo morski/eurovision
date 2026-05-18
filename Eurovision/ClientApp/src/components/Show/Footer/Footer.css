@@ -6,7 +6,10 @@
 }
 
 .footer {
-    background-image: url("/public/images/2025/footer-bg-colors-wide-2025.webp");
+    background:
+        linear-gradient(90deg, var(--esc-pink), var(--esc-cyan), var(--esc-yellow), var(--esc-red)),
+        var(--esc-black);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .phantom {
@@ -16,8 +19,6 @@
     width: 100%;
 }
 
-;
-
 .final-icon {
     height: 40px;
     width: 40px;
@@ -25,7 +26,7 @@
 }
 
 .footer .nav-link {
-    color: #fff;
+    color: var(--esc-white);
     font-family: gotham-book;
     font-weight: bold;
 }

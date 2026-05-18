@@ -42,7 +42,7 @@ function Room() {
     setRoomPassword("");
   };
 
-  const colors = ["#64d7d6", "#eb54df", "#ea3323;"];
+  const colors = ["var(--esc-cyan)", "var(--esc-pink)", "var(--esc-yellow)", "var(--esc-red)", "var(--esc-lime)"];
 
   return (
     <Container
@@ -56,17 +56,20 @@ function Room() {
     >
       <Box
         sx={{
-          borderRadius: "12px",
-          backgroundColor: "#000",
+          borderRadius: "8px",
+          background: "var(--esc-panel)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           py: "16px",
+          px: { xs: "8px", md: "18px" },
           width: "100%",
-          border: "2px solid " + colors[0],
+          border: "1px solid var(--esc-border)",
+          borderTop: "4px solid " + colors[0],
+          boxShadow: "var(--esc-shadow)",
         }}
       >
-        <Typography key={"title"} textAlign='center' fontFamily={"gotham-book"} fontSize={"30px"} color={"#ea3323"} fontWeight={600} mb={"16px"} textTransform={"uppercase"}>
+        <Typography key={"title"} textAlign='center' fontFamily={"gotham-book"} fontSize={"30px"} color={"var(--esc-white)"} fontWeight={800} mb={"16px"} textTransform={"uppercase"}>
           Party Rooms
         </Typography>
         <StyledTextField fieldKey={"roomName"} id='outlined-basic' label='Room name' value={roomName} onChange={(e) => setRoomName(e.target.value)} />
@@ -96,8 +99,8 @@ function Room() {
         {isLoading && <p>Loading...</p>}
         {!isLoading && rooms.length > 0 && (
           <Box sx={{ width: "calc(100% - 32px)" }}>
-            <Divider variant='middle' sx={{ mx: 0, borderColor: "#FF0087" }} />
-            <Typography textAlign='left' fontFamily={"gotham-book"} fontSize={"30px"} color={"#FBF401"} fontWeight={600} my={"16px"} lineHeight={1}>
+            <Divider variant='middle' sx={{ mx: 0, borderColor: "var(--esc-border)" }} />
+            <Typography textAlign='left' fontFamily={"gotham-book"} fontSize={"30px"} color={"var(--esc-yellow)"} fontWeight={800} my={"16px"} lineHeight={1}>
               Your Rooms
             </Typography>
             {rooms.map((room, index) => (
@@ -110,12 +113,12 @@ function Room() {
                 }}
               >
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Typography textAlign='left' fontFamily={"gotham-book"} fontSize={"30px"} color={colors[index % 3]} fontWeight={600} my={"16px"} lineHeight={1.5}>
+                  <Typography textAlign='left' fontFamily={"gotham-book"} fontSize={{ xs: "24px", md: "30px" }} color={colors[index % colors.length]} fontWeight={800} my={"16px"} lineHeight={1.5}>
                     {index + 1}. {room.name}
                   </Typography>
                   <StyledButton onClick={() => handleLeaveRoom(room.id)}>Leave</StyledButton>
                 </Box>
-                <Divider variant='middle' sx={{ mx: 0, borderColor: colors[index % 3] }} />
+                <Divider variant='middle' sx={{ mx: 0, borderColor: colors[index % colors.length] }} />
               </Box>
             ))}
           </Box>
