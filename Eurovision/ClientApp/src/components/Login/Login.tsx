@@ -41,7 +41,8 @@ function Login() {
             "user",
             JSON.stringify({
               userId: response.userId,
-              username: response.username,
+                username: response.username,
+                isAdmin: response.isAdmin,
             })
           );
           navigate("/");

@@ -12,6 +12,7 @@ import Home from "../Home/Home";
 import Navbar from "../Navbar/Navbar";
 import Room from "../Room/Room";
 import Show from "../Show/Show";
+import Admin from "../Admin/Admin";
 
 function Default() {
     // currentUser holds the logged-in user's data (name, token, etc.)
@@ -22,6 +23,8 @@ function Default() {
 
     // nav is used to programmatically navigate to different pages
     const nav = useNavigate();
+
+    const isAdmin = currentUser?.isAdmin ?? false;
 
     useEffect(() => {
         // Called once when the component first loads.
@@ -55,7 +58,7 @@ function Default() {
             {activeEvent && (
                 <div>
                     {/* Navbar shows the top navigation bar with the user's name and event year */}
-                    <Navbar user={currentUser} year={activeEvent.year} />
+                    <Navbar user={currentUser} year={activeEvent.year} isAdmin={isAdmin} />
 
                     {/* Routes define which component to show based on the URL path.
               showType corresponds to: 1 = Semi Final 1, 2 = Semi Final 2, 3 = Grand Final */}
@@ -65,6 +68,7 @@ function Default() {
                         <Route path='/semi-final-2' element={<Show key={2} showType={2} year={activeEvent.year} />} />
                         <Route path='/grand-final' element={<Show key={3} showType={3} year={activeEvent.year} />} />
                         <Route path='/rooms' element={<Room />} />
+                        {isAdmin && <Route path='/admin' element={<Admin />} />}
                     </Routes>
                 </div>
             )}

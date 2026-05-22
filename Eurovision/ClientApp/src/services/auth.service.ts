@@ -64,7 +64,7 @@ class AuthService {
           if (response.token) {
             localStorage.setItem("token", response.token);
             localStorage.setItem("refreshToken", response.refreshToken);
-            localStorage.setItem("user", JSON.stringify({ userId: response.userId, username: response.username }));
+            localStorage.setItem("user", JSON.stringify({ userId: response.userId, username: response.username, isAdmin: response.isAdmin }));
             return true;
           }
           return false;

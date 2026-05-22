@@ -9,7 +9,7 @@ namespace Eurovision.Views
         {
             Id = subCompetition.RecordGuid;
             Name = subCompetition.Name;
-            Participants = subCompetition.PerformanceNumbers.Select(x =>
+            Participants = subCompetition.PerformanceNumbers.OrderBy(x => x.PerformanceNr).Select(x =>
             {
                 return new ParticipantView
                 {
@@ -23,7 +23,6 @@ namespace Eurovision.Views
                     },
                     Votes = VoteView.ConvertVotesToVoteView(votes.Where(v => v.ParticipantId == x.ParticipantId).ToList()),
                 };
-
             }).ToList();
         }
 

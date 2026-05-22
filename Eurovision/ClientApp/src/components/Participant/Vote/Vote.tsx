@@ -21,7 +21,7 @@ type VoteProps = {
 function Vote({ subcompetition, participant, voteCategories, updateParticipant }: VoteProps) {
   const { mutate: updateVote } = useUpdateVote();
   const colors = ["var(--esc-cyan)", "var(--esc-pink)", "var(--esc-yellow)", "var(--esc-red)", "var(--esc-lime)"];
-  const points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const points = [1, 2, 3, 4, 5, 6, 7, 8, 10, 12];
 
     // Required by MUI Slider for accessibility labels
     function valuetext(value: number) {
