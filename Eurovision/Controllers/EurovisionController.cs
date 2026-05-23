@@ -187,5 +187,63 @@ namespace Eurovision.Controllers
             var user = HttpContext.Items["User"];
             return new JsonResult(_eurovisionService.GetSubCompetitionById(subCompetitionId, user as User));
         }
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("events")]
+        public IActionResult GetEvents()
+        {
+            var events = _context.Events
+                .Select(e => new {
+                    recordGuid = e.RecordGuid,
+                    name = e.Name,
+                    year = e.Year,
+                    city = e.City,
+                    isActive = e.IsActive
+                })
+                .ToList();
+            return new JsonResult(events);
+        }
+
+        [HttpPost]
+        [Route("admin/subcompetition")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult AddSubCompetition([FromBody] SubCompetition subCompetition)
+        {
+            try
+            {
+                subCompetition.RecordGuid = Guid.NewGuid();
+                _context.SubCompetitions.Add(subCompetition);
+                _context.SaveChanges();
+                return Ok(new { recordGuid = subCompetition.RecordGuid, name = subCompetition.Name });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error adding sub-competition");
+                return StatusCode(500, "An error has occurred");
+            }
+        }
+
+        [HttpPut]
+        [Route("admin/event/setactive/{eventId}")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult SetActiveEvent(Guid eventId)
+        {
+            try
+            {
+                var events = _context.Events.ToList();
+                foreach (var e in events)
+                {
+                    e.IsActive = e.RecordGuid == eventId;
+                    _context.Entry(e).State = EntityState.Modified;
+                }
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error setting active event");
+                return StatusCode(500, "An error has occurred");
+            }
+        }
     }
 }

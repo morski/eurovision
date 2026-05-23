@@ -82,6 +82,10 @@ function Admin() {
     const [eventYear, setEventYear] = useState("");
     const [eventCity, setEventCity] = useState("");
     const [eventCountryId, setEventCountryId] = useState("");
+    const [allEvents, setAllEvents] = useState<any[]>([]);
+    const [subCompName, setSubCompName] = useState("");
+    const [subCompEventId, setSubCompEventId] = useState("");
+    const [activeEventId, setActiveEventId] = useState("");
 
     // Participant state
     const [artist, setArtist] = useState("");
@@ -105,6 +109,15 @@ function Admin() {
         fetch(BASE_URL + "api/eurovision/countries")
             .then(r => r.json())
             .then(setCountries)
+            .catch(() => { });
+
+        fetch(BASE_URL + "api/eurovision/events")
+            .then(r => r.json())
+            .then((data) => {
+                setAllEvents(data);
+                const active = data.find((e: any) => e.isActive);
+                if (active) setActiveEventId(active.recordGuid);
+            })
             .catch(() => { });
 
         if (activeEvent) {
@@ -157,6 +170,32 @@ function Admin() {
         const res = await AdminService.saveParticipantOrder(selectedSubId, ids);
         if (res.ok) showFeedback("Order saved successfully!");
         else showFeedback("Failed to save order", true);
+    };
+
+    const handleAddSubCompetition = async () => {
+        if (!subCompName || !subCompEventId)
+            return showFeedback("Please fill in all fields", true);
+        const res = await AdminService.addSubCompetition(subCompName, subCompEventId);
+        if (res.ok) {
+            showFeedback("Show added successfully!");
+            setSubCompName("");
+            setSubCompEventId("");
+        } else {
+            showFeedback("Failed to add show", true);
+        }
+    };
+
+    const handleSetActiveEvent = async () => {
+        if (!activeEventId)
+            return showFeedback("Please select an event", true);
+        const res = await AdminService.setActiveEvent(activeEventId);
+        if (res.ok) {
+            showFeedback("Active event updated! Refresh the page to see changes.");
+            // Clear cached active event so it reloads
+            localStorage.removeItem("activeEvent");
+        } else {
+            showFeedback("Failed to update active event", true);
+        }
     };
 
     const handleAddCountry = async () => {
@@ -279,6 +318,9 @@ function Admin() {
                     <Tab label="Add Country" />
                     <Tab label="Add Event" />
                     <Tab label="Song Order" />
+                    <Tab label="Add Show" />
+                    <Tab label="Active Event" />
+                    
                 </Tabs>
 
                 {/* ADD PARTICIPANT */}
@@ -370,6 +412,66 @@ function Admin() {
                     </Stack>
                 )}
 
+                {/* ADD SHOW */}
+                {tab === 4 && (
+                    <Stack spacing={0}>
+                        {sectionTitle("Add a show to an event")}
+                        <TextField
+                            fullWidth
+                            label="Show Name"
+                            placeholder="e.g. Eurovision Semi-Final 1"
+                            value={subCompName}
+                            onChange={e => setSubCompName(e.target.value)}
+                            sx={inputStyle}
+                        />
+                        <FormControl fullWidth sx={inputStyle}>
+                            <InputLabel shrink>Event</InputLabel>
+                            <Select
+                                value={subCompEventId ?? ""}
+                                displayEmpty
+                                label="Event"
+                                onChange={e => setSubCompEventId(e.target.value)}
+                                MenuProps={selectMenuProps}
+                            >
+                                <MenuItem value=""><em>Select event...</em></MenuItem>
+                                {allEvents.map((e: any) => (
+                                    <MenuItem key={e.recordGuid} value={e.recordGuid}>
+                                        {e.name} ({e.year})
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <StyledButton onClick={handleAddSubCompetition}>Add Show</StyledButton>
+                    </Stack>
+                )}
+
+                {/* ACTIVE EVENT */}
+                {tab === 5 && (
+                    <Stack spacing={0}>
+                        {sectionTitle("Set the active event")}
+                        <Typography fontFamily="gotham-book" color="var(--esc-muted)" fontSize="13px" mb={2}>
+                            The active event is what all users see when they open the app.
+                        </Typography>
+                        <FormControl fullWidth sx={inputStyle}>
+                            <InputLabel shrink>Active Event</InputLabel>
+                            <Select
+                                value={activeEventId ?? ""}
+                                displayEmpty
+                                label="Active Event"
+                                onChange={e => setActiveEventId(e.target.value)}
+                                MenuProps={selectMenuProps}
+                            >
+                                <MenuItem value=""><em>Select event...</em></MenuItem>
+                                {allEvents.map((e: any) => (
+                                    <MenuItem key={e.recordGuid} value={e.recordGuid}>
+                                        {e.name} ({e.year}) {e.isActive ? "current" : ""}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <StyledButton onClick={handleSetActiveEvent}>Set as Active</StyledButton>
+                    </Stack>
+                )}
                 {/* SONG ORDER */}
                 {tab === 3 && (
                     <Stack spacing={0}>

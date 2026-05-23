@@ -38,6 +38,22 @@ class AdminService {
             body: JSON.stringify(participantIds),
         });
     }
+    addSubCompetition(name: string, eventId: string) {
+        return fetch(`${BASE_URL}api/eurovision/admin/subcompetition`, {
+            method: "POST",
+            mode: "cors",
+            headers: authHeader(),
+            body: JSON.stringify({ name, eventId }),
+        });
+    }
+
+    setActiveEvent(eventId: string) {
+        return fetch(`${BASE_URL}api/eurovision/admin/event/setactive/${eventId}`, {
+            method: "PUT",
+            mode: "cors",
+            headers: authHeader(),
+        });
+    }
 }
 
 const adminService = new AdminService();
