@@ -9,11 +9,12 @@ import VoteView from "./VoteView/VoteView";
 import "./Show.css";
 
 type IShowProps = {
-  showType: number;
-  year: number;
+    showType: number;
+    year: number;
+    subCompetitionId: string;
 };
 
-function Show({ showType, year }: IShowProps) {
+function Show({ showType, year, subCompetitionId }: IShowProps) {
   const [view, setView] = useState<number>(0);
   const [order, setOrder] = useState<string>("start-order");
   const [filterChecked, setFilterChecked] = useState<boolean>(false);
@@ -27,28 +28,22 @@ function Show({ showType, year }: IShowProps) {
   };
 
   return (
-    <Container
-      maxWidth='md'
-      className='main-content'
-      sx={{
-        display: "flex",
-        height: "100%",
-      }}
-    >
-      {view === 0 ? (
-        <VoteView
-          showType={showType}
-          year={year}
-          order={order}
-          handleRadioChange={handleRadioChange}
-          filterChecked={filterChecked}
-          handleFilterChange={handleFilterChange}
-        />
-      ) : (
-        <ResultView showType={showType} year={year} />
-      )}
-      <Footer view={view} setView={setView} />
-    </Container>
+      <Container maxWidth='md' className='main-content' sx={{ display: "flex", height: "100%" }}>
+          {view === 0 ? (
+              <VoteView
+                  showType={showType}
+                  year={year}
+                  subCompetitionId={subCompetitionId}
+                  order={order}
+                  handleRadioChange={handleRadioChange}
+                  filterChecked={filterChecked}
+                  handleFilterChange={handleFilterChange}
+              />
+          ) : (
+              <ResultView showType={showType} year={year} />
+          )}
+          <Footer view={view} setView={setView} />
+      </Container>
   );
 }
 

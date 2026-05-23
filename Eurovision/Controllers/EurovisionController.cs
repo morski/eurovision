@@ -95,12 +95,21 @@ namespace Eurovision.Controllers
         [HttpPost]
         [Route("admin/participant")]
         [Authorize(Roles = "Admin")]
-        public IActionResult AddParticipant([FromBody] Participant participant)
+        public IActionResult AddParticipant([FromBody] AddParticipantRequest request)
         {
             try
             {
-                var result = _eurovisionService.AddParticipant(participant);
-                return Ok(result);
+                var participant = new Participant
+                {
+                    RecordGuid = Guid.NewGuid(),
+                    Artist = request.Artist,
+                    Song = request.Song,
+                    CountryId = request.CountryId,
+                    EventId = request.EventId
+                };
+                _context.Participants.Add(participant);
+                _context.SaveChanges();
+                return Ok(new { recordGuid = participant.RecordGuid });
             }
             catch (Exception ex)
             {
@@ -207,13 +216,23 @@ namespace Eurovision.Controllers
         [HttpPost]
         [Route("admin/subcompetition")]
         [Authorize(Roles = "Admin")]
-        public IActionResult AddSubCompetition([FromBody] SubCompetition subCompetition)
+        public IActionResult AddSubCompetition([FromBody] AddSubCompetitionRequest request)
         {
             try
             {
-                subCompetition.RecordGuid = Guid.NewGuid();
+                _logger.LogInformation("Adding subcompetition: Name={Name}, EventId={EventId}", request.Name, request.EventId);
+
+                var subCompetition = new SubCompetition
+                {
+                    RecordGuid = Guid.NewGuid(),
+                    Name = request.Name,
+                    EventId = request.EventId
+                };
                 _context.SubCompetitions.Add(subCompetition);
                 _context.SaveChanges();
+
+                _logger.LogInformation("Saved subcompetition: RecordGuid={RecordGuid}, EventId={EventId}", subCompetition.RecordGuid, subCompetition.EventId);
+
                 return Ok(new { recordGuid = subCompetition.RecordGuid, name = subCompetition.Name });
             }
             catch (Exception ex)
@@ -245,5 +264,111 @@ namespace Eurovision.Controllers
                 return StatusCode(500, "An error has occurred");
             }
         }
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("subcompetitions/active")]
+        public IActionResult GetActiveSubCompetitions()
+        {
+            var activeEvent = _context.Events.FirstOrDefault(e => e.IsActive == true);
+            if (activeEvent == null) return NotFound();
+
+            var subs = _context.SubCompetitions
+                .Where(s => s.EventId == activeEvent.RecordGuid)
+                .Select(s => new {
+                    recordGuid = s.RecordGuid,
+                    name = s.Name
+                })
+                .ToList();
+            return new JsonResult(subs);
+        }
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("event/active/full")]
+        public IActionResult GetActiveEventFull()
+        {
+            var activeEvent = _context.Events
+                .Include(e => e.Country)
+                .Include(e => e.Participants)
+                    .ThenInclude(p => p.Country)
+                .FirstOrDefault(e => e.IsActive == true);
+            if (activeEvent == null) return NotFound();
+            return new JsonResult(new
+            {
+                recordGuid = activeEvent.RecordGuid,
+                name = activeEvent.Name,
+                year = activeEvent.Year,
+                city = activeEvent.City,
+                isActive = activeEvent.IsActive,
+                country = activeEvent.Country,
+                participants = activeEvent.Participants
+            });
+        }
+        [HttpGet]
+        [Route("participants/{eventId}")]
+        [Authorize]
+        public IActionResult GetParticipantsByEvent(Guid eventId)
+        {
+            var participants = _context.Participants
+                .Where(p => p.EventId == eventId)
+                .Include(p => p.Country)
+                .Select(p => new {
+                    recordGuid = p.RecordGuid,
+                    artist = p.Artist,
+                    song = p.Song,
+                    country = new { name = p.Country.Name }
+                })
+                .ToList();
+            return new JsonResult(participants);
+        }
+
+        [HttpPost]
+        [Route("admin/assignparticipant")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult AssignParticipantToShow([FromBody] AssignParticipantRequest request)
+        {
+            try
+            {
+                // Check if already assigned
+                var existing = _context.PerformanceNumbers
+                    .FirstOrDefault(p => p.ParticipantId == request.ParticipantId
+                        && p.SubCompetitionId == request.SubCompetitionId);
+                if (existing != null)
+                    return BadRequest("Participant already assigned to this show");
+
+                var performanceNumber = new PerformanceNumber
+                {
+                    RecordGuid = Guid.NewGuid(),
+                    ParticipantId = request.ParticipantId,
+                    SubCompetitionId = request.SubCompetitionId,
+                    PerformanceNr = request.PerformanceNr
+                };
+                _context.PerformanceNumbers.Add(performanceNumber);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error assigning participant to show");
+                return StatusCode(500, "An error has occurred");
+            }
+        }
+    }
+    public class AddSubCompetitionRequest
+    {
+        public string Name { get; set; } = null!;
+        public Guid EventId { get; set; }
+    }
+    public class AddParticipantRequest
+    {
+        public string? Artist { get; set; }
+        public string? Song { get; set; }
+        public Guid CountryId { get; set; }
+        public Guid EventId { get; set; }
+    }
+    public class AssignParticipantRequest
+    {
+        public Guid ParticipantId { get; set; }
+        public Guid SubCompetitionId { get; set; }
+        public int PerformanceNr { get; set; }
     }
 }

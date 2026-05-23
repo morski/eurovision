@@ -54,6 +54,22 @@ class AdminService {
             headers: authHeader(),
         });
     }
+    getParticipantsByEvent(eventId: string) {
+        return fetch(`${BASE_URL}api/eurovision/participants/${eventId}`, {
+            method: "GET",
+            mode: "cors",
+            headers: authHeader(),
+        });
+    }
+
+    assignParticipantToShow(participantId: string, subCompetitionId: string, performanceNr: number) {
+        return fetch(`${BASE_URL}api/eurovision/admin/assignparticipant`, {
+            method: "POST",
+            mode: "cors",
+            headers: authHeader(),
+            body: JSON.stringify({ participantId, subCompetitionId, performanceNr }),
+        });
+    }
 }
 
 const adminService = new AdminService();

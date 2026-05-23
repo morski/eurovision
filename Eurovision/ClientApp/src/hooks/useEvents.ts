@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { EVENTS_QUERY_KEY } from "../constants";
-import { getActiveEvent, getActiveEventYear, getEvent, getSubcompetition, getSubCompetitionResults } from "../services/events.service";
+import { getActiveEvent, getActiveEventYear, getEvent, getSubcompetition, getSubCompetitionResults, getSubcompetitionById } from "../services/events.service";
 
 interface DefaultEventQueryProps {
   year: number;
@@ -44,3 +44,10 @@ export const useGetSubcompetitionResults = ({ year, showType, roomId }: Subcompe
     queryFn: () => getSubCompetitionResults(year, showType, roomId),
     enabled: !!roomId,
   });
+
+export const useGetSubcompetitionById = (subCompetitionId: string) =>
+    useQuery({
+        queryKey: [EVENTS_QUERY_KEY, subCompetitionId],
+        queryFn: () => getSubcompetitionById(subCompetitionId),
+        enabled: !!subCompetitionId,
+    });

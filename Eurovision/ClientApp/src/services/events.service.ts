@@ -46,3 +46,8 @@ export const getSubCompetitionResults = async (year: number, showType: number, r
   const response = await requestService.sendApiRequest("GET", API_URL + "subcompetition/" + year + "/" + showType + "/result/" + roomId, null);
   return response.json();
 };
+
+export const getSubcompetitionById = async (subCompetitionId: string): Promise<ISubcompetition> => {
+    const response = await requestService.sendApiRequest("GET", API_URL + "subcompetition/byid/" + subCompetitionId, null);
+    return response.json();
+};

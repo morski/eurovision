@@ -70,7 +70,7 @@ function Admin() {
     const [tab, setTab] = useState(0);
     const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
-    const { data: activeEvent } = useGetActiveEvent();
+    const [activeEvent, setActiveEvent] = useState<any>(null);
 
     // Countries state
     const [countries, setCountries] = useState<any[]>([]);
@@ -100,12 +100,28 @@ function Admin() {
     const [subCompetitions, setSubCompetitions] = useState<any[]>([]);
     const [orderedParticipants, setOrderedParticipants] = useState<IParticipant[]>([]);
 
+    // Assign participant state
+    const [assignSubCompId, setAssignSubCompId] = useState("");
+    const [assignParticipantId, setAssignParticipantId] = useState("");
+    const [assignPerformanceNr, setAssignPerformanceNr] = useState<number | "">(1);
+    const [eventParticipants, setEventParticipants] = useState<any[]>([]);
+    const [assignSubCompetitions, setAssignSubCompetitions] = useState<any[]>([]);
+
     const sensors = useSensors(
         useSensor(PointerSensor),
         useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
     );
 
+    // Runs ONCE on mount — fetches initial data
     useEffect(() => {
+        fetch("/api/eurovision/event/active/full")
+            .then(r => r.json())
+            .then(event => {
+                setActiveEvent(event);
+                setEventId(event.recordGuid ?? "");
+            })
+            .catch(() => { });
+
         fetch(BASE_URL + "api/eurovision/countries")
             .then(r => r.json())
             .then(setCountries)
@@ -115,29 +131,52 @@ function Admin() {
             .then(r => r.json())
             .then((data) => {
                 setAllEvents(data);
-                const active = data.find((e: any) => e.isActive);
-                if (active) setActiveEventId(active.recordGuid);
+                setActiveEventId(prev => {
+                    if (prev) return prev;
+                    const active = data.find((e: any) => e.isActive);
+                    return active ? active.recordGuid : prev;
+                });
             })
-            .catch(() => { });
+            .catch(err => console.error("Failed to load events:", err));
+    }, []); //  empty array = runs once
 
-        if (activeEvent) {
-            setEventId(activeEvent.id ?? "");
-            fetch(`${BASE_URL}api/eurovision/subcompetitions/${activeEvent.year}`, {
-                headers: authHeader()
-            })
-                .then(r => r.json())
-                .then(setSubCompetitions)
-                .catch(() => { });
-        }
-    }, [activeEvent]);
-
+    // Runs when activeEvent changes - fetches sub-competitions and participants
     useEffect(() => {
-        if (!selectedSubId) return;
-        fetch(`${BASE_URL}api/eurovision/subcompetition/byid/${selectedSubId}`, {
+        if (!activeEvent?.recordGuid) return;
+
+        setEventId(activeEvent.recordGuid);
+
+        fetch(`${BASE_URL}api/eurovision/subcompetitions/${activeEvent.year}`, {
             headers: authHeader()
         })
             .then(r => r.json())
             .then(data => {
+                setSubCompetitions(data);
+                setAssignSubCompetitions(data);
+            })
+            .catch(() => { });
+
+        fetch(`${BASE_URL}api/eurovision/participants/${activeEvent.recordGuid}`, {
+            headers: authHeader()
+        })
+            .then(r => r.json())
+            .then(setEventParticipants)
+            .catch(() => { });
+    }, [activeEvent?.recordGuid]); //  only re-runs when the GUID changes, not the whole object
+
+
+    useEffect(() => {
+        if (!selectedSubId) return;
+        console.log("Fetching participants for sub:", selectedSubId);
+        fetch(`${BASE_URL}api/eurovision/subcompetition/byid/${selectedSubId}`, {
+            headers: authHeader()
+        })
+            .then(r => {
+                console.log("Response status:", r.status);
+                return r.json();
+            })
+            .then(data => {
+                console.log("Data received:", data);
                 setOrderedParticipants(
                     (data.participants ?? []).sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0))
                 );
@@ -191,7 +230,6 @@ function Admin() {
         const res = await AdminService.setActiveEvent(activeEventId);
         if (res.ok) {
             showFeedback("Active event updated! Refresh the page to see changes.");
-            // Clear cached active event so it reloads
             localStorage.removeItem("activeEvent");
         } else {
             showFeedback("Failed to update active event", true);
@@ -222,6 +260,10 @@ function Admin() {
     };
 
     const handleAddParticipant = async () => {
+        console.log("eventId:", eventId);
+        console.log("participantCountryId:", participantCountryId);
+        console.log("artist:", artist);
+        console.log("song:", song);
         if (!artist || !song || !participantCountryId || !eventId)
             return showFeedback("Please fill in all fields", true);
 
@@ -245,6 +287,24 @@ function Admin() {
         showFeedback("Participant added successfully!");
         setArtist(""); setSong(""); setParticipantCountryId("");
         setImageFile(null); setSelectedCountryName("");
+    };
+
+    const handleAssignParticipant = async () => {
+        if (!assignSubCompId || !assignParticipantId || assignPerformanceNr === "")
+            return showFeedback("Please fill in all fields", true);
+        const res = await AdminService.assignParticipantToShow(
+            assignParticipantId,
+            assignSubCompId,
+            assignPerformanceNr as number
+        );
+        if (res.ok) {
+            showFeedback("Participant assigned successfully!");
+            setAssignParticipantId("");
+            setAssignPerformanceNr(1);
+        } else {
+            const text = await res.text();
+            showFeedback(text.includes("already assigned") ? "Already assigned to this show!" : "Failed to assign participant", true);
+        }
     };
 
     const panelStyle = {
@@ -307,11 +367,14 @@ function Admin() {
                 <Tabs
                     value={tab}
                     onChange={(_, v) => setTab(v)}
+                    variant="scrollable"
+                    scrollButtons="auto"
                     sx={{
                         mb: 3,
                         "& .MuiTab-root": { color: "var(--esc-muted)", fontFamily: "gotham-book" },
                         "& .Mui-selected": { color: "var(--esc-cyan) !important" },
                         "& .MuiTabs-indicator": { backgroundColor: "var(--esc-cyan)" },
+                        "& .MuiTabScrollButton-root": { color: "var(--esc-muted)" },
                     }}
                 >
                     <Tab label="Add Participant" />
@@ -320,6 +383,7 @@ function Admin() {
                     <Tab label="Song Order" />
                     <Tab label="Add Show" />
                     <Tab label="Active Event" />
+                    <Tab label="Assign to Show" />
                     
                 </Tabs>
 
@@ -512,6 +576,54 @@ function Admin() {
                                 No participants found for this show.
                             </Typography>
                         )}
+                    </Stack>
+                )}
+                {/* ASSIGN TO SHOW */}
+                {tab === 6 && (
+                    <Stack spacing={0}>
+                        {sectionTitle("Assign participant to a show")}
+                        <FormControl fullWidth sx={inputStyle}>
+                            <InputLabel shrink>Show</InputLabel>
+                            <Select
+                                value={assignSubCompId ?? ""}
+                                displayEmpty
+                                label="Show"
+                                onChange={e => setAssignSubCompId(e.target.value)}
+                                MenuProps={selectMenuProps}
+                            >
+                                <MenuItem value=""><em>Select show...</em></MenuItem>
+                                {assignSubCompetitions.map((s: any) => (
+                                    <MenuItem key={s.recordGuid} value={s.recordGuid}>{s.name}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl fullWidth sx={inputStyle}>
+                            <InputLabel shrink>Participant</InputLabel>
+                            <Select
+                                value={assignParticipantId ?? ""}
+                                displayEmpty
+                                label="Participant"
+                                onChange={e => setAssignParticipantId(e.target.value)}
+                                MenuProps={selectMenuProps}
+                            >
+                                <MenuItem value=""><em>Select participant...</em></MenuItem>
+                                {eventParticipants.map((p: any) => (
+                                    <MenuItem key={p.recordGuid} value={p.recordGuid}>
+                                        {p.country?.name?.trim()} — {p.artist} &bull; {p.song}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <TextField
+                            fullWidth
+                            label="Performance Number"
+                            type="number"
+                            value={assignPerformanceNr}
+                            onChange={e => setAssignPerformanceNr(e.target.value === "" ? "" : parseInt(e.target.value))}
+                            sx={inputStyle}
+                            inputProps={{ min: 1 }}
+                        />
+                        <StyledButton onClick={handleAssignParticipant}>Assign to Show</StyledButton>
                     </Stack>
                 )}
             </Box>

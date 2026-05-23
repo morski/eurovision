@@ -24,9 +24,10 @@ type INavbarProps = {
     user: IUser;
     year: number;
     isAdmin?: boolean;
+    subCompetitions?: any[];
 };
 
-function Navbar({ user, year, isAdmin }: INavbarProps) {
+function Navbar({ user, year, isAdmin, subCompetitions = [] }: INavbarProps) {
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -83,105 +84,59 @@ function Navbar({ user, year, isAdmin }: INavbarProps) {
                         <Menu
                             id='menu-appbar'
                             anchorEl={anchorElNav}
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "left",
-                            }}
+                            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
                             keepMounted
-                            transformOrigin={{
-                                vertical: "top",
-                                horizontal: "left",
-                            }}
+                            transformOrigin={{ vertical: "top", horizontal: "left" }}
                             open={Boolean(anchorElNav)}
                             onClose={handleCloseNavMenu}
-                            sx={{
-                                display: { xs: "block", md: "none" },
-                            }}
+                            sx={{ display: { xs: "block", md: "none" } }}
                         >
                             <MenuItem key={"Home"} onClick={() => navigateToPage("/")}>
-                                <Typography textAlign='center' fontFamily='gotham-book' fontWeight='700' textTransform={"uppercase"}>{"Home"}</Typography>
+                                <Typography textAlign='center' fontFamily='gotham-book' fontWeight='700' textTransform="uppercase">Home</Typography>
                             </MenuItem>
-                            <MenuItem
-                                key={"First Semi-Final"}
-                                onClick={() => navigateToPage("/semi-final-1")}
-                            >
-                                <Typography textAlign='center' fontFamily='gotham-book' fontWeight='700' textTransform={"uppercase"}>
-                                    {"First Semi-Final"}
-                                </Typography>
-                            </MenuItem>
-                            <MenuItem
-                                key={"Second Semi-Final"}
-                                onClick={() => navigateToPage("/semi-final-2")}
-                            >
-                                <Typography textAlign='center' fontFamily='gotham-book' fontWeight='700' textTransform={"uppercase"}>
-                                    {"Second Semi-Final"}
-                                </Typography>
-                            </MenuItem>
-                            <MenuItem
-                                key={"Grand Final"}
-                                onClick={() => navigateToPage("/grand-final")}
-                            >
-                                <Typography textAlign='center' fontFamily='gotham-book' fontWeight='700' textTransform={"uppercase"}>
-                                    {"Grand Final"}
-                                </Typography>
-                            </MenuItem>
+                            {subCompetitions.map((sub: any, index: number) => (
+                                <MenuItem key={sub.recordGuid} onClick={() => navigateToPage(`/show-${index + 1}`)}>
+                                    <Typography textAlign='center' fontFamily='gotham-book' fontWeight='700' textTransform="uppercase">
+                                        {sub.name}
+                                    </Typography>
+                                </MenuItem>
+                            ))}
                             {isAdmin && (
                                 <MenuItem key={"Admin"} onClick={() => navigateToPage("/admin")}>
-                                    <Typography textAlign='center' fontFamily='gotham-book' fontWeight='700' textTransform={"uppercase"}>{"Admin"}</Typography>
+                                    <Typography textAlign='center' fontFamily='gotham-book' fontWeight='700' textTransform="uppercase">Admin</Typography>
                                 </MenuItem>
                             )}
                         </Menu>
                     </Box>
                     <Box
                         component='div'
-                        sx={{
-                            display: { xs: "flex", md: "none" },
-                            flexGrow: 1,
-                            mr: 1,
-                        }}
+                        sx={{ display: { xs: "flex", md: "none" }, flexGrow: 1, mr: 1 }}
                     >
                         <Box
                             component='img'
-                            sx={{
-                                height: 54,
-                                mr: 1,
-                                mt: 1,
-                                mb: 1,
-                            }}
+                            sx={{ height: 54, mr: 1, mt: 1, mb: 1 }}
                             alt='Eurovision Logo'
                             src={`/images/${year}/logo/eurovision_${year}_white.png`}
                         />
                     </Box>
 
                     <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                        <Button
-                            key={"First Semi-Final"}
-                            onClick={() => navigateToPage("/semi-final-1")}
-                            sx={{ my: 2, color: "white", display: "block", fontFamily: 'gotham-book', fontWeight: 700 }}
-                        >
-                            {"First Semi-Final"}
-                        </Button>
-                        <Button
-                            key={"Second Semi-Final"}
-                            onClick={() => navigateToPage("/semi-final-2")}
-                            sx={{ my: 2, color: "white", display: "block", fontFamily: 'gotham-book', fontWeight: 700 }}
-                        >
-                            {"Second Semi-Final"}
-                        </Button>
-                        <Button
-                            key={"Grand Final"}
-                            onClick={() => navigateToPage("/grand-final")}
-                            sx={{ my: 2, color: "white", display: "block", fontFamily: 'gotham-book', fontWeight: 700 }}
-                        >
-                            {"Grand Final"}
-                        </Button>
+                        {subCompetitions.map((sub: any, index: number) => (
+                            <Button
+                                key={sub.recordGuid}
+                                onClick={() => navigateToPage(`/show-${index + 1}`)}
+                                sx={{ my: 2, color: "white", display: "block", fontFamily: 'gotham-book', fontWeight: 700 }}
+                            >
+                                {sub.name}
+                            </Button>
+                        ))}
                         {isAdmin && (
                             <Button
                                 key={"Admin"}
                                 onClick={() => navigateToPage("/admin")}
                                 sx={{ my: 2, color: "var(--esc-cyan)", display: "block", fontFamily: 'gotham-book', fontWeight: 700 }}
                             >
-                                {"Admin"}
+                                Admin
                             </Button>
                         )}
                     </Box>
@@ -205,15 +160,9 @@ function Navbar({ user, year, isAdmin }: INavbarProps) {
                             sx={{ mt: "45px" }}
                             id='menu-appbar'
                             anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: "top",
-                                horizontal: "right",
-                            }}
+                            anchorOrigin={{ vertical: "top", horizontal: "right" }}
                             keepMounted
-                            transformOrigin={{
-                                vertical: "top",
-                                horizontal: "right",
-                            }}
+                            transformOrigin={{ vertical: "top", horizontal: "right" }}
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
@@ -225,10 +174,7 @@ function Navbar({ user, year, isAdmin }: INavbarProps) {
                             <MenuItem key={"rooms"} onClick={() => navigateToPage("/rooms")}>
                                 <Typography textAlign='center'>Rooms</Typography>
                             </MenuItem>
-                            <MenuItem
-                                key={"logout"}
-                                onClick={() => EventBus.dispatch("logout")}
-                            >
+                            <MenuItem key={"logout"} onClick={() => EventBus.dispatch("logout")}>
                                 <Typography textAlign='center'>Logout</Typography>
                             </MenuItem>
                         </Menu>
