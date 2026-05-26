@@ -23,24 +23,20 @@ namespace Eurovision.Services
                 var context = scope.ServiceProvider.GetRequiredService<EurovisionContext>();
                 var user = context.Users.FirstOrDefault(u => u.Username == login.Username);
 
-
-                
-
                 if (user != null)
                 {
                     PasswordHasher hasher = new PasswordHasher();
                     var ok = hasher.Check(user.Password, login.Password);
-
-                    if(ok)
+                    if (ok)
                     {
                         var jwtUtil = scope.ServiceProvider.GetRequiredService<JwtUtil>();
-                        var token = jwtUtil.GenerateJwtToken(user.RecordGuid, 1, false);
-                        var refreshToken = jwtUtil.GenerateJwtToken(user.RecordGuid, 24, true);
-                        return new { Token = token, RefreshToken = refreshToken, UserId = user.RecordGuid, user.Username };
+                        bool isAdmin = context.Roles.Any(r => r.UserId == user.RecordGuid && r.UserRole == 1);
+                        var token = jwtUtil.GenerateJwtToken(user.RecordGuid, 1, false, isAdmin);
+                        var refreshToken = jwtUtil.GenerateJwtToken(user.RecordGuid, 24, true, false);
+                        return new { Token = token, RefreshToken = refreshToken, UserId = user.RecordGuid, user.Username, IsAdmin = isAdmin };
                     }
                 }
             }
-
             throw new Exception("Invalid Username or Password");
         }
 

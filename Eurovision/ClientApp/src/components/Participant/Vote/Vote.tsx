@@ -1,59 +1,89 @@
-import { useUpdateVote } from "../../../hooks/useVotes";
+// Vote.tsx
+// This component renders the voting sliders for a single participant.
+// Each vote category (e.g. Song, Performance, Outfit) gets its own slider.
+// Votes are saved automatically when the user stops dragging the slider.
 
+import { useUpdateVote } from "../../../hooks/useVotes";
 import IParticipant from "../../../types/participant.type";
 import ISubcompetition from "../../../types/subcompetition.type";
 import IVote from "../../../types/vote.type";
 import IVoteCategory from "../../../types/votecategory.type";
-
 import { Box, Slider } from "@mui/material";
 
+// Props passed into this component from the parent
 type VoteProps = {
-  subcompetition: ISubcompetition;
-  participant: IParticipant;
-  voteCategories: Array<IVoteCategory>;
-  updateParticipant: React.Dispatch<React.SetStateAction<IParticipant>>;
+    subcompetition: ISubcompetition;   // The current show (Semi Final 1/2 or Grand Final)
+    participant: IParticipant;          // The country/artist being voted on
+    voteCategories: Array<IVoteCategory>; // List of categories to vote on (e.g. Song, Performance)
+    updateParticipant: React.Dispatch<React.SetStateAction<IParticipant>>; // Callback to update parent state
 };
 
 function Vote({ subcompetition, participant, voteCategories, updateParticipant }: VoteProps) {
   const { mutate: updateVote } = useUpdateVote();
   const colors = ["var(--esc-cyan)", "var(--esc-pink)", "var(--esc-yellow)", "var(--esc-red)", "var(--esc-lime)"];
-  const points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const points = [1, 2, 3, 4, 5, 6, 7, 8, 10, 12];
 
-  function valuetext(value: number) {
-    return `${value}°C`;
-  }
-
-  const handleChange = (event: Event, newValue: number | number[]) => {
-    if (typeof newValue === "number") {
-      const categoryId = (event.target as HTMLInputElement).name;
-      const vote = participant.votes.find((v) => v.categoryId === categoryId);
-      if (vote !== undefined) {
-        vote.amount = newValue;
-      } else {
-        const newVote: IVote = {
-          amount: newValue,
-          categoryId: categoryId,
-        };
-        participant.votes.push(newVote);
-      }
-      updateParticipant({ ...participant });
-    }
-  };
-
-  function isTouchScreen() {
-    const isTouchScreen = 'ontouchstart' in window || (navigator.maxTouchPoints & 0xFF) > 0;
-    return isTouchScreen;
-  }
-
-  const handleChangeCommited = (event: React.SyntheticEvent | Event, value: number | Array<number>, categoryId: string) => {
-    if (isTouchScreen() && event.type == 'mouseup') {
-      return;
+    // Required by MUI Slider for accessibility labels
+    function valuetext(value: number) {
+        return `${value}°C`;
     }
 
-    if (typeof value === "number") {
-      updateVote({ subcompetitionId: subcompetition.id, categoryId, participantId: participant.id, voteAmount: value });
+    // Called every time the slider moves — updates the local state immediately
+    // so the UI feels responsive, without saving to the backend yet
+    const handleChange = (event: Event, newValue: number | number[]) => {
+        if (typeof newValue === "number") {
+            // Get the category ID from the slider's name attribute
+            const categoryId = (event.target as HTMLInputElement).name;
+
+            // Check if a vote for this category already exists
+            const vote = participant.votes.find((v) => v.categoryId === categoryId);
+
+            if (vote !== undefined) {
+                // Update the existing vote amount
+                vote.amount = newValue;
+            } else {
+                // Create a new vote entry for this category
+                const newVote: IVote = {
+                    amount: newValue,
+                    categoryId: categoryId,
+                };
+                participant.votes.push(newVote);
+            }
+
+            // Spread operator creates a new object reference so React detects the change
+            updateParticipant({ ...participant });
+        }
+    };
+
+    // Detects if the user is on a touch screen device (phone/tablet)
+    // This is used to prevent double-saving votes on touch devices,
+    // since touch screens fire both 'touchend' and 'mouseup' events
+    function isTouchScreen() {
+        const isTouchScreen = 'ontouchstart' in window || (navigator.maxTouchPoints & 0xFF) > 0;
+        return isTouchScreen;
     }
-  };
+
+    // Called when the user releases the slider — this is when we save to the backend
+    const handleChangeCommited = (
+        event: React.SyntheticEvent | Event,
+        value: number | Array<number>,
+        categoryId: string
+    ) => {
+        // On touch screens, ignore the mouseup event to avoid saving twice
+        if (isTouchScreen() && event.type === 'mouseup') {
+            return;
+        }
+
+        if (typeof value === "number") {
+            // Send the vote to the backend API
+            updateVote({
+                subcompetitionId: subcompetition.id,
+                categoryId,
+                participantId: participant.id,
+                voteAmount: value
+            });
+        }
+    };
 
   return (
     <Box>

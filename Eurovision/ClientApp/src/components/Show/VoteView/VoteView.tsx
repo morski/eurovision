@@ -9,21 +9,25 @@ import { Box, Checkbox, Drawer, FormControl, FormControlLabel, FormLabel, IconBu
 import SortRoundedIcon from "@mui/icons-material/SortRounded";
 import Participant from "../../Participant/Participant";
 
+import { useGetSubcompetitionById } from "../../../hooks/useEvents";
+
 type IVoteViewProps = {
-  showType: number;
-  year: number;
-  order: string;
-  handleRadioChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  filterChecked: boolean;
-  handleFilterChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    showType: number;
+    year: number;
+    subCompetitionId: string;
+    order: string;
+    handleRadioChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    filterChecked: boolean;
+    handleFilterChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-function VoteView({ showType, year, order, handleRadioChange, filterChecked, handleFilterChange }: IVoteViewProps) {
+function VoteView({ showType, year, subCompetitionId, order, handleRadioChange, filterChecked, handleFilterChange }: IVoteViewProps) {
+  console.log("subCompetitionId:", subCompetitionId);
   const [expanded, setExpanded] = useState<string>("");
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
 
   const { data: voteCategories } = useGetVoteCategories();
-  const { data: subcompetition } = useGetSubcompetition({ year, showType });
+  const { data: subcompetition } = useGetSubcompetitionById(subCompetitionId);
   const participants = subcompetition ? [...subcompetition.participants] : [];
 
   const handleChange = (panel: string) => {

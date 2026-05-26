@@ -81,9 +81,12 @@ builder.Services.AddSwaggerGen(swagger =>
             new string[] {}
         }
     });
+
+    // Enable attribute annotations in Swagger (e.g., [SwaggerOperation]).
     swagger.EnableAnnotations();
 });
 
+// Configure authentication to use JWT Bearer tokens by default.
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -91,6 +94,8 @@ builder.Services.AddAuthentication(option =>
 
 }).AddJwtBearer(options =>
 {
+    // Token validation settings. Note: ValidateLifetime is false here (tokens won't be checked for expiry).
+    // If you want automatic expiry validation, set ValidateLifetime = true.
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -108,33 +113,45 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    // In non-development environments enable HSTS for extra security.
+    // Default HSTS value is 30 days.
     app.UseHsts();
 }
 
 if (app.Environment.IsDevelopment())
 {
+    // Enable Swagger UI only in development for API exploration.
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// Serve static files from wwwroot (SPA assets, js, css, index.html).
 app.UseStaticFiles();
+
+// Enable authentication middleware (reads and sets ClaimsPrincipal on HttpContext).
 app.UseAuthentication();
+
+// Add routing middleware to evaluate route matching.
 app.UseRouting();
 
+// For requests whose path starts with /api, run a custom JWTMiddleware (e.g., to handle token refresh,
+// custom header behavior, or alternative validation). This isolates middleware to API endpoints only.
 app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
 {
     appBuilder.UseMiddleware<JWTMiddleware>();
 });
 
-
+// Enable authorization middleware which checks policies and [Authorize] attributes.
 app.UseAuthorization();
 
-
+// Map controller endpoints and require authorization globally for them.
+// Controllers will need a valid authenticated principal unless specific actions allow anonymous access.
 app.MapControllers().RequireAuthorization();
 
+// For any routes not matched by controllers (SPA client), fall back to serving index.html.
 app.MapFallbackToFile("index.html");
 
+// Start the application and listen for incoming HTTP requests.
 app.Run();
 
 

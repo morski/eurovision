@@ -1,3 +1,8 @@
+// ResultView.tsx
+// This component displays the results/leaderboard for a show (Semi Final 1/2 or Grand Final).
+// It shows participants ranked by total points, with expandable cards showing vote breakdowns.
+// Results can be viewed per room (group of friends voting together).
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetSubcompetitionResults } from "../../../hooks/useEvents";
@@ -5,25 +10,32 @@ import { useGetRooms } from "../../../hooks/useRooms";
 import { useGetVoteCategories } from "../../../hooks/useVotes";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Box, Button, Card, CardContent, Collapse, Divider, IconButton, IconButtonProps, Tab, Typography, styled } from "@mui/material";
+// Note: Button was removed as it was imported but never used
+import { Box, Card, CardContent, Collapse, Divider, IconButton, IconButtonProps, Tab, Typography, styled } from "@mui/material";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 
 import IParticipant from "../../../types/participant.type";
-
 import StyledButton from "../../shared/StyledButton/StyledButton";
 
+import { useGetSubcompetitionResultsById } from "../../../hooks/useEvents";
+
+// Props passed into this component from the parent (Show.tsx)
 type IResultViewProps = {
-  showType: number;
-  year: number;
+    showType: number;
+    year: number;
+    subCompetitionId: string;
 };
 
+// Props for the expand/collapse arrow button on each participant card
 interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
+    expand: boolean;  // Whether the card is currently expanded
 }
 
+// Custom styled IconButton that rotates 180� when expanded
+// This creates the animated arrow effect on the participant cards
 const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
 })(({ theme, expand }) => ({
   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
   color: "var(--esc-white)",
@@ -33,38 +45,56 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-function ResultView({ showType, year }: IResultViewProps) {
-  const [expanded, setExpanded] = useState<string>("");
-  const [selectedTab, setSelectedTab] = useState<number>(0);
+function ResultView({ showType, year, subCompetitionId }: IResultViewProps) {
+    // Tracks which participant card is expanded ("panel0", "panel1", etc.), empty string = none
+    const [expanded, setExpanded] = useState<string>("");
 
-  const { data: rooms } = useGetRooms();
-  const { data: subcompetition } = useGetSubcompetitionResults({ year, showType, roomId: rooms != undefined && rooms.length != 0 ? rooms[selectedTab].id : "" });
-  const participants = subcompetition ? [...subcompetition.participants] : [];
-  const { data: voteCategories } = useGetVoteCategories();
+    // Tracks which room tab is currently selected (index into the rooms array)
+    const [selectedTab, setSelectedTab] = useState<number>(0);
 
-  const nav = useNavigate();
+    // Fetch all rooms the user belongs to
+    const { data: rooms } = useGetRooms();
+
+    // Fetch results for the current show and selected room
+    // Only fetch if rooms exist � uses the currently selected room's ID
+    const { data: subcompetition } = useGetSubcompetitionResultsById({
+        subCompetitionId,
+        roomId: rooms !== undefined && rooms.length !== 0 ? rooms[selectedTab].id : ""
+    });
+
+    // Copy participants array so we can sort it without mutating the original
+    const participants = subcompetition ? [...subcompetition.participants] : [];
+
+    // Fetch the vote categories (e.g. Song, Performance, Outfit)
+    const { data: voteCategories } = useGetVoteCategories();
+
+    const nav = useNavigate();
 
   const colors = ["var(--esc-cyan)", "var(--esc-pink)", "var(--esc-yellow)", "var(--esc-red)", "var(--esc-lime)"];
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setSelectedTab(newValue);
-  };
+    // Called when the user switches between room tabs
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+        setSelectedTab(newValue);
+    };
 
-  const handleChange = (panel: string) => {
-    if (panel === expanded) {
-      setExpanded("");
-    } else {
-      setExpanded(panel);
-    }
-  };
+    // Toggles a participant card open/closed
+    // Clicking an already-open card closes it, clicking a new one opens it
+    const handleChange = (panel: string) => {
+        if (panel === expanded) {
+            setExpanded("");
+        } else {
+            setExpanded(panel);
+        }
+    };
 
-  const sortByTotalPoints = (a: IParticipant, b: IParticipant) => {
-    const aTotal = a.votes.reduce((a, b) => a + b.amount, 0);
-    const bTotal = b.votes.reduce((a, b) => a + b.amount, 0);
-    return bTotal - aTotal;
-  };
+    // Sorting function: sorts participants by their total vote points (highest first)
+    const sortByTotalPoints = (a: IParticipant, b: IParticipant) => {
+        const aTotal = a.votes.reduce((a, b) => a + b.amount, 0);
+        const bTotal = b.votes.reduce((a, b) => a + b.amount, 0);
+        return bTotal - aTotal;
+    };
 
-  const sortedParticipants = participants.length ? participants.sort(sortByTotalPoints) : [];
+    const sortedParticipants = participants.length ? participants.sort(sortByTotalPoints) : [];
 
   if (rooms && rooms.length === 0) {
     return (

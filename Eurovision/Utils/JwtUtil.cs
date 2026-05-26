@@ -19,21 +19,22 @@ namespace Eurovision.Utils
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        public string GenerateJwtToken(Guid userId, double exipreTimeinHours, bool refreshToken)
+        public string GenerateJwtToken(Guid userId, double expireTimeInHours, bool refreshToken, bool isAdmin = false)
         {
-            var claims = new[] { new Claim("id", userId.ToString()) };
+            var claims = new List<Claim> { new Claim("id", userId.ToString()) };
 
-            if(refreshToken)
-            {
-                claims = claims.Append(new Claim("refreshToken", "true")).ToArray();
-            }
+            if (refreshToken)
+                claims.Add(new Claim("refreshToken", "true"));
+
+            if (isAdmin)
+                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(exipreTimeinHours),
+                Expires = DateTime.UtcNow.AddHours(expireTimeInHours),
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

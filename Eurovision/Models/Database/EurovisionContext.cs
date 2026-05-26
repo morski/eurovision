@@ -35,6 +35,8 @@ public partial class EurovisionContext : DbContext
 
     public virtual DbSet<RoomUser> RoomUsers { get; set; }
 
+    public virtual DbSet<Role> Roles { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer();
 
@@ -264,6 +266,19 @@ public partial class EurovisionContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.RoomUsers)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_room_users_users");
+        });
+
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("roles");
+            entity.Property(e => e.Id).ValueGeneratedNever().HasColumnName("id");
+            entity.Property(e => e.UserRole).HasColumnName("user_role");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Roles)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_roles_users");
         });
 
         OnModelCreatingPartial(modelBuilder);
