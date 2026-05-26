@@ -40,7 +40,7 @@ function Show({ showType, year, subCompetitionId }: IShowProps) {
                   handleFilterChange={handleFilterChange}
               />
           ) : (
-              <ResultView showType={showType} year={year} />
+                  <ResultView showType={showType} year={year} subCompetitionId={subCompetitionId} />
           )}
           <Footer view={view} setView={setView} />
       </Container>

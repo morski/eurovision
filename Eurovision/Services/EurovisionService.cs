@@ -10,7 +10,7 @@ namespace Eurovision.Services
         private readonly IVoteService _voteService;
 
         public EurovisionService(EurovisionContext context, IVoteService voteService)
-        { 
+        {
             _context = context;
             _voteService = voteService;
         }
@@ -25,12 +25,10 @@ namespace Eurovision.Services
                 .First(s => s.Event.Year == year.ToString() && s.Name == subCompetitionName);
 
             List<Vote> votes = new List<Vote>();
-
             if (includeVotes)
             {
                 votes = _voteService.GetUserVotes(user.RecordGuid, subCompetition.RecordGuid);
             }
-
             return new SubCompetitionView(subCompetition, votes);
         }
 
@@ -53,9 +51,8 @@ namespace Eurovision.Services
                     .ThenInclude(p => p.Country)
                 .First(s => s.Event.Year == year.ToString() && s.Name == subCompetitionName);
 
-            var allVOtes = _voteService.GetRoomVotesForSubcompetition(roomId, subCompetition.RecordGuid);
-
-            return new SubCompetitionResultView(subCompetition, allVOtes);
+            var allVotes = _voteService.GetRoomVotesForSubcompetition(roomId, subCompetition.RecordGuid);
+            return new SubCompetitionResultView(subCompetition, allVotes);
         }
 
         public string GetActiveEventYear()
@@ -86,6 +83,7 @@ namespace Eurovision.Services
             _context.SaveChanges();
             return evt;
         }
+
         public void SaveParticipantOrder(List<Guid> participantIds, Guid subCompetitionId)
         {
             var performanceNumbers = _context.PerformanceNumbers
@@ -103,6 +101,7 @@ namespace Eurovision.Services
             }
             _context.SaveChanges();
         }
+
         public SubCompetitionView GetSubCompetitionById(Guid subCompetitionId, User user)
         {
             var subCompetition = _context.SubCompetitions
@@ -111,25 +110,38 @@ namespace Eurovision.Services
                     .ThenInclude(p => p.Country)
                 .First(s => s.RecordGuid == subCompetitionId);
 
-            return new SubCompetitionView(subCompetition, new List<Vote>());
+            var votes = user != null
+                ? _voteService.GetUserVotes(user.RecordGuid, subCompetition.RecordGuid)
+                : new List<Vote>();
+
+            return new SubCompetitionView(subCompetition, votes);
+        }
+
+        public SubCompetitionResultView GetSubCompetitionResultsById(Guid subCompetitionId, Guid roomId)
+        {
+            var subCompetition = _context.SubCompetitions
+                .Include(s => s.PerformanceNumbers)
+                    .ThenInclude(p => p.Participant)
+                    .ThenInclude(p => p.Country)
+                .First(s => s.RecordGuid == subCompetitionId);
+
+            var allVotes = _voteService.GetRoomVotesForSubcompetition(roomId, subCompetition.RecordGuid);
+            return new SubCompetitionResultView(subCompetition, allVotes);
         }
     }
 
     public interface IEurovisionService
     {
         public SubCompetitionView GetSubCompetition(int year, int type, bool includeVotes, User user);
-
         public SubCompetitionResultView GetSubCompetitionResults(int year, int type, Guid roomId);
-
         public Event? GetEvent(int year);
-
         public Event? GetActiveEvent();
-
         public string GetActiveEventYear();
         public Country AddCountry(Country country);
         public Participant AddParticipant(Participant participant);
         public Event AddEvent(Event evt);
         public void SaveParticipantOrder(List<Guid> participantIds, Guid subCompetitionId);
         public SubCompetitionView GetSubCompetitionById(Guid subCompetitionId, User user);
+        public SubCompetitionResultView GetSubCompetitionResultsById(Guid subCompetitionId, Guid roomId);
     }
 }

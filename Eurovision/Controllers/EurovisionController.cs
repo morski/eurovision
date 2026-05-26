@@ -352,6 +352,12 @@ namespace Eurovision.Controllers
                 return StatusCode(500, "An error has occurred");
             }
         }
+        [HttpGet]
+        [Route("subcompetition/byid/{subCompetitionId}/result/{roomId}")]
+        public IActionResult GetSubcompetitionResultsById(Guid subCompetitionId, Guid roomId)
+        {
+            return new JsonResult(_eurovisionService.GetSubCompetitionResultsById(subCompetitionId, roomId));
+        }
     }
     public class AddSubCompetitionRequest
     {

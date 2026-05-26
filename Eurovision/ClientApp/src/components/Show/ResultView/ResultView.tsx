@@ -17,10 +17,13 @@ import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import IParticipant from "../../../types/participant.type";
 import StyledButton from "../../shared/StyledButton/StyledButton";
 
+import { useGetSubcompetitionResultsById } from "../../../hooks/useEvents";
+
 // Props passed into this component from the parent (Show.tsx)
 type IResultViewProps = {
-    showType: number;  // 1 = Semi Final 1, 2 = Semi Final 2, 3 = Grand Final
-    year: number;      // The Eurovision year (e.g. 2026)
+    showType: number;
+    year: number;
+    subCompetitionId: string;
 };
 
 // Props for the expand/collapse arrow button on each participant card
@@ -42,7 +45,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-function ResultView({ showType, year }: IResultViewProps) {
+function ResultView({ showType, year, subCompetitionId }: IResultViewProps) {
     // Tracks which participant card is expanded ("panel0", "panel1", etc.), empty string = none
     const [expanded, setExpanded] = useState<string>("");
 
@@ -54,9 +57,8 @@ function ResultView({ showType, year }: IResultViewProps) {
 
     // Fetch results for the current show and selected room
     // Only fetch if rooms exist � uses the currently selected room's ID
-    const { data: subcompetition } = useGetSubcompetitionResults({
-        year,
-        showType,
+    const { data: subcompetition } = useGetSubcompetitionResultsById({
+        subCompetitionId,
         roomId: rooms !== undefined && rooms.length !== 0 ? rooms[selectedTab].id : ""
     });
 
